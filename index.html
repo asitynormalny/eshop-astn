@@ -19,8 +19,9 @@
   }
 
   header img {
-    max-width:300px;
-    height:auto;
+    max-width:400px;   /* väčšie logo na desktop */
+    width:80%;         /* flexibilné pre menšie obrazovky */
+    height:auto;       /* zachovanie proporcií */
     justify-self:center;
   }
 
@@ -47,7 +48,8 @@
       gap:10px;
     }
     header img{
-      max-width:250px; /* väčšie logo na mobile */
+      max-width:300px; /* väčšie logo na mobile */
+      width:90%;
     }
     .cart-icon{
       justify-self:center; /* ikona pod logom */
