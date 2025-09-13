@@ -7,7 +7,7 @@
 <style>
 body { font-family:sans-serif; margin:0; padding:0; background:#000; color:#fff; text-align:center;}
 header { padding:15px 20px; background:#111; display:flex; justify-content:center; align-items:center; gap:20px; position:relative;}
-header img { max-width:300px; height:auto; cursor:pointer; }
+header img { max-width:450px; height:auto; cursor:pointer; }
 
 .cart-container { position:absolute; top:10px; right:10px; text-align:center; }
 .cart-price{ font-size:14px; color:#0f0; }
@@ -37,12 +37,73 @@ label{display:block; margin-top:6px;}
 .lightbox{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;}
 .lightbox img{max-width:90%; max-height:90%; border-radius:5px; cursor:pointer;}
 
+/* Centrálne popup po pridaní do košíka */
+#addCartPopup {
+  display:none; 
+  position:fixed; 
+  top:50%; 
+  left:50%; 
+  transform:translate(-50%, 20px);
+  background:#222; 
+  color:#fff; 
+  padding:15px 20px; 
+  border-radius:8px; 
+  box-shadow:0 2px 10px rgba(0,0,0,0.5); 
+  z-index:1001; 
+  text-align:center; 
+  opacity:0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  max-width:90%;
+}
+#addCartPopup.show {
+  display:block;
+  opacity:1;
+  transform:translate(-50%, 0);
+}
+#addCartPopup button{
+  margin:5px; 
+  padding:8px 12px; 
+  border:none; 
+  border-radius:5px; 
+  cursor:pointer;
+}
+#addCartPopup #continueShopping{background:#6772e5; color:#fff;}
+#addCartPopup #goToCart{background:#0f0; color:#000;}
+
+/* Kontaktný formulár */
+#contactFormContainer{
+  margin:40px auto; 
+  max-width:400px; 
+  text-align:center; 
+  background:#111; 
+  padding:20px; 
+  border-radius:10px; 
+  box-shadow:0 2px 5px rgba(255,255,255,0.2);
+}
+#contactForm input, #contactForm textarea{
+  width:90%; 
+  padding:10px; 
+  margin:5px 0; 
+  border-radius:5px; 
+  border:none;
+}
+#contactForm button{
+  padding:10px 20px; 
+  margin-top:10px; 
+  border:none; 
+  border-radius:5px; 
+  background:#6772e5; 
+  color:#fff; 
+  cursor:pointer;
+}
+
 @media (max-width:600px){
   header img{max-width:200px;}
   .arrow{font-size:24px; padding:4px 8px;}
   .size-container select, .qty-container select{width:70%; font-size:14px;}
   .cart input, .cart select, .cart textarea{width:95%; font-size:13px;}
   .cart{max-width:95%;}
+  #addCartPopup{padding:12px 15px; font-size:14px;}
 }
 </style>
 </head>
@@ -85,8 +146,27 @@ label{display:block; margin-top:6px;}
   </div>
 
   <p>Cena: 23 €</p>
-  <p>Product Description: 100% cotton oversize unisex shirt and high quality screen printing.</p>
+  <p>Popis produktu: 100% cotton.</p>
   <button id="addToCart">Pridať do košíka</button>
+</div>
+
+<!-- Centrálne popup -->
+<div id="addCartPopup">
+  <p>Produkt bol úspešne pridaný do košíka!</p>
+  <button id="continueShopping">Pokračovať v nákupe</button>
+  <button id="goToCart">Do košíka</button>
+</div>
+
+<!-- Kontaktný formulár pod produktom -->
+<div id="contactFormContainer">
+  <h3>Kontaktujte nás</h3>
+  <form id="contactForm">
+    <input type="text" name="name" placeholder="Meno" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <textarea name="message" placeholder="Správa" required></textarea>
+    <button type="submit">Odoslať</button>
+  </form>
+  <p id="contactStatus" style="margin-top:10px;"></p>
 </div>
 
 <div class="cart-modal" id="cartModal">
@@ -182,11 +262,31 @@ cartIcon.addEventListener("click",()=>{ renderCart(); cartModal.style.display="f
 closeCart.addEventListener("click",()=>{ cartModal.style.display="none"; });
 cartModal.addEventListener("click",(e)=>{ if(e.target===cartModal) cartModal.style.display="none"; });
 
-document.getElementById("addToCart").addEventListener("click",()=>{
-  const size=document.getElementById("size").value;
-  const qty=parseInt(document.getElementById("quantity").value)||1;
-  cartData.push({product:"Tričko", size:size, price:23, qty:qty});
+// Centrálne popup
+const addCartPopup = document.getElementById("addCartPopup");
+const continueShopping = document.getElementById("continueShopping");
+const goToCart = document.getElementById("goToCart");
+
+document.getElementById("addToCart").addEventListener("click", () => {
+  const size = document.getElementById("size").value;
+  const qty = parseInt(document.getElementById("quantity").value) || 1;
+
+  cartData.push({ product: "Tričko", size: size, price: 23, qty: qty });
   renderCart();
+
+  addCartPopup.classList.add("show");
+});
+
+// Pokračovať v nákupe
+continueShopping.addEventListener("click", () => {
+  addCartPopup.classList.remove("show");
+});
+
+// Prejsť do košíka
+goToCart.addEventListener("click", () => {
+  renderCart();
+  cartModal.style.display = "flex";
+  addCartPopup.classList.remove("show");
 });
 
 countrySelect.addEventListener("change", renderCart);
@@ -209,7 +309,6 @@ payBtn.addEventListener("click", async ()=>{
 
   if(!name||!email||!phone||!street||!zip){ alert("Vyplň všetky povinné polia!"); return; }
 
-  // Vytvorenie FormData pre Formspree
   const formData = new FormData();
   formData.append("product", JSON.stringify(cartData));
   formData.append("name", name);
@@ -243,6 +342,37 @@ payBtn.addEventListener("click", async ()=>{
     }
   } catch(err){
     alert("Chyba pri odosielaní objednávky.");
+  }
+});
+
+// Kontakt cez Formspree
+const contactForm = document.getElementById("contactForm");
+const contactStatus = document.getElementById("contactStatus");
+
+contactForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(contactForm);
+
+  try {
+    const response = await fetch("https://formspree.io/f/xeolddoa", { 
+      method: "POST",
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok){
+      contactStatus.textContent = "Správa bola úspešne odoslaná!";
+      contactStatus.style.color = "#0f0"; // zelená
+      contactForm.reset();
+      setTimeout(() => { contactStatus.textContent = ""; }, 3000); // zmizne po 3s
+    } else {
+      contactStatus.textContent = "Chyba pri odosielaní správy. Skúste znova.";
+      contactStatus.style.color = "#f00"; // červená
+    }
+  } catch(err) {
+    contactStatus.textContent = "Chyba pri odosielaní správy.";
+    contactStatus.style.color = "#f00";
   }
 });
 </script>
