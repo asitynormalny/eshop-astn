@@ -97,8 +97,12 @@ label{display:block; margin-top:6px;}
   cursor:pointer;
 }
 
+/* RESPONSIVE */
 @media (max-width:600px){
-  header img{max-width:200px;}
+  header img{
+    max-width:90%;   /* Logo sa škáluje podľa šírky obrazovky */
+    height:auto;
+  }
   .arrow{font-size:24px; padding:4px 8px;}
   .size-container select, .qty-container select{width:70%; font-size:14px;}
   .cart input, .cart select, .cart textarea{width:95%; font-size:13px;}
