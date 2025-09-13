@@ -7,33 +7,42 @@
 <style>
 body { font-family:sans-serif; margin:0; padding:0; background:#000; color:#fff; text-align:center;}
 header { padding:15px 20px; background:#111; display:flex; justify-content:center; align-items:center; gap:20px; position:relative;}
-header img { max-width:300px; height:auto; }
-.cart-icon { position:absolute; right:20px; font-size:20px; cursor:pointer; color:white; display:flex; align-items:center; gap:6px; }
-.cart-badge{background:red; color:white; border-radius:20px; padding:2px 6px; font-size:13px;}
-.cart-price{font-size:13px; color:#0f0;}
-.product{margin:30px auto; background:#111; padding:20px; max-width:400px; box-shadow:0 2px 5px rgba(255,255,255,0.2); border-radius:10px;}
+header img { max-width:300px; height:auto; cursor:pointer; }
+
+.cart-container { position:absolute; top:10px; right:10px; text-align:center; }
+.cart-price{ font-size:14px; color:#0f0; }
+.cart-icon{ font-size:24px; cursor:pointer; margin-top:5px; }
+
+.product{margin:80px auto 30px auto; background:#111; padding:20px; max-width:400px; box-shadow:0 2px 5px rgba(255,255,255,0.2); border-radius:10px;}
 .carousel{position:relative; margin-bottom:15px; display:flex; justify-content:center; align-items:center;}
-.carousel img{max-width:100%; display:block; border-radius:5px;}
+.carousel img{max-width:100%; display:block; border-radius:5px; cursor:pointer;}
 .arrow{position:absolute; top:50%; transform:translateY(-50%); font-size:30px; color:#fff; cursor:pointer; background:rgba(0,0,0,0.4); padding:5px 10px; border-radius:5px; user-select:none;}
 .arrow.left{left:5px;} 
 .arrow.right{right:5px;}
+
 .size-container, .qty-container{margin:15px 0; text-align:center;}
-.size-container select, .qty-container input{width:50%; padding:10px; font-size:16px; border-radius:5px; border:none; text-align:center;}
+.size-container select, .qty-container select{width:50%; padding:10px; font-size:16px; border-radius:5px; border:none; text-align:center;}
+
 .product button{padding:10px 20px; font-size:16px; cursor:pointer; background:#6772e5; color:#fff; border:none; border-radius:5px; margin-top:10px;}
+
 .cart-modal{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; justify-content:center; align-items:center;}
-.cart{background:#111; padding:15px 20px; max-width:420px; width:90%; border-radius:10px; box-shadow:0 2px 10px rgba(255,255,255,0.3); position:relative; text-align:center; max-height:90vh; overflow-y:auto;}
+.cart{background:#111; padding:15px 20px; max-width:350px; width:90%; border-radius:10px; box-shadow:0 2px 10px rgba(255,255,255,0.3); position:relative; text-align:center; max-height:90vh; overflow-y:auto;}
 .cart input, .cart select, .cart textarea{width:90%; padding:8px; margin:5px 0; font-size:14px; border-radius:4px; border:none;}
 .cart textarea{resize:vertical; min-height:50px;}
 .cart button{padding:10px 16px; font-size:15px; cursor:pointer; background:#6772e5; color:#fff; border:none; border-radius:5px; margin-top:10px;}
 .close-btn{position:absolute; top:10px; right:15px; font-size:20px; color:#fff; cursor:pointer;}
 .remove-item{cursor:pointer; color:red; margin-left:8px; font-weight:bold;}
 label{display:block; margin-top:6px;}
+
+.lightbox{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000;}
+.lightbox img{max-width:90%; max-height:90%; border-radius:5px; cursor:pointer;}
+
 @media (max-width:600px){
   header img{max-width:200px;}
   .arrow{font-size:24px; padding:4px 8px;}
-  .size-container select, .qty-container input{width:70%; font-size:14px;}
+  .size-container select, .qty-container select{width:70%; font-size:14px;}
   .cart input, .cart select, .cart textarea{width:95%; font-size:13px;}
-  .cart-icon{position:absolute; right:10px; top:10px;}
+  .cart{max-width:95%;}
 }
 </style>
 </head>
@@ -41,9 +50,9 @@ label{display:block; margin-top:6px;}
 
 <header>
   <img src="DWDasitynormalny.jpg" alt="Logo">
-  <div id="cartIcon" class="cart-icon">
-    🛒 <span id="cartCount" class="cart-badge">0</span>
-    <span id="cartTotal" class="cart-price">0 €</span>
+  <div class="cart-container">
+    <div id="cartTotal" class="cart-price">0 €</div>
+    <div id="cartIcon" class="cart-icon">🛒</div>
   </div>
 </header>
 
@@ -66,7 +75,13 @@ label{display:block; margin-top:6px;}
 
   <div class="qty-container">
     <label for="quantity">Počet kusov:</label>
-    <input type="number" id="quantity" value="1" min="1">
+    <select id="quantity">
+      <option value="1" selected>1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
   </div>
 
   <p>Cena: 23 €</p>
@@ -81,7 +96,6 @@ label{display:block; margin-top:6px;}
     <div id="cartItems"></div>
     <p id="total"></p>
 
-    <!-- Polia -->
     <input type="text" id="name" placeholder="Meno a priezvisko">
     <input type="email" id="email" placeholder="Email">
     <input type="tel" id="phone" placeholder="Telefón">
@@ -106,14 +120,28 @@ label{display:block; margin-top:6px;}
   </div>
 </div>
 
+<div class="lightbox" id="lightbox">
+  <img id="lightboxImg" src="">
+</div>
+
 <script>
 const images=["trikomore.jpg","0001.jpg","2006.jpg"];
 let current=0;
 let cartData=[];
 const productImg=document.getElementById("productImg");
+const lightbox=document.getElementById("lightbox");
+const lightboxImg=document.getElementById("lightboxImg");
 
-document.getElementById("prev").addEventListener("click",()=>{current=(current-1+images.length)%images.length;productImg.src=images[current];});
-document.getElementById("next").addEventListener("click",()=>{current=(current+1)%images.length;productImg.src=images[current];});
+// Carousel
+document.getElementById("prev").addEventListener("click",()=>{current=(current-1+images.length)%images.length; productImg.src=images[current];});
+document.getElementById("next").addEventListener("click",()=>{current=(current+1)%images.length; productImg.src=images[current];});
+
+// Lightbox
+productImg.addEventListener("click", ()=>{
+  lightbox.style.display="flex";
+  lightboxImg.src=productImg.src;
+});
+lightbox.addEventListener("click", ()=>{ lightbox.style.display="none"; });
 
 const cartModal=document.getElementById("cartModal");
 const cartItems=document.getElementById("cartItems");
@@ -125,13 +153,8 @@ const cartTotal=document.getElementById("cartTotal");
 const countrySelect=document.getElementById("country");
 const codCheckbox=document.getElementById("cod");
 
-function getShipping(){
-  return countrySelect.value==="Česká republika"?4.50:3.50;
-}
-
-function getCOD(){
-  return codCheckbox.checked?1.40:0;
-}
+function getShipping(){ return countrySelect.value==="Česká republika"?4.50:3.50; }
+function getCOD(){ return codCheckbox.checked?1.40:0; }
 
 function renderCart(){
   const shipping=getShipping();
@@ -139,7 +162,6 @@ function renderCart(){
   if(cartData.length===0){
     cartItems.innerHTML="<em>Košík je prázdny</em>";
     total.innerHTML="";
-    cartCount.textContent=0;
     cartTotal.textContent="0 €";
     return;
   }
@@ -147,12 +169,10 @@ function renderCart(){
     `<p>${item.product} (${item.size}) x${item.qty} - ${(item.price*item.qty).toFixed(2)} €
       <span class="remove-item" data-index="${index}">❌</span></p>`).join('');
   const subtotal=cartData.reduce((sum,i)=>sum+i.price*i.qty,0);
-  const totalQty=cartData.reduce((sum,i)=>sum+i.qty,0);
   const totalPrice=(subtotal+shipping+cod).toFixed(2);
 
   total.innerHTML=`Medzisúčet: ${subtotal.toFixed(2)} €<br>Poštovné: ${shipping.toFixed(2)} €<br>Dobierka: ${cod.toFixed(2)} €<br><strong>Celkom: ${totalPrice} €</strong>`;
 
-  cartCount.textContent=totalQty;
   cartTotal.textContent=subtotal.toFixed(2)+" €";
 
   document.querySelectorAll(".remove-item").forEach(btn=>{
