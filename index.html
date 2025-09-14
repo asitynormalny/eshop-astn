@@ -8,29 +8,23 @@
 body { font-family:sans-serif; margin:0; padding:0; background:#fff; color:#fff; text-align:center;}
 header { padding:15px 20px; background:#111; display:flex; justify-content:center; align-items:center; gap:20px; position:relative;}
 header img { max-width:600px; height:auto; cursor:pointer; }
-
 .navbar { display:flex; justify-content:center; gap:20px; margin:15px 0; }
 .navbar button { padding:10px 20px; font-size:16px; cursor:pointer; background:#222; color:#fff; border:none; border-radius:5px; }
 .navbar button.active { background:#6772e5; }
-
 .section { display:none; }
 .section.active { display:block; }
-
-/* Produkt */
 .product{margin:25px auto 30px auto; background:#111; padding:20px; max-width:400px; box-shadow:0 2px 5px rgba(255,255,255,0.2); border-radius:10px;}
 .carousel{position:relative; margin-bottom:15px; display:flex; justify-content:center; align-items:center;}
 .carousel img{max-width:100%; display:block; border-radius:5px; cursor:pointer;}
 .arrow{position:absolute; top:50%; transform:translateY(-50%); font-size:30px; color:#fff; cursor:pointer; background:rgba(0,0,0,0.4); padding:5px 10px; border-radius:5px; user-select:none;}
 .arrow.left{left:5px;} 
 .arrow.right{right:5px;}
-
 .size-container, .qty-container{margin:15px 0; text-align:center;}
 .size-container select, .qty-container select{width:50%; padding:10px; font-size:16px; border-radius:5px; border:none; text-align:center;}
 .product button{padding:10px 20px; font-size:16px; cursor:pointer; background:#6772e5; color:#fff; border:none; border-radius:5px; margin-top:10px;}
-.cart-container { text-align:center; }
-.cart-price{ font-size:14px; color:#0f0; }
+.cart-container { text-align:center; display:flex; flex-direction:column; align-items:center; }
+.cart-price{ font-size:14px; color:#0f0; margin-top:5px; }
 .cart-icon{ font-size:24px; cursor:pointer; margin-top:5px; }
-
 .cart-modal{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; justify-content:center; align-items:center;}
 .cart{background:#111; padding:15px 20px; max-width:350px; width:90%; border-radius:10px; box-shadow:0 2px 10px rgba(255,255,255,0.3); position:relative; text-align:center; max-height:90vh; overflow-y:auto;}
 .cart input, .cart select, .cart textarea{width:90%; padding:8px; margin:5px 0; font-size:14px; border-radius:4px; border:none;}
@@ -39,32 +33,22 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 .close-btn{position:absolute; top:10px; right:15px; font-size:20px; color:#fff; cursor:pointer;}
 .remove-item{cursor:pointer; color:red; margin-left:8px; font-weight:bold;}
 label{display:block; margin-top:6px;}
-.lightbox{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000; flex-direction:column;}
+.lightbox{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000; flex-direction:column; cursor:pointer;}
 .lightbox img{max-width:90%; max-height:90%; border-radius:5px; cursor:pointer;}
 .lightbox .close-lightbox{position:absolute; top:15px; right:20px; font-size:30px; color:#fff; cursor:pointer;}
-
-/* Centrálne popup po pridaní do košíka a objednávke */
 #addCartPopup, #orderPopup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, 20px); background:#222; color:#fff; padding:15px 20px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.5); z-index:1001; text-align:center; opacity:0; transition: opacity 0.3s ease, transform 0.3s ease; max-width:90%; }
 #addCartPopup.show, #orderPopup.show { display:block; opacity:1; transform:translate(-50%, 0); }
 #addCartPopup button, #orderPopup button { margin:5px; padding:8px 12px; border:none; border-radius:5px; cursor:pointer; }
 #addCartPopup #continueShopping{background:#6772e5; color:#fff;}
 #addCartPopup #goToCart{background:#0f0; color:#000;}
 #orderPopup button{background:#6772e5; color:#fff;}
-
-/* Kontaktný formulár */
 #contactFormContainer{ margin:40px auto; max-width:400px; text-align:center; background:#111; padding:20px; border-radius:10px; box-shadow:0 2px 5px rgba(255,255,255,0.2); }
 #contactForm input, #contactForm textarea{ width:90%; padding:10px; margin:5px 0; border-radius:5px; border:none;}
 #contactForm button{ padding:10px 20px; margin-top:10px; border:none; border-radius:5px; background:#6772e5; color:#fff; cursor:pointer; }
-
-/* Photoalbum grid */
 #photoContainer { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; padding:20px; }
 #photoContainer img { width:100%; border-radius:5px; cursor:pointer; }
-
-/* Zarovnanie checkboxu na stred */
 #cod { transform: scale(1.2); margin-right:8px; vertical-align:middle; }
 .cart label { display:flex; justify-content:center; align-items:center; gap:8px; }
-
-/* RESPONSIVE */
 @media (max-width:600px){
   header img{ max-width:80%; height:auto; }
   .arrow{font-size:24px; padding:4px 8px;}
@@ -86,59 +70,82 @@ label{display:block; margin-top:6px;}
   <button id="photoBtn" class="active">Photos</button>
 </div>
 
-<!-- Sekcia Shop -->
+<!-- SHOP SECTION -->
 <div id="shopSection" class="section">
+  <!-- Produkt 1 -->
   <div class="product">
-    <h2>Shirt</h2>
+    <h2>Tričko</h2>
     <div class="carousel">
-      <span class="arrow left" id="prev">&#10094;</span>
-      <img src="poster 001.jpg" id="productImg" alt="Tričko">
-      <span class="arrow right" id="next">&#10095;</span>
+      <span class="arrow left" data-product="1">&#10094;</span>
+      <img src="trikomore.jpg" id="productImg1" alt="Tričko">
+      <span class="arrow right" data-product="1">&#10095;</span>
     </div>
     <div class="size-container">
-      <label for="size">Veľkosť:</label>
-      <select id="size">
+      <label for="size1">Veľkosť:</label>
+      <select id="size1">
         <option value="M" selected>M</option>
         <option value="L">L</option>
         <option value="XL">XL</option>
       </select>
     </div>
     <div class="qty-container">
-      <label for="quantity">Počet kusov:</label>
-      <select id="quantity">
+      <label for="quantity1">Počet kusov:</label>
+      <select id="quantity1">
         <option value="1" selected>1</option>
         <option value="2">2</option>
         <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
       </select>
     </div>
     <p>Cena: 23 €</p>
     <p>Popis produktu: 100% cotton.</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button id="addToCart">Pridať do košíka</button>
+      <button class="addToCartBtn" data-product="Tričko" data-price="23" data-size="size1" data-qty="quantity1">Pridať do košíka</button>
       <div class="cart-container">
-        <div id="cartTotal" class="cart-price">0 €</div>
-        <div id="cartIcon" class="cart-icon">🛒</div>
+        <div class="cart-price">0 €</div>
+        <div class="cart-icon">🛒</div>
       </div>
     </div>
   </div>
 
-  <div id="addCartPopup">
-    <p>Produkt bol úspešne pridaný do košíka!</p>
-    <button id="continueShopping">Pokračovať v nákupe</button>
-    <button id="goToCart">Do košíka</button>
+  <!-- Produkt 2 -->
+  <div class="product">
+    <h2>Plagát</h2>
+    <div class="carousel">
+      <span class="arrow left" data-product="2">&#10094;</span>
+      <img src="0001.jpg" id="productImg2" alt="Hoodie">
+      <span class="arrow right" data-product="2">&#10095;</span>
+    </div>
+    <div class="size-container">
+      <label for="size2">Veľkosť:</label>
+      <select id="size2">
+        <option value="A2" selected>A2</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
+    </div>
+    <div class="qty-container">
+      <label for="quantity2">Počet kusov:</label>
+      <select id="quantity2">
+        <option value="1" selected>1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+    </div>
+    <p>Cena: 12 €</p>
+    <p>Popis produktu: Warm and cozy hoodie.</p>
+    <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
+      <button class="addToCartBtn" data-product="Hoodie" data-price="35" data-size="size2" data-qty="quantity2">Pridať do košíka</button>
+      <div class="cart-container">
+        <div class="cart-price">0 €</div>
+        <div class="cart-icon">🛒</div>
+      </div>
+    </div>
   </div>
 
-  <!-- Popup pre objednávku -->
-  <div id="orderPopup">
-    <p>Objednávka bola úspešne odoslaná!</p>
-    <button id="orderOkBtn">OK</button>
-  </div>
-
+  <!-- FORMULÁR KONTAKTUJTE NÁS (len tu) -->
   <div id="contactFormContainer">
     <h3>Kontaktujte nás</h3>
-    <form id="contactForm">
+    <form id="contactForm" action="https://formspree.io/f/xeolddoa" method="POST">
       <input type="text" name="name" placeholder="Meno" required>
       <input type="email" name="email" placeholder="Email" required>
       <textarea name="message" placeholder="Správa" required></textarea>
@@ -146,266 +153,187 @@ label{display:block; margin-top:6px;}
     </form>
     <p id="contactStatus" style="margin-top:10px;"></p>
   </div>
-
-  <div class="cart-modal" id="cartModal">
-    <div class="cart" id="cart">
-      <span class="close-btn" id="closeCart">&times;</span>
-      <h3>Košík</h3>
-      <div id="cartItems"></div>
-      <p id="total"></p>
-
-      <input type="text" id="name" placeholder="Meno a priezvisko">
-      <input type="email" id="email" placeholder="Email">
-      <input type="tel" id="phone" placeholder="Telefón">
-      <input type="text" id="street" placeholder="Ulica a popisné číslo">
-      <input type="text" id="zip" placeholder="PSČ">
-      <textarea id="note" placeholder="Názov výdajného miesta alebo Z-Boxu"></textarea>
-
-      <label for="country">Krajina doručenia:</label>
-      <select id="country">
-        <option value="Slovensko" selected>Slovensko</option>
-        <option value="Česká republika">Česká republika</option>
-      </select>
-
-      <label for="delivery">Packeta Spôsob doručenia:</label>
-      <select id="delivery">
-        <option value="Výdajné miesto">Výdajné miesto</option>
-        <option value="Z-Box">Z-Box</option>
-      </select>
-
-      <label><input type="checkbox" id="cod"> Platba dobierkou (+1,40 €)</label>
-      <button id="payBtn">Objednať s povinnosťou platby</button>
-    </div>
-  </div>
 </div>
 
-<!-- Sekcia Photoalbum -->
+<!-- PHOTOS SECTION -->
 <div id="photoSection" class="section active">
   <h2>Album</h2>
   <div id="photoContainer">
-    <img src="1987.jpg" alt="Foto1">
-    <img src="https://via.placeholder.com/300x300?text=Foto2" alt="Foto2">
-    <img src="https://via.placeholder.com/300x300?text=Foto3" alt="Foto3">
-    <img src="https://via.placeholder.com/300x300?text=Foto4" alt="Foto4">
-    <img src="https://via.placeholder.com/300x300?text=Foto5" alt="Foto5">
-    <img src="https://via.placeholder.com/300x300?text=Foto6" alt="Foto6">
+    <img src="loko.jpg" alt="Foto1">
+    <img src="000.jpg" alt="Foto2">
+    <img src="06.jpg" alt="Foto3">
+    <img src="poster1.jpg" alt="Foto4">
+    <img src="hoodie1.jpg" alt="Foto5">
+    <img src="hoodie2.jpg" alt="Foto6">
   </div>
 </div>
 
-<!-- Lightbox -->
+<!-- POPUPS -->
+<div id="addCartPopup">
+  <p>Produkt bol úspešne pridaný do košíka!</p>
+  <button id="continueShopping">Pokračovať v nákupe</button>
+  <button id="goToCart">Do košíka</button>
+</div>
+<div id="orderPopup">
+  <p>Objednávka bola úspešne odoslaná!</p>
+  <button id="orderOkBtn">OK</button>
+</div>
+
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <span class="close-lightbox" id="closeLightbox">&times;</span>
   <img id="lightboxImg" src="">
 </div>
 
+<!-- CART MODAL -->
+<div class="cart-modal" id="cartModal">
+  <div class="cart">
+    <span class="close-btn" id="closeCart">&times;</span>
+    <h3>Košík</h3>
+    <div id="cartItems"></div>
+    <p id="total"></p>
+    <input type="text" id="name" placeholder="Meno a priezvisko">
+    <input type="email" id="email" placeholder="Email">
+    <input type="tel" id="phone" placeholder="Telefón">
+    <input type="text" id="street" placeholder="Ulica a popisné číslo">
+    <input type="text" id="zip" placeholder="PSČ">
+    <textarea id="note" placeholder="Názov výdajného miesta alebo Z-Boxu"></textarea>
+    <label for="country">Krajina doručenia:</label>
+    <select id="country">
+      <option value="Slovensko" selected>Slovensko</option>
+      <option value="Česká republika">Česká republika</option>
+    </select>
+    <label for="delivery">Packeta Spôsob doručenia:</label>
+    <select id="delivery">
+      <option value="Výdajné miesto">Výdajné miesto</option>
+      <option value="Z-Box">Z-Box</option>
+    </select>
+    <label><input type="checkbox" id="cod"> Platba dobierkou (+1,40 €)</label>
+    <button id="payBtn">Objednať s povinnosťou platby</button>
+  </div>
+</div>
+
 <script>
-// Prepínanie sekcií
-const shopBtn = document.getElementById('shopBtn');
-const photoBtn = document.getElementById('photoBtn');
-const shopSection = document.getElementById('shopSection');
-const photoSection = document.getElementById('photoSection');
+// SECTION SWITCH
+const shopBtn=document.getElementById('shopBtn');
+const photoBtn=document.getElementById('photoBtn');
+const shopSection=document.getElementById('shopSection');
+const photoSection=document.getElementById('photoSection');
+shopBtn.addEventListener('click',()=>{shopSection.classList.add('active');photoSection.classList.remove('active');shopBtn.classList.add('active');photoBtn.classList.remove('active');});
+photoBtn.addEventListener('click',()=>{photoSection.classList.add('active');shopSection.classList.remove('active');photoBtn.classList.add('active');shopBtn.classList.remove('active');});
 
-shopBtn.addEventListener('click', () => {
-  shopSection.classList.add('active');
-  photoSection.classList.remove('active');
-  shopBtn.classList.add('active');
-  photoBtn.classList.remove('active');
-});
+// LIGHTBOX
+const photoImages=document.querySelectorAll('#photoContainer img');
+const lightbox=document.getElementById('lightbox');
+const lightboxImg=document.getElementById('lightboxImg');
+const closeLightbox=document.getElementById('closeLightbox');
+photoImages.forEach(img=>{img.addEventListener('click',()=>{lightbox.style.display='flex';lightboxImg.src=img.src;});});
+closeLightbox.addEventListener('click',()=>{lightbox.style.display='none';});
+lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.style.display='none';});
 
-photoBtn.addEventListener('click', () => {
-  photoSection.classList.add('active');
-  shopSection.classList.remove('active');
-  photoBtn.classList.add('active');
-  shopBtn.classList.remove('active');
-});
-
-// Lightbox pre Photoalbum
-const photoImages = document.querySelectorAll('#photoContainer img');
-const lightboxImg = document.getElementById('lightboxImg');
-const lightbox = document.getElementById('lightbox');
-const closeLightbox = document.getElementById('closeLightbox');
-
-photoImages.forEach(img => {
-  img.addEventListener('click', () => {
-    lightbox.style.display = 'flex';
-    lightboxImg.src = img.src;
-  });
-});
-closeLightbox.addEventListener('click', () => { lightbox.style.display = 'none'; });
-
-// Klik mimo obrázka
-lightbox.addEventListener('click', (e) => {
-  if(e.target === lightbox) lightbox.style.display = 'none';
-});
-
-// Carousel a košík
-const images=["trikomore.jpg","0001.jpg","2006.jpg"];
-let current=0;
+// CART
 let cartData=[];
-const productImg=document.getElementById("productImg");
-
-document.getElementById("prev").addEventListener("click",()=>{current=(current-1+images.length)%images.length; productImg.src=images[current];});
-document.getElementById("next").addEventListener("click",()=>{current=(current+1)%images.length; productImg.src=images[current];});
-
-// Lightbox pre Shop
-productImg.addEventListener("click", ()=>{ lightbox.style.display="flex"; lightboxImg.src=productImg.src; });
-
-// Košík
-const cartModal=document.getElementById("cartModal");
-const cartItems=document.getElementById("cartItems");
-const total=document.getElementById("total");
-const closeCart=document.getElementById("closeCart");
-const cartIcon=document.getElementById("cartIcon");
-const cartTotal=document.getElementById("cartTotal");
-const countrySelect=document.getElementById("country");
-const codCheckbox=document.getElementById("cod");
-
-function getShipping(){ return countrySelect.value==="Česká republika"?4.50:3.50; }
-function getCOD(){ return codCheckbox.checked?1.40:0; }
-
 function renderCart(){
-  const shipping=getShipping();
-  const cod=getCOD();
-  if(cartData.length===0){
-    cartItems.innerHTML="<em>Košík je prázdny</em>";
-    total.innerHTML="";
-    cartTotal.textContent="0 €";
-    return;
-  }
-  cartItems.innerHTML=cartData.map((item,index)=>
-    `<p>${item.product} (${item.size}) x${item.qty} - ${(item.price*item.qty).toFixed(2)} € <span class="remove-item" data-index="${index}">❌</span></p>`).join('');
+  const shipping=document.getElementById('country').value==="Česká republika"?4.50:3.50;
+  const cod=document.getElementById('cod').checked?1.40:0;
+  const cartItems=document.getElementById('cartItems');
+  const total=document.getElementById('total');
+  const cartPriceElems=document.querySelectorAll('.cart-price');
+  if(cartData.length===0){cartItems.innerHTML="<em>Košík je prázdny</em>";total.innerHTML="";cartPriceElems.forEach(e=>e.textContent="0 €");return;}
+  cartItems.innerHTML=cartData.map((i,index)=>`<p>${i.product} (${i.size}) x${i.qty} - ${(i.price*i.qty).toFixed(2)} € <span class="remove-item" data-index="${index}">❌</span></p>`).join('');
   const subtotal=cartData.reduce((sum,i)=>sum+i.price*i.qty,0);
   const totalPrice=(subtotal+shipping+cod).toFixed(2);
   total.innerHTML=`Medzisúčet: ${subtotal.toFixed(2)} €<br>Poštovné: ${shipping.toFixed(2)} €<br>Dobierka: ${cod.toFixed(2)} €<br><strong>Celkom: ${totalPrice} €</strong>`;
-  cartTotal.textContent=subtotal.toFixed(2)+" €";
-
-  document.querySelectorAll(".remove-item").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      const index=btn.getAttribute("data-index");
-      cartData.splice(index,1);
-      renderCart();
-    });
-  });
+  cartPriceElems.forEach(e=>e.textContent=subtotal.toFixed(2)+" €");
+  document.querySelectorAll('.remove-item').forEach(btn=>{btn.addEventListener('click',()=>{cartData.splice(btn.getAttribute('data-index'),1);renderCart();});});
 }
 
-cartIcon.addEventListener("click",()=>{ renderCart(); cartModal.style.display="flex"; });
-closeCart.addEventListener("click",()=>{ cartModal.style.display="none"; });
-cartModal.addEventListener("click",(e)=>{ if(e.target===cartModal) cartModal.style.display="none"; });
-
-// Popup pri pridaní do košíka
-const addCartPopup = document.getElementById("addCartPopup");
-const continueShopping = document.getElementById("continueShopping");
-const goToCart = document.getElementById("goToCart");
-
-document.getElementById("addToCart").addEventListener("click", () => {
-  const size = document.getElementById("size").value;
-  const qty = parseInt(document.getElementById("quantity").value) || 1;
-
-  cartData.push({ product: "Tričko", size: size, price: 23, qty: qty });
-  renderCart();
-
-  addCartPopup.classList.add("show");
+// ADD TO CART
+document.querySelectorAll('.addToCartBtn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const product=btn.getAttribute('data-product');
+    const price=parseFloat(btn.getAttribute('data-price'));
+    const size=document.getElementById(btn.getAttribute('data-size')).value;
+    const qty=parseInt(document.getElementById(btn.getAttribute('data-qty')).value)||1;
+    cartData.push({product,size,price,qty});
+    renderCart();
+    document.getElementById('addCartPopup').classList.add('show');
+  });
 });
+document.getElementById('continueShopping').addEventListener('click',()=>{document.getElementById('addCartPopup').classList.remove('show');});
+document.getElementById('goToCart').addEventListener('click',()=>{renderCart();document.getElementById('cartModal').style.display='flex';document.getElementById('addCartPopup').classList.remove('show');});
+document.querySelectorAll('.cart-icon').forEach(c=>c.addEventListener('click',()=>{renderCart();document.getElementById('cartModal').style.display='flex';}));
+document.getElementById('closeCart').addEventListener('click',()=>{document.getElementById('cartModal').style.display='none';});
+document.getElementById('cartModal').addEventListener('click',e=>{if(e.target===document.getElementById('cartModal'))document.getElementById('cartModal').style.display='none';});
 
-continueShopping.addEventListener("click", () => { addCartPopup.classList.remove("show"); });
-goToCart.addEventListener("click", () => { renderCart(); cartModal.style.display = "flex"; addCartPopup.classList.remove("show"); });
+// CAROUSEL
+const productImgs=[["poster001.jpg","0001.jpg","2006.jpg"],["hoodie1.jpg","hoodie2.jpg","hoodie3.jpg"]];
+let currentImgs=[0,0];
+document.querySelectorAll('.arrow.left').forEach(a=>{a.addEventListener('click',()=>{const p=parseInt(a.getAttribute('data-product'))-1;currentImgs[p]=(currentImgs[p]-1+productImgs[p].length)%productImgs[p].length;document.getElementById('productImg'+(p+1)).src=productImgs[p][currentImgs[p]];});});
+document.querySelectorAll('.arrow.right').forEach(a=>{a.addEventListener('click',()=>{const p=parseInt(a.getAttribute('data-product'))-1;currentImgs[p]=(currentImgs[p]+1)%productImgs[p].length;document.getElementById('productImg'+(p+1)).src=productImgs[p][currentImgs[p]];});});
+document.querySelectorAll('.carousel img').forEach(img=>{img.addEventListener('click',()=>{lightbox.style.display='flex';lightboxImg.src=img.src;});});
 
-countrySelect.addEventListener("change", renderCart);
-codCheckbox.addEventListener("change", renderCart);
-
-// Objednávka cez Formspree
-const payBtn=document.getElementById("payBtn");
-const orderPopup=document.getElementById("orderPopup");
-const orderOkBtn=document.getElementById("orderOkBtn");
-
-payBtn.addEventListener("click", async ()=>{
-  if(cartData.length===0){ alert("Košík je prázdny!"); return; }
-  if(!codCheckbox.checked){ alert("Objednávka musí byť na dobierku!"); return; }
-
-  const name=document.getElementById("name").value.trim();
-  const email=document.getElementById("email").value.trim();
-  const phone=document.getElementById("phone").value.trim();
-  const street=document.getElementById("street").value.trim();
-  const zip=document.getElementById("zip").value.trim();
-  const country=document.getElementById("country").value;
-  const note=document.getElementById("note").value.trim();
-  const delivery=document.getElementById("delivery").value;
-
-  if(!name||!email||!phone||!street||!zip){ alert("Vyplň všetky povinné polia!"); return; }
-
-  const formData = new FormData();
-  formData.append("product", JSON.stringify(cartData));
-  formData.append("name", name);
-  formData.append("email", email);
-  formData.append("phone", phone);
-  formData.append("street", street);
-  formData.append("zip", zip);
-  formData.append("country", country);
-  formData.append("note", note);
-  formData.append("delivery", delivery);
-  formData.append("cod", codCheckbox.checked ? "Áno" : "Nie");
-
-  try {
-    const response = await fetch("https://formspree.io/f/xvgbylyd", {
-      method: "POST",
-      body: formData,
-      headers: { 'Accept': 'application/json' }
-    });
+// ORDER FORMSPREE
+document.getElementById('payBtn').addEventListener('click',async()=>{
+  if(cartData.length===0){alert("Košík je prázdny!");return;}
+  if(!document.getElementById('cod').checked){alert("Objednávka musí byť na dobierku!");return;}
+  const name=document.getElementById('name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const street=document.getElementById('street').value.trim();
+  const zip=document.getElementById('zip').value.trim();
+  const country=document.getElementById('country').value;
+  const note=document.getElementById('note').value.trim();
+  const delivery=document.getElementById('delivery').value;
+  if(!name||!email||!phone||!street||!zip){alert("Vyplň všetky povinné polia!");return;}
+  const formData=new FormData();
+  formData.append("product",JSON.stringify(cartData));
+  formData.append("name",name);
+  formData.append("email",email);
+  formData.append("phone",phone);
+  formData.append("street",street);
+  formData.append("zip",zip);
+  formData.append("country",country);
+  formData.append("note",note);
+  formData.append("delivery",delivery);
+  formData.append("cod",document.getElementById('cod').checked?"Áno":"Nie");
+  try{
+    const response=await fetch("https://formspree.io/f/xvgbylyd",{method:"POST",body:formData,headers:{'Accept':'application/json'}});
     if(response.ok){
-      orderPopup.classList.add("show");
-
-      // Automatické zatvorenie po 3 sekundách
-      setTimeout(() => {
-        orderPopup.classList.remove("show");
-      }, 3000);
-
+      document.getElementById('orderPopup').classList.add('show');
+      setTimeout(()=>{document.getElementById('orderPopup').classList.remove('show');},3000);
       cartData=[];
       renderCart();
-      document.getElementById("name").value="";
-      document.getElementById("email").value="";
-      document.getElementById("phone").value="";
-      document.getElementById("street").value="";
-      document.getElementById("zip").value="";
-      document.getElementById("note").value="";
-    } else {
-      alert("Niečo sa pokazilo. Skúste znova.");
-    }
-  } catch(err){
-    alert("Chyba pri odosielaní objednávky.");
-  }
+      ['name','email','phone','street','zip','note'].forEach(id=>document.getElementById(id).value="");
+    } else {alert("Niečo sa pokazilo. Skúste znova.");}
+  }catch(err){alert("Chyba pri odosielaní objednávky.");}
 });
+document.getElementById('orderOkBtn').addEventListener('click',()=>{document.getElementById('orderPopup').classList.remove('show');});
 
-// Zavretie popupu objednávky tlačidlom
-orderOkBtn.addEventListener("click", ()=>{ orderPopup.classList.remove("show"); });
-
-// Kontakt cez Formspree
-const contactForm = document.getElementById("contactForm");
-const contactStatus = document.getElementById("contactStatus");
-
-contactForm.addEventListener("submit", async (e) => {
+// CONTACT FORMSPREE
+const contactForm=document.getElementById('contactForm');
+const contactStatus=document.getElementById('contactStatus');
+contactForm.addEventListener('submit',async(e)=>{
   e.preventDefault();
-  const formData = new FormData(contactForm);
-  try {
-    const response = await fetch("https://formspree.io/f/xeolddoa", { 
-      method: "POST",
-      body: formData,
-      headers: { 'Accept': 'application/json' }
-    });
-    if (response.ok){
-      contactStatus.textContent = "Správa bola úspešne odoslaná!";
-      contactStatus.style.color = "#0f0";
+  const data=new FormData(contactForm);
+  try{
+    const response=await fetch(contactForm.action,{method:'POST',body:data,headers:{'Accept':'application/json'}});
+    if(response.ok){
+      contactStatus.textContent="Správa bola úspešne odoslaná!";
+      contactStatus.style.color="#0f0";
       contactForm.reset();
-      setTimeout(() => { contactStatus.textContent = ""; }, 3000);
-    } else {
-      contactStatus.textContent = "Chyba pri odosielaní správy. Skúste znova.";
-      contactStatus.style.color = "#f00";
+      setTimeout(()=>{contactStatus.textContent="";},3000);
+    } else{
+      contactStatus.textContent="Chyba pri odosielaní správy. Skúste znova.";
+      contactStatus.style.color="#f00";
     }
-  } catch(err) {
-    contactStatus.textContent = "Chyba pri odosielaní správy.";
-    contactStatus.style.color = "#f00";
+  }catch(err){
+    contactStatus.textContent="Chyba pri odosielaní správy.";
+    contactStatus.style.color="#f00";
   }
 });
 </script>
-
 </body>
 </html>
+
+
