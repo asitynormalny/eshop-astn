@@ -26,7 +26,7 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 .cart-price{ font-size:14px; color:#0f0; margin-top:5px; }
 .cart-icon{ font-size:24px; cursor:pointer; margin-top:5px; }
 .cart-modal{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; justify-content:center; align-items:center;}
-.cart{background:#111; padding:15px 20px; max-width:350px; width:90%; border-radius:10px; box-shadow:0 2px 10px rgba(255,255,255,0.3); position:relative; text-align:center; max-height:90vh; overflow-y:auto;}
+.cart{background:#111; padding:15px 20px; max-width:400px; width:90%; border-radius:10px; box-shadow:0 2px 10px rgba(255,255,255,0.3); position:relative; text-align:center; max-height:90vh; overflow-y:auto;}
 .cart input, .cart select, .cart textarea{width:90%; padding:8px; margin:5px 0; font-size:14px; border-radius:4px; border:none;}
 .cart textarea{resize:vertical; min-height:50px;}
 .cart button{padding:10px 16px; font-size:15px; cursor:pointer; background:#6772e5; color:#fff; border:none; border-radius:5px; margin-top:10px;}
@@ -47,8 +47,7 @@ label{display:block; margin-top:6px;}
 #contactForm button{ padding:10px 20px; margin-top:10px; border:none; border-radius:5px; background:#6772e5; color:#fff; cursor:pointer; }
 #photoContainer { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; padding:20px; }
 #photoContainer img { width:100%; border-radius:5px; cursor:pointer; }
-#cod { transform: scale(1.2); margin-right:8px; vertical-align:middle; }
-.cart label { display:flex; justify-content:center; align-items:center; gap:8px; }
+#codText { font-weight:bold; font-size:16px; margin:10px 0; color:#fff; }
 @media (max-width:600px){
   header img{ max-width:80%; height:auto; }
   .arrow{font-size:24px; padding:4px 8px;}
@@ -112,7 +111,7 @@ label{display:block; margin-top:6px;}
     <h2>Plagát</h2>
     <div class="carousel">
       <span class="arrow left" data-product="2">&#10094;</span>
-      <img src="0001.jpg" id="productImg2" alt="Hoodie">
+      <img src="0001.jpg" id="productImg2" alt="Plagát">
       <span class="arrow right" data-product="2">&#10095;</span>
     </div>
     <div class="size-container">
@@ -134,7 +133,7 @@ label{display:block; margin-top:6px;}
     <p>Cena: 12 €</p>
     <p>Popis produktu: Warm and cozy hoodie.</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Hoodie" data-price="35" data-size="size2" data-qty="quantity2">Pridať do košíka</button>
+      <button class="addToCartBtn" data-product="Plagát" data-price="12" data-size="size2" data-qty="quantity2">Pridať do košíka</button>
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
@@ -192,23 +191,23 @@ label{display:block; margin-top:6px;}
     <h3>Košík</h3>
     <div id="cartItems"></div>
     <p id="total"></p>
+    <p id="codText">Platba dobierkou</p>
+    <label for="delivery">Packeta Spôsob doručenia:</label>
+    <select id="delivery">
+      <option value="Výdajné miesto">Výdajné miesto</option>
+      <option value="Z-Box">Z-Box</option>
+    </select>
+    <label for="country">Krajina doručenia:</label>
+    <select id="country">
+      <option value="Slovensko" selected>Slovensko</option>
+      <option value="Česká republika">Česká republika</option>
+    </select>
     <input type="text" id="name" placeholder="Meno a priezvisko">
     <input type="email" id="email" placeholder="Email">
     <input type="tel" id="phone" placeholder="Telefón">
     <input type="text" id="street" placeholder="Ulica a popisné číslo">
     <input type="text" id="zip" placeholder="PSČ">
     <textarea id="note" placeholder="Názov výdajného miesta alebo Z-Boxu"></textarea>
-    <label for="country">Krajina doručenia:</label>
-    <select id="country">
-      <option value="Slovensko" selected>Slovensko</option>
-      <option value="Česká republika">Česká republika</option>
-    </select>
-    <label for="delivery">Packeta Spôsob doručenia:</label>
-    <select id="delivery">
-      <option value="Výdajné miesto">Výdajné miesto</option>
-      <option value="Z-Box">Z-Box</option>
-    </select>
-    <label><input type="checkbox" id="cod"> Platba dobierkou (+1,40 €)</label>
     <button id="payBtn">Objednať s povinnosťou platby</button>
   </div>
 </div>
@@ -235,7 +234,7 @@ lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.style.disp
 let cartData=[];
 function renderCart(){
   const shipping=document.getElementById('country').value==="Česká republika"?4.50:3.50;
-  const cod=document.getElementById('cod').checked?1.40:0;
+  const cod=1.40; // dobierka je fixne zapocitana
   const cartItems=document.getElementById('cartItems');
   const total=document.getElementById('total');
   const cartPriceElems=document.querySelectorAll('.cart-price');
@@ -247,8 +246,6 @@ function renderCart(){
   cartPriceElems.forEach(e=>e.textContent=subtotal.toFixed(2)+" €");
   document.querySelectorAll('.remove-item').forEach(btn=>{btn.addEventListener('click',()=>{cartData.splice(btn.getAttribute('data-index'),1);renderCart();});});
 }
-
-// ADD TO CART
 document.querySelectorAll('.addToCartBtn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const product=btn.getAttribute('data-product');
@@ -265,6 +262,7 @@ document.getElementById('goToCart').addEventListener('click',()=>{renderCart();d
 document.querySelectorAll('.cart-icon').forEach(c=>c.addEventListener('click',()=>{renderCart();document.getElementById('cartModal').style.display='flex';}));
 document.getElementById('closeCart').addEventListener('click',()=>{document.getElementById('cartModal').style.display='none';});
 document.getElementById('cartModal').addEventListener('click',e=>{if(e.target===document.getElementById('cartModal'))document.getElementById('cartModal').style.display='none';});
+document.getElementById('country').addEventListener('change',renderCart);
 
 // CAROUSEL
 const productImgs=[["poster001.jpg","0001.jpg","2006.jpg"],["hoodie1.jpg","hoodie2.jpg","hoodie3.jpg"]];
@@ -276,7 +274,6 @@ document.querySelectorAll('.carousel img').forEach(img=>{img.addEventListener('c
 // ORDER FORMSPREE
 document.getElementById('payBtn').addEventListener('click',async()=>{
   if(cartData.length===0){alert("Košík je prázdny!");return;}
-  if(!document.getElementById('cod').checked){alert("Objednávka musí byť na dobierku!");return;}
   const name=document.getElementById('name').value.trim();
   const email=document.getElementById('email').value.trim();
   const phone=document.getElementById('phone').value.trim();
@@ -296,7 +293,7 @@ document.getElementById('payBtn').addEventListener('click',async()=>{
   formData.append("country",country);
   formData.append("note",note);
   formData.append("delivery",delivery);
-  formData.append("cod",document.getElementById('cod').checked?"Áno":"Nie");
+  formData.append("cod","Áno");
   try{
     const response=await fetch("https://formspree.io/f/xvgbylyd",{method:"POST",body:formData,headers:{'Accept':'application/json'}});
     if(response.ok){
