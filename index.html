@@ -408,9 +408,12 @@ document.querySelectorAll('#photoContainer img').forEach(img => {
   img.addEventListener('dragstart', e => e.preventDefault()); // zakáže ťahanie
 });
 
-window.onbeforeunload = function () {
-  window.scrollTo(0, 0);
-};
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+  }, 50); // 50 ms oneskorenie, pomáha na mobiloch
+});
+
 
 function disableBodyScroll() {
   document.body.style.overflow = 'hidden';
