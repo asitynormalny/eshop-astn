@@ -2,7 +2,7 @@
 <html lang="sk">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>asitynormalny</title>
 <style>
 body { font-family:sans-serif; margin:0; padding:0; background:#fff; color:#fff; text-align:center;}
@@ -36,15 +36,40 @@ label{display:block; margin-top:6px;}
 .lightbox{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000; flex-direction:column; cursor:pointer;}
 .lightbox img{max-width:90%; max-height:90%; border-radius:5px; cursor:pointer;}
 .lightbox .close-lightbox{position:absolute; top:15px; right:20px; font-size:30px; color:#fff; cursor:pointer;}
-#addCartPopup, #orderPopup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, 20px); background:#222; color:#fff; padding:15px 20px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.5); z-index:1001; text-align:center; opacity:0; transition: opacity 0.3s ease, transform 0.3s ease; max-width:90%; }
-#addCartPopup.show, #orderPopup.show { display:block; opacity:1; transform:translate(-50%, 0); }
-#addCartPopup button, #orderPopup button { margin:5px; padding:8px 12px; border:none; border-radius:5px; cursor:pointer; }
+#addCartPopup, #orderPopup { 
+    display: none; 
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); /* <-- vycentrované vertikálne aj horizontálne */
+    background: #222; 
+    color: #fff; 
+    padding: 25px 30px; 
+    border-radius: 10px; 
+    box-shadow: 0 2px 15px rgba(0,0,0,0.5); 
+    z-index: 1001; 
+    text-align: center; 
+    opacity: 0; 
+    transition: opacity 0.3s ease, transform 0.3s ease; 
+    max-width: 95%; 
+}
+#addCartPopup.show, #orderPopup.show { 
+    display: block; 
+    opacity: 1; 
+    transform: translate(-50%, -50%); /* <-- rovnaké ako vyššie */
+}
+
+#addCartPopup button, #orderPopup button { margin:5px; padding:12px 18px; font-size: 16px; border:none; border-radius:5px; cursor:pointer; }
 #addCartPopup #continueShopping{background:#6772e5; color:#fff;}
 #addCartPopup #goToCart{background:#0f0; color:#000;}
 #orderPopup button{background:#6772e5; color:#fff;}
 #contactFormContainer{ margin:40px auto; max-width:400px; text-align:center; background:#111; padding:20px; border-radius:10px; box-shadow:0 2px 5px rgba(255,255,255,0.2); }
 #contactForm input, #contactForm textarea{ width:90%; padding:10px; margin:5px 0; border-radius:5px; border:none;}
 #contactForm button{ padding:10px 20px; margin-top:10px; border:none; border-radius:5px; background:#6772e5; color:#fff; cursor:pointer; }
+#payBtn {
+    margin-top: -18px; /* zníži medzeru nad tlačidlom */
+}
+
 #photoContainer { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; padding:20px; }
 #photoContainer img { width:100%; border-radius:5px; cursor:pointer; }
 #codText { font-weight:bold; font-size:16px; margin:10px 0; color:#fff; }
@@ -56,6 +81,21 @@ label{display:block; margin-top:6px;}
   .cart{max-width:90%;}
   #addCartPopup, #orderPopup{padding:12px 15px; font-size:14px;}
 }
+input, select, textarea {
+  font-size: 16px;
+}
+
+
+#photoContainer img {
+  user-select: none;         /* zabráni výberu textu/obrázkov */
+  -webkit-user-drag: none;   /* zabráni drag & drop v Safari/Chrome */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge */
+  -webkit-touch-callout: none; /* zakáže "Save Image" na iOS */
+  pointer-events: auto;
+}
+
+
 </style>
 </head>
 <body>
@@ -135,6 +175,7 @@ label{display:block; margin-top:6px;}
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
+
       </div>
     </div>
   </div>
@@ -187,7 +228,6 @@ label{display:block; margin-top:6px;}
     <span class="close-btn" id="closeCart">&times;</span>
     <h3>Košík</h3>
     <div id="cartItems"></div>
-    <p id="total"></p>
     <input type="text" id="name" placeholder="Meno a priezvisko">
     <input type="email" id="email" placeholder="Email">
     <input type="tel" id="phone" placeholder="Telefon">
@@ -222,6 +262,7 @@ label{display:block; margin-top:6px;}
 
 
     <p id="codText" style="color:red;">PLATBA IBA DOBIERKOU !</p>
+    <p id="total"></p>
 
     <button id="payBtn">Objednať s povinostou platby !</button>
   </div>
@@ -304,6 +345,7 @@ document.getElementById('payBtn').addEventListener('click',async()=>{
   formData.append("email",email);
   formData.append("phone",phone);
   formData.append("street",street);
+  formData.append("city", document.getElementById('city').value.trim());
   formData.append("zip",zip);
   formData.append("country",country);
   formData.append("note",note);
@@ -316,7 +358,7 @@ document.getElementById('payBtn').addEventListener('click',async()=>{
       setTimeout(()=>{document.getElementById('orderPopup').classList.remove('show');},3000);
       cartData=[];
       renderCart();
-      ['name','email','phone','street','zip','note'].forEach(id=>document.getElementById(id).value="");
+      ['name','email','phone','street','city','zip','note'].forEach(id=>document.getElementById(id).value="");
     } else {alert("Niečo sa pokazilo. Skúste znova.");}
   }catch(err){alert("Chyba pri odosielaní objednávky.");}
 });
@@ -344,9 +386,13 @@ contactForm.addEventListener('submit',async(e)=>{
     contactStatus.style.color="#f00";
   }
 });
+
+// Zabránime pravému kliknutiu na obrázky
+document.querySelectorAll('#photoContainer img').forEach(img => {
+  img.addEventListener('contextmenu', e => e.preventDefault());
+  img.addEventListener('dragstart', e => e.preventDefault()); // zakáže ťahanie
+});
+
 </script>
 </body>
 </html>
-
-
-
