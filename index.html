@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>asitynormalny</title>
 <style>
+    header img#logo {
+      width: 80%;
+      max-width: 600px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      -webkit-user-drag: none;
+      -webkit-touch-callout: none;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    @media (max-width: 600px) {
+      header img#logo {
+        width: 90%;
+      }
+    }
 body { font-family:sans-serif; margin:0; padding:0; background:#fff; color:#fff; text-align:center;}
 header { padding:15px 20px; background:#111; display:flex; justify-content:center; align-items:center; gap:20px; position:relative;}
 header img { max-width:600px; height:auto; cursor:pointer; }
@@ -26,7 +43,7 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 .cart-price{ font-size:14px; color:#0f0; margin-top:5px; }
 .cart-icon{ font-size:24px; cursor:pointer; margin-top:5px; }
 .cart-modal{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; justify-content:center; align-items:center;}
-.cart{background:#111; padding:15px 20px; max-width:350px; width:80%; border-radius:10px; box-shadow:0 2px 10px rgba(255,255,255,0.3); position:relative; text-align:center; max-height:85vh; overflow-y:auto;}
+.cart{background:#111; padding:15px 20px; max-width:350px; width:80%; border-radius:10px; box-shadow:0 2px 10px rgba(255,255,255,0.3); position:relative; text-align:center; max-height:85vh; overflow-y:auto;-webkit-overflow-scrolling: touch; /* plynulý scroll na iOS */}
 .cart input, .cart select, .cart textarea{width:90%; padding:8px; margin:5px 0; font-size:14px; border-radius:4px; border:none;}
 .cart textarea{resize:vertical; min-height:50px;}
 .cart button{padding:10px 16px; font-size:15px; cursor:pointer; background:#6772e5; color:#fff; border:none; border-radius:5px; margin-top:10px;}
@@ -101,8 +118,9 @@ input, select, textarea {
 <body>
 
 <header>
-  <img src="DWDasitynormalny.jpg" alt="Logo">
+  <img id="logo" src="DWDasitynormalny.jpg" alt="Logo">
 </header>
+
 
 <div class="navbar">
   <button id="shopBtn">Shop</button>
@@ -199,9 +217,6 @@ input, select, textarea {
     <img src="1.jpg" alt="Foto1">
     <img src="2.jpg" alt="Foto2">
     <img src="3.jpg" alt="Foto3">
-    <img src="poster1.jpg" alt="Foto4">
-    <img src="hoodie1.jpg" alt="Foto5">
-    <img src="hoodie2.jpg" alt="Foto6">
   </div>
 </div>
 
@@ -391,6 +406,47 @@ contactForm.addEventListener('submit',async(e)=>{
 document.querySelectorAll('#photoContainer img').forEach(img => {
   img.addEventListener('contextmenu', e => e.preventDefault());
   img.addEventListener('dragstart', e => e.preventDefault()); // zakáže ťahanie
+});
+
+window.onbeforeunload = function () {
+  window.scrollTo(0, 0);
+};
+
+function disableBodyScroll() {
+  document.body.style.overflow = 'hidden';
+}
+
+function enableBodyScroll() {
+  document.body.style.overflow = '';
+}
+
+const cartModal = document.getElementById('cartModal');
+const closeCart = document.getElementById('closeCart');
+
+cartModal.addEventListener('click', e => {
+  if (e.target === cartModal) {
+    cartModal.style.display = 'none';
+    enableBodyScroll();
+  }
+});
+
+closeCart.addEventListener('click', () => {
+  cartModal.style.display = 'none';
+  enableBodyScroll();
+});
+
+// Keď otvoríš košík
+document.querySelectorAll('.cart-icon').forEach(c => c.addEventListener('click', () => {
+  renderCart();
+  cartModal.style.display = 'flex';
+  disableBodyScroll();
+}));
+
+document.getElementById('goToCart').addEventListener('click', () => {
+  renderCart();
+  cartModal.style.display = 'flex';
+  disableBodyScroll();
+  document.getElementById('addCartPopup').classList.remove('show');
 });
 
 </script>
