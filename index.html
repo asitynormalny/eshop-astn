@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>asitynormalny</title>
+<!-- Favicon pre prehliadače -->
+  <link rel="icon" type="image/png" sizes="128x128" href="faviconsi.png">
+  <link rel="shortcut icon" href="faviconsi.png" type="image/png">
+
+  <!-- Apple touch ikonky pre iOS / iPadOS / iPhone -->
+  <link rel="apple-touch-icon" sizes="180x180" href="faviconsi.png">
+
+  <!-- Android / Chrome Web App ikonky -->
+  <link rel="icon" type="image/png" sizes="192x192" href="faviconsi.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="faviconsi.png">
+
+  <!-- Pre Google (favicon sa načíta aj zo /favicon.ico ako fallback) -->
+  <link rel="icon" href="/faviconsi.png">
 <style>
     header img#logo {
       width: 80%;
@@ -19,7 +32,8 @@
 
     @media (max-width: 600px) {
       header img#logo {
-        width: 90%;
+        width: 95%;
+        max-width: none;
       }
     }
 body { font-family:sans-serif; margin:0; padding:0; background:#fff; color:#fff; text-align:center;}
@@ -276,10 +290,10 @@ input, select, textarea {
 <textarea id="note" placeholder="Názov výdajného miesta alebo Z-Boxu"></textarea>
 
 
-    <p id="codText" style="color:red;">PLATBA IBA DOBIERKOU !</p>
+    <p id="codText" style="color:green;">PLATBA IBA DOBIERKOU !</p>
     <p id="total"></p>
 
-    <button id="payBtn">Objednať s povinostou platby !</button>
+    <button id="payBtn">Objednať</button>
   </div>
 </div>
 
@@ -336,48 +350,97 @@ document.getElementById('cartModal').addEventListener('click',e=>{if(e.target===
 document.getElementById('country').addEventListener('change',renderCart);
 
 // CAROUSEL
-const productImgs=[["poster001.jpg","0001.jpg","2006.jpg"],["hoodie1.jpg","hoodie2.jpg","hoodie3.jpg"]];
+const productImgs = [
+  ["trikomore.jpg", "poster001.jpg", "0001.jpg", "2006.jpg"], // T-shirt
+  ["0001.jpg", "2006.jpg", "poster001.jpg"]                  // Poster
+];
 let currentImgs=[0,0];
 document.querySelectorAll('.arrow.left').forEach(a=>{a.addEventListener('click',()=>{const p=parseInt(a.getAttribute('data-product'))-1;currentImgs[p]=(currentImgs[p]-1+productImgs[p].length)%productImgs[p].length;document.getElementById('productImg'+(p+1)).src=productImgs[p][currentImgs[p]];});});
 document.querySelectorAll('.arrow.right').forEach(a=>{a.addEventListener('click',()=>{const p=parseInt(a.getAttribute('data-product'))-1;currentImgs[p]=(currentImgs[p]+1)%productImgs[p].length;document.getElementById('productImg'+(p+1)).src=productImgs[p][currentImgs[p]];});});
 document.querySelectorAll('.carousel img').forEach(img=>{img.addEventListener('click',()=>{lightbox.style.display='flex';lightboxImg.src=img.src;});});
 
 // ORDER FORMSPREE
-document.getElementById('payBtn').addEventListener('click',async()=>{
-  if(cartData.length===0){alert("Košík je prázdny!");return;}
-  const name=document.getElementById('name').value.trim();
-  const email=document.getElementById('email').value.trim();
-  const phone=document.getElementById('phone').value.trim();
-  const street=document.getElementById('street').value.trim();
-  const zip=document.getElementById('zip').value.trim();
-  const country=document.getElementById('country').value;
-  const note=document.getElementById('note').value.trim();
-  const delivery=document.getElementById('delivery').value;
-  if(!name||!email||!phone||!street||!zip){alert("Vyplň všetky povinné polia!");return;}
-  const formData=new FormData();
-  formData.append("product",JSON.stringify(cartData));
-  formData.append("name",name);
-  formData.append("email",email);
-  formData.append("phone",phone);
-  formData.append("street",street);
-  formData.append("city", document.getElementById('city').value.trim());
-  formData.append("zip",zip);
-  formData.append("country",country);
-  formData.append("note",note);
-  formData.append("delivery",delivery);
-  formData.append("cod","Áno");
-  try{
-    const response=await fetch("https://formspree.io/f/xvgbylyd",{method:"POST",body:formData,headers:{'Accept':'application/json'}});
-    if(response.ok){
+document.getElementById('payBtn').addEventListener('click', async () => {
+  if (cartData.length === 0) {
+    alert("Košík je prázdny!");
+    return;
+  }
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const street = document.getElementById('street').value.trim();
+  const city = document.getElementById('city').value.trim();
+  const zip = document.getElementById('zip').value.trim();
+  const country = document.getElementById('country').value;
+  const note = document.getElementById('note').value.trim();
+  const delivery = document.getElementById('delivery').value;
+
+  // 🔴 základné overenie
+  if (!name || !email || !phone || !street || !city || !zip) {
+    alert("Vyplň všetky povinné polia!");
+    return;
+  }
+
+  // 📧 email musí mať správny tvar
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert("Zadaj správny email!");
+    return;
+  }
+
+  // 📱 telefón iba čísla, min. 9 znakov
+  const phoneRegex = /^[0-9]{9,15}$/;
+  if (!phoneRegex.test(phone)) {
+    alert("Zadaj správne telefónne číslo (len číslice, min. 9)!");
+    return;
+  }
+
+  // 📮 PSČ – 5 číslic
+  const zipRegex = /^[0-9]{5}$/;
+  if (!zipRegex.test(zip)) {
+    alert("Zadaj správne PSČ (5 číslic)!");
+    return;
+  }
+
+  // --- ak je všetko OK ---
+  const formData = new FormData();
+  formData.append("product", JSON.stringify(cartData));
+  formData.append("name", name);
+  formData.append("email", email);
+  formData.append("phone", phone);
+  formData.append("street", street);
+  formData.append("city", city);
+  formData.append("zip", zip);
+  formData.append("country", country);
+  formData.append("note", note);
+  formData.append("delivery", delivery);
+  formData.append("cod", "Áno");
+
+  try {
+    const response = await fetch("https://formspree.io/f/xvgbylyd", {
+      method: "POST",
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
       document.getElementById('orderPopup').classList.add('show');
-      setTimeout(()=>{document.getElementById('orderPopup').classList.remove('show');},3000);
-      cartData=[];
+      cartData = [];
       renderCart();
-      ['name','email','phone','street','city','zip','note'].forEach(id=>document.getElementById(id).value="");
-    } else {alert("Niečo sa pokazilo. Skúste znova.");}
-  }catch(err){alert("Chyba pri odosielaní objednávky.");}
+      ['name','email','phone','street','city','zip','note'].forEach(id => document.getElementById(id).value = "");
+    } else {
+      alert("Niečo sa pokazilo. Skúste znova.");
+    }
+  } catch (err) {
+    alert("Chyba pri odosielaní objednávky.");
+  }
 });
-document.getElementById('orderOkBtn').addEventListener('click',()=>{document.getElementById('orderPopup').classList.remove('show');});
+
+document.getElementById('orderOkBtn').addEventListener('click', () => {
+  document.getElementById('orderPopup').classList.remove('show');
+});
+
 
 // CONTACT FORMSPREE
 const contactForm=document.getElementById('contactForm');
@@ -391,7 +454,7 @@ contactForm.addEventListener('submit',async(e)=>{
       contactStatus.textContent="Your message was sent !";
       contactStatus.style.color="#0f0";
       contactForm.reset();
-      setTimeout(()=>{contactStatus.textContent="";},3000);
+      setTimeout(()=>{contactStatus.textContent="";},5000);
     } else{
       contactStatus.textContent="Chyba pri odosielaní správy. Skúste znova.";
       contactStatus.style.color="#f00";
