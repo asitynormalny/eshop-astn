@@ -515,8 +515,25 @@ document.getElementById('goToCart').addEventListener('click', () => {
   document.getElementById('addCartPopup').classList.remove('show');
 });
 
+// Dynamický footer s aktuálnym rokom (hrubšie písmo)
+function addFooter(sectionId) {
+  const section = document.getElementById(sectionId);
+  const footer = document.createElement('p');
+  const year = new Date().getFullYear();
+  footer.textContent = `© ${year} All rights reserved`;
+  footer.style.marginTop = '30px';
+  footer.style.fontSize = '14px';
+  footer.style.color = '#aaa';
+  footer.style.fontWeight = '600'; // hrubšie písmo
+  section.appendChild(footer);
+}
+
+// Pridanie footeru do oboch sekcií
+addFooter('shopSection');
+addFooter('photoSection');
 </script>
 </body>
 </html>
+
 
 
