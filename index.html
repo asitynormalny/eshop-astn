@@ -4,19 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>asitynormalny</title>
-<!-- Favicon pre prehliadače -->
-  <link rel="icon" type="image/png" sizes="128x128" href="faviconsi.png">
-  <link rel="shortcut icon" href="faviconsi.png" type="image/png">
+<!-- Favicon pre PC a väčšinu prehliadačov -->
+<link rel="icon" href="favicon3.png" type="image/png">
 
-  <!-- Apple touch ikonky pre iOS / iPadOS / iPhone -->
-  <link rel="apple-touch-icon" sizes="180x180" href="faviconsi1.png">
+<!-- Apple iOS / iPadOS / iPhone -->
+<link rel="apple-touch-icon" href="favicon3.png">
 
-  <!-- Android / Chrome Web App ikonky -->
-  <link rel="icon" type="image/png" sizes="192x192" href="faviconsi.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="faviconsi.png">
-
-  <!-- Pre Google (favicon sa načíta aj zo /favicon.ico ako fallback) -->
-  <link rel="icon" href="/faviconsi.png">
+<!-- Android / Chrome Web App -->
+<link rel="manifest" href="manifest.json">
 <style>
     header img#logo {
       width: 80%;
@@ -30,11 +25,10 @@
       pointer-events: none;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 600px) {
       header img#logo {
-        width: 105%;
+        width: 95%;
         max-width: none;
-        height: 105%;
       }
     }
 body { font-family:sans-serif; margin:0; padding:0; background:#fff; color:#fff; text-align:center;}
@@ -231,6 +225,7 @@ input, select, textarea {
   <div id="photoContainer">
     <img src="1.jpg" alt="Foto1">
     <img src="2.jpg" alt="Foto2">
+    <img src="3.jpg" alt="Foto3">
   </div>
 </div>
 
@@ -531,13 +526,7 @@ function addFooter(sectionId) {
 // Pridanie footeru do oboch sekcií
 addFooter('shopSection');
 addFooter('photoSection');
+
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
