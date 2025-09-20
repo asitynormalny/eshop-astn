@@ -338,14 +338,32 @@ shopBtn.addEventListener('click',()=>{shopSection.classList.add('active');photoS
 photoBtn.addEventListener('click',()=>{photoSection.classList.add('active');shopSection.classList.remove('active');photoBtn.classList.add('active');shopBtn.classList.remove('active');});
 
 // LIGHTBOX
-const photoImages=document.querySelectorAll('#photoContainer img');
-const lightbox=document.getElementById('lightbox');
-const lightboxImg=document.getElementById('lightboxImg');
-const closeLightbox=document.getElementById('closeLightbox');
-photoImages.forEach(img=>{img.addEventListener('click',()=>{lightbox.style.display='flex';lightboxImg.src=img.src;});});
-closeLightbox.addEventListener('click',()=>{lightbox.style.display='none';});
-lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.style.display='none';});
+const photoImages = document.querySelectorAll('#photoContainer img');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const closeLightbox = document.getElementById('closeLightbox');
 
+photoImages.forEach(img => {
+  img.addEventListener('click', (e) => {
+    e.stopPropagation(); // zabráni "bublaniu" kliknutia na lightbox
+    lightbox.style.display = 'flex';
+    lightboxImg.src = img.src;
+    disableBodyScroll(); // zakáže scroll
+  });
+});
+
+closeLightbox.addEventListener('click', (e) => {
+  e.stopPropagation(); // zabránime zatvoreniu cez bublanie
+  lightbox.style.display = 'none';
+  enableBodyScroll(); // povolí scroll
+});
+
+lightbox.addEventListener('click', e => {
+  if (e.target === lightbox) {
+    lightbox.style.display = 'none';
+    enableBodyScroll(); // povolí scroll
+  }
+});
 // CART
 let cartData=[];
 function renderCart(){
@@ -420,10 +438,10 @@ document.getElementById('payBtn').addEventListener('click', async () => {
     return;
   }
 
-    // 📱 telefón iba čísla, min. 9 znakov
-  const phoneRegex = /^(?:\+(420|421)[0-9]{9}|[0-9]{9,10})$/;
+  // 📱 telefón iba čísla, medzery sú povolené
+const phoneRegex = /^(?:\+(420|421)[\s]?[0-9]{3}[\s]?[0-9]{3}[\s]?[0-9]{3}|[0-9]{9,10})$/;
 if (!phoneRegex.test(phone)) {
-  alert("Zadaj správne telefónne číslo: buď s predvoľbou +420/+421 a 9 číslic, alebo bez predvoľby 9–10 číslic!");
+  alert("Zadaj správne telefónne číslo: buď s predvoľbou +420/+421 a 9 číslic (medzery povolené), alebo bez predvoľby 9–10 číslic!");
   return;
 }
 
