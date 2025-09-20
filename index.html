@@ -68,7 +68,24 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 label{display:block; margin-top:6px;}
 .lightbox{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000; flex-direction:column; cursor:pointer;}
 .lightbox img{max-width:90%; max-height:90%; border-radius:5px; cursor:pointer;}
-.lightbox .close-lightbox{position:absolute; top:15px; right:20px; font-size:30px; color:#fff; cursor:pointer;}
+.lightbox .close-lightbox {
+  position: fixed;
+  top: 20px;
+  right: 25px;
+  font-size: 35px;
+  color: #fff;
+  cursor: pointer;
+  z-index: 2000;
+}
+
+@media (max-width: 600px) {
+  .lightbox .close-lightbox {
+    font-size: 26px; /* menší krížik na mobile */
+    top: 15px;
+    right: 15px;
+  }
+}
+
 #addCartPopup, #orderPopup { 
     display: none; 
     position: fixed; 
@@ -205,7 +222,7 @@ input, select, textarea {
     <h2>Poster</h2>
     <div class="carousel">
       <span class="arrow left" data-product="2">&#10094;</span>
-      <img src="0001.jpg" id="productImg2" alt="Plagát">
+      <img src="1.jpg" id="productImg2" alt="Plagát">
       <span class="arrow right" data-product="2">&#10095;</span>
     </div>
     <div class="size-container">
@@ -342,9 +359,26 @@ const photoImages=document.querySelectorAll('#photoContainer img');
 const lightbox=document.getElementById('lightbox');
 const lightboxImg=document.getElementById('lightboxImg');
 const closeLightbox=document.getElementById('closeLightbox');
-photoImages.forEach(img=>{img.addEventListener('click',()=>{lightbox.style.display='flex';lightboxImg.src=img.src;});});
-closeLightbox.addEventListener('click',()=>{lightbox.style.display='none';});
-lightbox.addEventListener('click',e=>{if(e.target===lightbox)lightbox.style.display='none';});
+photoImages.forEach(img => {
+  img.addEventListener('click', () => {
+    lightbox.style.display = 'flex';
+    lightboxImg.src = img.src;
+    disableBodyScroll();   // 🚫 zakážeme scroll
+  });
+});
+
+closeLightbox.addEventListener('click', () => {
+  lightbox.style.display = 'none';
+  enableBodyScroll();      // ✅ povolíme scroll
+});
+
+lightbox.addEventListener('click', e => {
+  if (e.target === lightbox) {
+    lightbox.style.display = 'none';
+    enableBodyScroll();    // ✅ povolíme scroll
+  }
+});
+
 
 // CART
 let cartData=[];
@@ -362,6 +396,7 @@ function renderCart(){
   cartPriceElems.forEach(e=>e.textContent=subtotal.toFixed(2)+" €");
   document.querySelectorAll('.remove-item').forEach(btn=>{btn.addEventListener('click',()=>{cartData.splice(btn.getAttribute('data-index'),1);renderCart();});});
 }
+
 document.querySelectorAll('.addToCartBtn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const product=btn.getAttribute('data-product');
@@ -382,13 +417,25 @@ document.getElementById('country').addEventListener('change',renderCart);
 
 // CAROUSEL
 const productImgs = [
-  ["trikomore.jpg", "poster001.jpg", "0001.jpg", "2006.jpg"], // T-shirt
-  ["0001.jpg", "2006.jpg", "poster001.jpg"]                  // Poster
+  ["2.jpg", "1.jpg"], // T-shirt
+  ["1.jpg", "2.jpg"] // Poster
 ];
 let currentImgs=[0,0];
+window.addEventListener('load', () => {
+  currentImgs = [0, 0]; // reset indexov pri načítaní stránky
+  document.getElementById('productImg1').src = productImgs[0][0];
+  document.getElementById('productImg2').src = productImgs[1][0];
+});
 document.querySelectorAll('.arrow.left').forEach(a=>{a.addEventListener('click',()=>{const p=parseInt(a.getAttribute('data-product'))-1;currentImgs[p]=(currentImgs[p]-1+productImgs[p].length)%productImgs[p].length;document.getElementById('productImg'+(p+1)).src=productImgs[p][currentImgs[p]];});});
 document.querySelectorAll('.arrow.right').forEach(a=>{a.addEventListener('click',()=>{const p=parseInt(a.getAttribute('data-product'))-1;currentImgs[p]=(currentImgs[p]+1)%productImgs[p].length;document.getElementById('productImg'+(p+1)).src=productImgs[p][currentImgs[p]];});});
-document.querySelectorAll('.carousel img').forEach(img=>{img.addEventListener('click',()=>{lightbox.style.display='flex';lightboxImg.src=img.src;});});
+document.querySelectorAll('.carousel img').forEach(img => {
+  img.addEventListener('click', () => {
+    const p = parseInt(img.closest('.carousel').querySelector('.arrow.left').getAttribute('data-product')) - 1;
+    lightboxImg.src = productImgs[p][currentImgs[p]]; // aktuálny obrázok
+    lightbox.style.display = 'flex';
+    disableBodyScroll();
+  });
+});
 
 // ORDER FORMSPREE
 document.getElementById('payBtn').addEventListener('click', async () => {
