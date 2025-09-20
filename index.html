@@ -16,8 +16,8 @@
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta property="og:title" content="asitynormalny">
-<meta property="og:description" content="Popis tvojej stránky">
-<meta property="og:url" content="https://tvoja-stranka.sk">
+<meta property="og:description" content="asitynormalny">
+<meta property="og:url" content="https://asitynormalny.com">
 <style>
     header img#logo {
       width: 80%;
@@ -203,7 +203,7 @@ input, select, textarea {
       </select>
     </div>
     <p>Price: 12 €</p>
-    <p>Product description: Warm and cozy hoodie.</p>
+    <p>Product description: High quality print poster.</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
       <button class="addToCartBtn" data-product="Poster" data-price="12" data-size="size2" data-qty="quantity2">Add to cart</button>
       <div class="cart-container">
@@ -392,10 +392,10 @@ document.getElementById('payBtn').addEventListener('click', async () => {
   }
 
   // 📱 telefón iba čísla, min. 9 znakov
-  const phoneRegex = /^[0-9]{9,15}$/;
+  const phoneRegex = /^(?:\+(?:420|421))?[0-9]{9}$/;
   if (!phoneRegex.test(phone)) {
-    alert("Zadaj správne telefónne číslo (len číslice, min. 9)!");
-    return;
+    alert("Zadaj správne telefónne číslo: buď s predvoľbou +420/+421 alebo len 9 číslic!");
+  return;
   }
 
   // 📮 PSČ – 5 číslic
@@ -404,6 +404,12 @@ document.getElementById('payBtn').addEventListener('click', async () => {
     alert("Zadaj správne PSČ (5 číslic)!");
     return;
   }
+
+  // 📝 poznámka nesmie byť prázdna
+if (!note) {
+  alert("Vyplň názov výdajného miesta alebo Z-Boxu!");
+  return;
+}
 
   // --- ak je všetko OK ---
   const formData = new FormData();
@@ -537,10 +543,3 @@ addFooter('photoSection');
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
