@@ -103,8 +103,28 @@ label{display:block; margin-top:6px;}
     margin-top: -18px; /* zníži medzeru nad tlačidlom */
 }
 
-#photoContainer { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; padding:20px; }
-#photoContainer img { width:100%; border-radius:5px; cursor:pointer; }
+#photoContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 fotky na riadok na PC */
+  gap: 10px;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  #photoContainer {
+    grid-template-columns: repeat(2, 1fr); /* 2 fotky na riadok na mobil */
+  }
+}
+
+#photoContainer img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  cursor: pointer;
+  object-fit: cover;
+}
+
+
 #codText { font-weight:bold; font-size:16px; margin:10px 0; color:#fff; }
 @media (max-width:600px){
   header img{ width: 80%; max-width:500px; height:auto; }
@@ -230,6 +250,17 @@ input, select, textarea {
 <!-- PHOTOS SECTION -->
 <div id="photoSection" class="section active">
   <div id="photoContainer">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
   </div>
 </div>
@@ -389,12 +420,12 @@ document.getElementById('payBtn').addEventListener('click', async () => {
     return;
   }
 
-  // 📱 telefón iba čísla, min. 9 znakov
-  const phoneRegex = /^(?:\+(?:420|421))?[0-9]{9}$/;
-  if (!phoneRegex.test(phone)) {
-    alert("Zadaj správne telefónne číslo: buď s predvoľbou +420/+421 alebo len 9 číslic!");
+    // 📱 telefón iba čísla, min. 9 znakov
+  const phoneRegex = /^(?:\+(420|421)[0-9]{9}|[0-9]{9,10})$/;
+if (!phoneRegex.test(phone)) {
+  alert("Zadaj správne telefónne číslo: buď s predvoľbou +420/+421 a 9 číslic, alebo bez predvoľby 9–10 číslic!");
   return;
-  }
+}
 
   // 📮 PSČ – 5 číslic
   const zipRegex = /^[0-9]{5}$/;
@@ -421,7 +452,7 @@ if (!note) {
   formData.append("country", country);
   formData.append("note", note);
   formData.append("delivery", delivery);
-  formData.append("cod", "Áno");
+  formData.append("cod", "Dobierka");
 
   try {
     const response = await fetch("https://formspree.io/f/xvgbylyd", {
@@ -541,4 +572,3 @@ addFooter('photoSection');
 </script>
 </body>
 </html>
-
