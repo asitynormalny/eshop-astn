@@ -532,18 +532,13 @@ window.addEventListener('load', () => {
   }, 50); // 50 ms oneskorenie, pomáha na mobiloch
 });
 
+
 function disableBodyScroll() {
   document.body.style.overflow = 'hidden';
-  document.addEventListener('touchmove', preventScroll, { passive: false });
 }
 
 function enableBodyScroll() {
   document.body.style.overflow = '';
-  document.removeEventListener('touchmove', preventScroll, { passive: false });
-}
-
-function preventScroll(e) {
-  e.preventDefault();
 }
 
 const cartModal = document.getElementById('cartModal');
