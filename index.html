@@ -22,7 +22,7 @@
 <style>
     header img#logo {
       width: 80%;
-      max-width: 623px;
+      max-width: 600px;
       height: auto;
       display: block;
       margin: 0 auto;
@@ -149,6 +149,7 @@ input, select, textarea {
   pointer-events: auto;
 }
 
+
 </style>
 </head>
 <body>
@@ -229,6 +230,7 @@ input, select, textarea {
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
+
       </div>
     </div>
   </div>
@@ -445,11 +447,11 @@ if (!phoneRegex.test(phone)) {
 }
 
   // 📮 PSČ – 5 číslic
-  const zipRegex = /^[0-9]{3}\s?[0-9]{2}$/;
+  const zipRegex = /^[0-9]{5}$/;
   if (!zipRegex.test(zip)) {
-  alert("Zadaj správne PSČ (5 číslic alebo 3 číslice + medzera + 2 číslice)!");
-  return;
-}
+    alert("Zadaj správne PSČ (5 číslic)!");
+    return;
+  }
 
   // 📝 poznámka nesmie byť prázdna
 if (!note) {
@@ -532,20 +534,12 @@ window.addEventListener('load', () => {
 });
 
 
-let scrollPosition = 0;
-
 function disableBodyScroll() {
-  scrollPosition = window.scrollY;
-  document.body.style.position = 'fixed';
-  document.body.style.top = `-${scrollPosition}px`;
-  document.body.style.width = '100%'; // aby sa neposunul layout
+  document.body.style.overflow = 'hidden';
 }
 
 function enableBodyScroll() {
-  document.body.style.position = '';
-  document.body.style.top = '';
-  document.body.style.width = '';
-  window.scrollTo(0, scrollPosition); // vráti pôvodný scroll
+  document.body.style.overflow = '';
 }
 
 const cartModal = document.getElementById('cartModal');
