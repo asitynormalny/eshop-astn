@@ -105,26 +105,22 @@ label{display:block; margin-top:6px;}
 }
 
 #photoContainer {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 fotky na riadok na PC */
-  gap: 10px;
-  padding: 20px;
-}
-
-@media (max-width: 768px) {
-  #photoContainer {
-    grid-template-columns: repeat(2, 1fr); /* 2 fotky na riadok na mobil */
-  }
+  column-count: 4;       /* počet stĺpcov na PC */
+  column-gap: 10px;
 }
 
 #photoContainer img {
   width: 100%;
-  height: auto;
+  display: block;
+  margin-bottom: 10px;   /* medzera medzi obrázkami */
   border-radius: 5px;
-  cursor: pointer;
-  object-fit: cover;
 }
 
+@media (max-width: 768px) {
+  #photoContainer {
+    column-count: 2;
+  }
+}
 
 #codText { font-weight:bold; font-size:16px; margin:10px 0; color:#fff; }
 @media (max-width:600px){
@@ -206,7 +202,7 @@ input, select, textarea {
     <h2>Poster A2</h2>
     <div class="carousel">
       <span class="arrow left" data-product="2">&#10094;</span>
-      <img src="0001.jpg" id="productImg2" alt="Plagát">
+      <img src="ganjaman.jpg" id="productImg2" alt="Plagát">
       <span class="arrow right" data-product="2">&#10095;</span>
     </div>
     <div class="size-container">
@@ -253,15 +249,29 @@ input, select, textarea {
   <div id="photoContainer">
     <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
-    <img src="1987.jpg" alt="Foto1">
+    <img src="ganjaman.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
-    <img src="1987.jpg" alt="Foto1">
+    <img src="ganjaman.jpg" alt="Foto1">
+    <img src="ganjaman.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="ganjaman.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
-    <img src="1987.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="ganjaman.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="ganjaman.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
+    <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
   </div>
 </div>
@@ -402,7 +412,7 @@ document.getElementById('country').addEventListener('change',renderCart);
 // CAROUSEL
 const productImgs = [
   ["trikomore.jpg", "poster001.jpg", "0001.jpg", "2006.jpg"], // T-shirt
-  ["0001.jpg", "2006.jpg", "poster001.jpg"]                  // Poster
+  ["0001.jpg", "2006.jpg", "ganjaman.jpg"]                  // Poster
 ];
 let currentImgs=[0,0];
 document.querySelectorAll('.arrow.left').forEach(a=>{a.addEventListener('click',()=>{const p=parseInt(a.getAttribute('data-product'))-1;currentImgs[p]=(currentImgs[p]-1+productImgs[p].length)%productImgs[p].length;document.getElementById('productImg'+(p+1)).src=productImgs[p][currentImgs[p]];});});
@@ -592,5 +602,3 @@ addFooter('photoSection');
 </script>
 </body>
 </html>
-
-
