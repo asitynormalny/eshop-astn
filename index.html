@@ -168,7 +168,7 @@ input, select, textarea {
 <div id="shopSection" class="section">
   <!-- Produkt 1 -->
   <div class="product">
-    <h2>T-shirt</h2>
+    <h2>Rolling papers</h2>
     <div class="carousel">
       <span class="arrow left" data-product="1">&#10094;</span>
       <img src="trikomore.jpg" id="productImg1" alt="Tričko">
@@ -191,9 +191,9 @@ input, select, textarea {
       </select>
     </div>
     <p>Price: 23 €</p>
-    <p>Product description: 100% cotton.</p>
+    <p><strong>55pc hemp rolling paper and natural filters, eco friendly print</strong></p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="T-shirt" data-price="23" data-size="size1" data-qty="quantity1">Add to cart</button>
+      <button class="addToCartBtn" data-product="Rolling papers" data-price="23" data-size="size1" data-qty="quantity1">Add to cart</button>
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
@@ -203,7 +203,7 @@ input, select, textarea {
 
   <!-- Produkt 2 -->
   <div class="product">
-    <h2>Poster</h2>
+    <h2>Poster A2</h2>
     <div class="carousel">
       <span class="arrow left" data-product="2">&#10094;</span>
       <img src="0001.jpg" id="productImg2" alt="Plagát">
@@ -223,10 +223,10 @@ input, select, textarea {
         <option value="3">3</option>
       </select>
     </div>
-    <p>Price: 12 €</p>
-    <p>Product description: High quality print poster.</p>
+    <p>Price: 8 €</p>
+    <p><strong>High-quality digital print on 225 g/m² matte paper.</strong></p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Poster" data-price="12" data-size="size2" data-qty="quantity2">Add to cart</button>
+      <button class="addToCartBtn" data-product="Poster" data-price="8" data-size="size2" data-qty="quantity2">Add to cart</button>
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
@@ -322,7 +322,7 @@ input, select, textarea {
 <textarea id="note" placeholder="Názov výdajného miesta alebo Z-Boxu"></textarea>
 
 
-    <p id="codText" style="color:green;">PLATBA IBA DOBIERKOU !</p>
+    <p id="codText" style="color:green;">PLATBA IBA DOBIERKOU</p>
     <p id="total"></p>
 
     <button id="payBtn">Objednať</button>
@@ -446,12 +446,13 @@ if (!phoneRegex.test(phone)) {
   return;
 }
 
-  // 📮 PSČ – 5 číslic
-  const zipRegex = /^[0-9]{5}$/;
-  if (!zipRegex.test(zip)) {
-    alert("Zadaj správne PSČ (5 číslic)!");
-    return;
-  }
+  // 📮 PSČ – 5 číslic alebo 3 číslice + medzera + 2 číslice
+const zipRegex = /^(\d{5}|\d{3}\s\d{2})$/;
+
+if (!zipRegex.test(zip)) {
+  alert("Zadaj správne PSČ (5 číslic alebo 3 číslice + medzera + 2 číslice)!");
+  return;
+}
 
   // 📝 poznámka nesmie byť prázdna
 if (!note) {
