@@ -49,14 +49,6 @@
   box-sizing: border-box;
 }
 
-#photoSection {
-  background: url('background.jpg') no-repeat center center fixed;
-  background-size: cover;
-  min-height: 100vh;
-  padding: 5px 6px;
-  box-sizing: border-box;
-}
-
     @media (max-width: 900px) {
       header img#logo {
         width: 110%;
@@ -196,10 +188,10 @@ input, select, textarea {
 <div id="shopSection" class="section">
   <!-- Produkt 1 -->
   <div class="product">
-    <h2>Rolling papers</h2>
+    <h2>Blaze Kit</h2>
     <div class="carousel">
       <span class="arrow left" data-product="1">&#10094;</span>
-      <img src="60.jpg" id="productImg1" alt="Tričko">
+      <img src="23.jpg" id="productImg1" alt="Tričko">
       <span class="arrow right" data-product="1">&#10095;</span>
     </div>
     <div class="size-container">
@@ -219,9 +211,9 @@ input, select, textarea {
       </select>
     </div>
     <p>Price: 23 €</p>
-    <p><strong>55pc hemp rolling paper and natural filters, eco friendly print</strong></p>
+    <p><strong>Blaze Naturally</strong></p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Rolling papers" data-price="23" data-size="size1" data-qty="quantity1">Add to cart</button>
+      <button class="addToCartBtn" data-product="Blaze Kit" data-price="23" data-size="size1" data-qty="quantity1">Add to cart</button>
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
@@ -234,7 +226,7 @@ input, select, textarea {
     <h2>Poster A2</h2>
     <div class="carousel">
       <span class="arrow left" data-product="2">&#10094;</span>
-      <img src="60.jpg" id="productImg2" alt="Plagát">
+      <img src="23.jpg" id="productImg2" alt="Plagát">
       <span class="arrow right" data-product="2">&#10095;</span>
     </div>
     <div class="size-container">
@@ -280,9 +272,9 @@ input, select, textarea {
 <div id="photoSection" class="section active">
   <div id="photoContainer">
     <img src="8.jpg" alt="Foto1">
-    <img src="9.jpg" alt="Foto1">
-    <img src="10.jpg" alt="Foto1">
-    <img src="1.jpg" alt="Foto1">
+    <img src="8.jpg" alt="Foto1">
+    <img src="8.jpg" alt="Foto1">
+    <img src="8.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
     <img src="2.jpg" alt="Foto1">
@@ -429,8 +421,8 @@ document.getElementById('country').addEventListener('change',renderCart);
 
 // CAROUSEL
 const productImgs = [
-  ["60.jpg", "9.jpg", "10.jpg"], // T-shirt
-  ["60.jpg", "9.jpg", "10.jpg"]                  // Poster
+  ["23.jpg", "9.jpg", "10.jpg"], // T-shirt
+  ["23.jpg", "9.jpg", "10.jpg"]                  // Poster
 ];
 let currentImgs=[0,0];
 document.querySelectorAll('.arrow.left').forEach(a=>{a.addEventListener('click',()=>{const p=parseInt(a.getAttribute('data-product'))-1;currentImgs[p]=(currentImgs[p]-1+productImgs[p].length)%productImgs[p].length;document.getElementById('productImg'+(p+1)).src=productImgs[p][currentImgs[p]];});});
@@ -611,7 +603,7 @@ function addFooter(sectionId) {
   if(sectionId === 'shopSection') {
     footer.style.color = '#FF0000'; //
 } else {
-    footer.style.color = '#FF0000'; // pre Photos sekciu
+    footer.style.color = '#aaa'; // pre Photos sekciu
 }
   footer.style.fontWeight = '700'; // hrubšie písmo
   section.appendChild(footer);
