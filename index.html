@@ -20,6 +20,7 @@
 <meta property="og:url" content="https://asitynormalny.com">
 <meta name="robots" content="noimageindex">
 <style>
+
     header img#logo {
       width: 80%;
       max-width: 600px;
@@ -31,6 +32,14 @@
       user-select: none;
       pointer-events: none;
     }
+
+#shopSection {
+  background: url('pozadie shop.jpg') no-repeat center center fixed ; /* obrázok, centrovaný a fixný */
+  background-size: cover; /* automatické prispôsobenie obrazovke */
+  min-height: 100vh; /* aspoň výška celej obrazovky */
+  padding: 5px 5px; /* medzery okolo produktov */
+  box-sizing: border-box; /* zahrnie padding do výšky/šírky */
+}
 
     @media (max-width: 900px) {
       header img#logo {
@@ -110,6 +119,7 @@ label{display:block; margin-top:6px;}
   gap: 10px;
   padding: 20px;
 }
+
 
 @media (max-width: 768px) {
   #photoContainer {
@@ -580,15 +590,18 @@ function addFooter(sectionId) {
   footer.textContent = `© ${year} All rights reserved`;
   footer.style.marginTop = '30px';
   footer.style.fontSize = '14px';
-  footer.style.color = '#aaa';
-  footer.style.fontWeight = '600'; // hrubšie písmo
+  if(sectionId === 'shopSection') {
+    footer.style.color = '#FF0000'; //
+} else {
+    footer.style.color = '#aaa'; // pre Photos sekciu
+}
+  footer.style.fontWeight = '700'; // hrubšie písmo
   section.appendChild(footer);
 }
 
 // Pridanie footeru do oboch sekcií
 addFooter('shopSection');
 addFooter('photoSection');
-
 </script>
 </body>
 </html>
