@@ -37,15 +37,15 @@
   background: url('pozadie shop.jpg') no-repeat center center fixed ; /* obrázok, centrovaný a fixný */
   background-size: cover; /* automatické prispôsobenie obrazovke */
   min-height: 100vh; /* aspoň výška celej obrazovky */
-  padding: 5px 5px; /* medzery okolo produktov */
+  padding: 5px 6px; /* medzery okolo produktov */
   box-sizing: border-box; /* zahrnie padding do výšky/šírky */
 }
 
     @media (max-width: 900px) {
       header img#logo {
-        width: 105%;
+        width: 110%;
         max-width: none;
-        height: 105%;
+        height: 110%;
       }
     }
 body { font-family:sans-serif; margin:0; padding:0; background:#fff; color:#fff; text-align:center;}
@@ -116,21 +116,23 @@ label{display:block; margin-top:6px;}
 #photoContainer {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 fotky na riadok na PC */
-  gap: 10px;
-  padding: 20px;
+  gap: 5px;
+  padding: 8px;
 }
 
 
 @media (max-width: 768px) {
   #photoContainer {
     grid-template-columns: repeat(2, 1fr); /* 2 fotky na riadok na mobil */
+    gap: 5px;
+    padding: 8px;
   }
 }
 
 #photoContainer img {
   width: 100%;
   height: auto;
-  border-radius: 5px;
+  border-radius: 0px;
   cursor: pointer;
   object-fit: cover;
 }
@@ -262,8 +264,8 @@ input, select, textarea {
 <div id="photoSection" class="section active">
   <div id="photoContainer">
     <img src="1.jpg" alt="Foto1">
-    <img src="1.jpg" alt="Foto1">
-    <img src="1987.jpg" alt="Foto1">
+    <img src="2006.jpg" alt="Foto1">
+    <img src="2.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
     <img src="1.jpg" alt="Foto1">
@@ -602,6 +604,7 @@ function addFooter(sectionId) {
 // Pridanie footeru do oboch sekcií
 addFooter('shopSection');
 addFooter('photoSection');
+
 </script>
 </body>
 </html>
