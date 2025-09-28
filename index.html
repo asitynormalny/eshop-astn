@@ -62,8 +62,18 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 .navbar { display:flex; justify-content:center; gap:20px; margin:15px 0; }
 .navbar button { padding:10px 20px; font-size:16px; cursor:pointer; background:#222; color:#fff; border:none; border-radius:5px; }
 .navbar button.active { background:#6772e5; }
-.section { display:none; }
-.section.active { display:block; }
+.section {
+  display: none;
+  opacity: 0;
+  transform: translateX(50px); /* posun doprava */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.section.active {
+  display: block;
+  opacity: 1;
+  transform: translateX(0);
+}
 .product{margin:25px auto 30px auto; background:#111; padding:20px; max-width:400px; box-shadow:0 2px 5px rgba(255,255,255,0.2); border-radius:10px;}
 .carousel{position:relative; margin-bottom:15px; display:flex; justify-content:center; align-items:center;}
 .carousel img{max-width:100%; display:block; border-radius:5px; cursor:pointer;}
@@ -175,7 +185,7 @@ input, select, textarea {
 <body>
 
 <header>
-  <img id="logo" src="DWDasitynormalny.jpg" alt="Logo">
+  <img id="logo" src="Logo.jpg" alt="Logo">
 </header>
 
 
@@ -355,8 +365,28 @@ const shopBtn=document.getElementById('shopBtn');
 const photoBtn=document.getElementById('photoBtn');
 const shopSection=document.getElementById('shopSection');
 const photoSection=document.getElementById('photoSection');
-shopBtn.addEventListener('click',()=>{shopSection.classList.add('active');photoSection.classList.remove('active');shopBtn.classList.add('active');photoBtn.classList.remove('active');});
-photoBtn.addEventListener('click',()=>{photoSection.classList.add('active');shopSection.classList.remove('active');photoBtn.classList.add('active');shopBtn.classList.remove('active');});
+function showSection(sectionToShow, sectionToHide, btnToActivate, btnToDeactivate) {
+  sectionToHide.style.opacity = '0';
+  setTimeout(() => {
+    sectionToHide.classList.remove('active');
+    sectionToHide.style.display = 'none';  // ⬅ skrytie sekcie
+    sectionToShow.style.display = 'block'; // ⬅ zobrazenie novej sekcie
+    sectionToShow.classList.add('active');
+    sectionToShow.style.opacity = '0';
+    requestAnimationFrame(() => { 
+      sectionToShow.style.opacity = '1';
+    });
+  }, 200);
+  btnToActivate.classList.add('active');
+  btnToDeactivate.classList.remove('active');
+}
+shopBtn.addEventListener('click', () => {
+  showSection(shopSection, photoSection, shopBtn, photoBtn);
+});
+
+photoBtn.addEventListener('click', () => {
+  showSection(photoSection, shopSection, photoBtn, shopBtn);
+});
 
 // LIGHTBOX
 const photoImages = document.querySelectorAll('#photoContainer img');
