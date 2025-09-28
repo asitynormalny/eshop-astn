@@ -386,12 +386,21 @@ const closeLightbox = document.getElementById('closeLightbox');
 lightboxImg.addEventListener('contextmenu', e => e.preventDefault());
 lightboxImg.addEventListener('dragstart', e => e.preventDefault());
 
-// Zablokuje "long press" menu na iOS/Android **iba na obrázku**
+// Zablokuje "long press" menu na iOS/Android **iba na lightbox obrázku**
 lightboxImg.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
 lightboxImg.addEventListener('touchend', e => e.preventDefault(), { passive: false });
 
+// obrázky v shope a photos – **len otvorenie lightboxu**
 const productImages = document.querySelectorAll('.carousel img');
 const photoImages = document.querySelectorAll('#photoContainer img');
+
+productImages.forEach(img => {
+  img.addEventListener('click', () => openLightbox(img.src));
+});
+
+photoImages.forEach(img => {
+  img.addEventListener('click', () => openLightbox(img.src));
+});
 
 const cartModal = document.getElementById('cartModal');
 const closeCart = document.getElementById('closeCart');
