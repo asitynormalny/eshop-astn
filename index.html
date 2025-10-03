@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>asitynormalny</title>
 <!-- Favicon PNG -->
 <link rel="icon" type="image/png" href="faviconsi.png?v=2">
@@ -91,20 +91,12 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 .cart input, .cart select, .cart textarea{width:90%; padding:8px; margin:5px 0; font-size:14px; border-radius:4px; border:none;}
 .cart textarea{resize:vertical; min-height:50px;}
 .cart button{padding:10px 16px; font-size:15px; cursor:pointer; background:#6772e5; color:#fff; border:none; border-radius:5px; margin-top:10px;}
-.close-btn{position:absolute; top:10px; right:15px; font-size:20px; color:#fff; cursor:pointer;}
+.close-btn{position:absolute; top:10px; right:15px; font-size:35px; color:#fff; cursor:pointer;}
 .remove-item{cursor:pointer; color:red; margin-left:8px; font-weight:bold;}
 label{display:block; margin-top:6px;}
 .lightbox{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; z-index:1000; flex-direction:column; cursor:pointer;}
 .lightbox img{max-width:90%; max-height:90%; border-radius:5px; cursor:pointer;}
-.lightbox .close-lightbox {
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 15px);
-  right: calc(env(safe-area-inset-right, 0px) + 20px);
-  font-size: 30px;
-  color: #fff;
-  cursor: pointer;
-  z-index: 1100;
-}
+.lightbox .close-lightbox{position:fixed; top:15px; right:20px; font-size:35px; color:#fff; cursor:pointer; z-index: 1100;}
 #addCartPopup, #orderPopup { 
     display: none; 
     position: fixed; 
@@ -227,14 +219,6 @@ input, select, textarea {
       <img src="23.jpg" id="productImg1" alt="Tričko">
       <span class="arrow right" data-product="1">&#10095;</span>
     </div>
-    <div class="size-container">
-      <label for="size1">Size:</label>
-      <select id="size1">
-        <option value="M" selected>M</option>
-        <option value="L">L</option>
-        <option value="XL">XL</option>
-      </select>
-    </div>
     <div class="qty-container">
       <label for="quantity1">Quantity:</label>
       <select id="quantity1">
@@ -246,7 +230,7 @@ input, select, textarea {
     <p>Price: 23 €</p>
     <p><strong>Blaze Naturally</strong></p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Blaze Kit" data-price="23" data-size="size1" data-qty="quantity1">Add to cart</button>
+      <button class="addToCartBtn" data-product="Blaze Kit" data-price="23" data-size="" data-qty="quantity1">Add to cart</button>
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
@@ -511,8 +495,10 @@ function renderCart(){
   }
 
   cartItems.innerHTML = cartData.map((i,index) =>
-    `<p>${i.product} (${i.size}) x${i.qty} - ${(i.price*i.qty).toFixed(2)} € <span class="remove-item" data-index="${index}">❌</span></p>`
+  `<p>${i.product}${i.size ? ' (' + i.size + ')' : ''} x${i.qty} - ${(i.price*i.qty).toFixed(2)} € 
+   <span class="remove-item" data-index="${index}">❌</span></p>`
   ).join('');
+
 
   const subtotal = cartData.reduce((sum,i) => sum + i.price*i.qty, 0);
   const totalPrice = (subtotal + shipping + cod).toFixed(2);
@@ -532,7 +518,8 @@ document.querySelectorAll('.addToCartBtn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     const product = btn.getAttribute('data-product');
     const price = parseFloat(btn.getAttribute('data-price'));
-    const size = document.getElementById(btn.getAttribute('data-size')).value;
+    const sizeId = btn.getAttribute('data-size');
+    const size = sizeId ? document.getElementById(sizeId).value : "";
     const qty = parseInt(document.getElementById(btn.getAttribute('data-qty')).value) || 1;
     cartData.push({product, size, price, qty});
     renderCart();
