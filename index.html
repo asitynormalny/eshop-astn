@@ -385,25 +385,38 @@ const lightbox = document.getElementById('lightbox');
 const lightboxImg = document.getElementById('lightboxImg');
 const closeLightbox = document.getElementById('closeLightbox');
 
-// zakázanie pravého kliknutia a drag na lightbox obrázku
-lightboxImg.addEventListener('contextmenu', e => e.preventDefault());
-lightboxImg.addEventListener('dragstart', e => e.preventDefault());
+// Vyber všetky obrázky, ktoré chceme chrániť
+const protectedImages = document.querySelectorAll('#photoContainer img, .carousel img, #lightbox img');
 
-// Zablokuje "long press" menu na iOS/Android **iba na lightbox obrázku**
-lightboxImg.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
-lightboxImg.addEventListener('touchend', e => e.preventDefault(), { passive: false });
+protectedImages.forEach(img => {
+  // zakáže pravé kliknutie
+  img.addEventListener('contextmenu', e => e.preventDefault());
 
-// obrázky v shope a photos – **len otvorenie lightboxu**
+  // zakáže drag & drop
+  img.addEventListener('dragstart', e => e.preventDefault());
+
+  // zakáže long press na mobiloch bez ovplyvnenia kliknutia
+  img.addEventListener('touchstart', e => {
+    img.dataset.touchStart = Date.now();
+  }, { passive: true });
+
+  img.addEventListener('touchend', e => {
+    const duration = Date.now() - img.dataset.touchStart;
+    if (duration > 500) { // dlhé podržanie
+      e.preventDefault(); // zablokuje menu "Save image"
+    }
+    // krátke tapy stále spustia click
+  }, { passive: false });
+});
+
+// Kliknutie na obrázok (Photos + Shop) ostáva rovnaké
 const productImages = document.querySelectorAll('.carousel img');
 const photoImages = document.querySelectorAll('#photoContainer img');
 
-productImages.forEach(img => {
+[...productImages, ...photoImages].forEach(img => {
   img.addEventListener('click', () => openLightbox(img.src));
 });
 
-photoImages.forEach(img => {
-  img.addEventListener('click', () => openLightbox(img.src));
-});
 
 const cartModal = document.getElementById('cartModal');
 const closeCart = document.getElementById('closeCart');
