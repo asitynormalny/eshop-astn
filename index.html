@@ -170,13 +170,16 @@ input, select, textarea {
 }
 
 
-#photoContainer img {
-  user-select: none;         /* zabráni výberu textu/obrázkov */
-  -webkit-user-drag: none;   /* zabráni drag & drop v Safari/Chrome */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* IE/Edge */
-  -webkit-touch-callout: none; /* zakáže "Save Image" na iOS */
-  pointer-events: auto;
+/* Zákaz stiahnutia všetkých obrázkov */
+#photoContainer img,
+.carousel img,
+#lightbox img {
+    user-select: none;           /* zakáže výber textu/obrázkov */
+    -webkit-user-drag: none;     /* zakáže drag & drop v Safari/Chrome */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE/Edge */
+    -webkit-touch-callout: none; /* zakáže "Save Image" na iOS */
+    pointer-events: auto;        /* obrázky stále reagujú na klik */
 }
 
 /* Lightbox animácia */
