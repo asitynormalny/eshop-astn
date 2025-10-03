@@ -194,6 +194,44 @@ input, select, textarea {
   transform: scale(1); /* dorastie na 100% */
 }
 
+.cart-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none; /* zablokuje klikanie keď je skrytý */
+  background: rgba(0,0,0,0.7);
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+.cart-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cart {
+  background: #111;
+  padding: 15px 20px;
+  max-width: 350px;
+  width: 80%;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(255,255,255,0.3);
+  text-align: center;
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.cart-modal.show .cart {
+  transform: scale(1);
+  opacity: 1;
+}
 
 </style>
 </head>
@@ -324,21 +362,21 @@ input, select, textarea {
 <div class="cart-modal" id="cartModal">
   <div class="cart">
     <span class="close-btn" id="closeCart">&times;</span>
-    <h3>Košík</h3>
+    <h3>Cart</h3>
     <div id="cartItems"></div>
-    <input type="text" id="name" placeholder="Meno a priezvisko">
+    <input type="text" id="name" placeholder="Full name">
     <input type="email" id="email" placeholder="Email">
-    <input type="tel" id="phone" placeholder="Telefon">
-    <input type="text" id="street" placeholder="Ulica a popisné číslo">
-    <input type="text" id="city" placeholder="Mesto">
-    <input type="text" id="zip" placeholder="PSČ">
-    <label for="country">Krajina doručenia:</label>
+    <input type="tel" id="phone" placeholder="Phone">
+    <input type="text" id="street" placeholder="Street address">
+    <input type="text" id="city" placeholder="City">
+    <input type="text" id="zip" placeholder="ZIP code">
+    <label for="country">Shipping country:</label>
     <select id="country">
       <option value="Slovensko" selected>Slovensko</option>
       <option value="Česká republika">Česká republika</option>
     </select>
     <label for="delivery">
-  <label for="delivery">PACKETA - spôsob doručenia:</label>
+  <label for="delivery">PACKETA - delivery method:</label>
 </label>
 
     <select id="delivery">
@@ -359,10 +397,10 @@ input, select, textarea {
 <textarea id="note" placeholder="Názov výdajného miesta alebo Z-Boxu"></textarea>
 
 
-    <p id="codText" style="color:green;">PLATBA IBA DOBIERKOU</p>
+    <p id="codText" style="color:green;">CASH ON DELIVERY</p>
     <p id="total"></p>
 
-    <button id="payBtn">Objednať</button>
+    <button id="payBtn">Order Now</button>
   </div>
 </div>
 
@@ -438,12 +476,17 @@ photoBtn.addEventListener('click', () => {
 
 /* ====== LIGHTBOX (univerzálne pre shop + photos) ====== */
 function openLightbox(src) {
-  lightbox.style.display = 'flex';
   lightboxImg.src = src;
-  // pridať triedu pre animáciu na ďalší frame
-  requestAnimationFrame(() => lightbox.classList.add('show'));
-  disableBodyScroll();
+  lightbox.classList.remove('show'); // reset animácie
+  lightbox.style.display = 'flex';   // zobrazíme hneď
+  lightboxImg.onload = () => {
+    requestAnimationFrame(() => {
+      lightbox.classList.add('show'); // spustíme fade/scale
+      disableBodyScroll();
+    });
+  };
 }
+
 
 function closeLightboxFn() {
   lightbox.classList.remove('show');
@@ -488,7 +531,7 @@ function renderCart(){
   const cartPriceElems = document.querySelectorAll('.cart-price');
 
   if(cartData.length === 0){
-    cartItems.innerHTML = "<em>Košík je prázdny</em>";
+    cartItems.innerHTML = "<em>Your cart is empty</em>";
     total.innerHTML = "";
     cartPriceElems.forEach(e => e.textContent = "0 €");
     return;
@@ -514,40 +557,47 @@ function renderCart(){
 }
 
 /* add to cart buttons */
-document.querySelectorAll('.addToCartBtn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
+/* add to cart buttons */
+document.querySelectorAll('.addToCartBtn').forEach(btn => {
+  btn.addEventListener('click', () => {
     const product = btn.getAttribute('data-product');
     const price = parseFloat(btn.getAttribute('data-price'));
     const sizeId = btn.getAttribute('data-size');
     const size = sizeId ? document.getElementById(sizeId).value : "";
     const qty = parseInt(document.getElementById(btn.getAttribute('data-qty')).value) || 1;
-    cartData.push({product, size, price, qty});
+    cartData.push({ product, size, price, qty });
     renderCart();
     document.getElementById('addCartPopup').classList.add('show');
   });
 });
-document.getElementById('continueShopping').addEventListener('click', ()=> {
+
+document.getElementById('continueShopping').addEventListener('click', () => {
   document.getElementById('addCartPopup').classList.remove('show');
 });
-document.getElementById('goToCart').addEventListener('click', ()=> {
+
+// Otvorenie košíka animovane
+function openCart() {
   renderCart();
-  cartModal.style.display = 'flex';
+  cartModal.classList.add('show'); // <-- tu pridáme triedu show
   disableBodyScroll();
-  document.getElementById('addCartPopup').classList.remove('show');
+}
+
+// Zatvorenie košíka animovane
+function closeCartFn() {
+  cartModal.classList.remove('show'); // <-- tu odstránime triedu show
+  setTimeout(enableBodyScroll, 300); // počkáme na animáciu
+}
+
+document.getElementById('goToCart').addEventListener('click', () => {
+  document.getElementById('addCartPopup').classList.remove('show'); // skryje popup
+  openCart(); // otvorí košík animovane
 });
-document.querySelectorAll('.cart-icon').forEach(c=>{
-  c.addEventListener('click', ()=> {
-    renderCart();
-    disableBodyScroll();
-    cartModal.style.display = 'flex';
-  });
-});
-document.getElementById('closeCart').addEventListener('click', ()=> {
-  cartModal.style.display = 'none';
-});
+document.querySelectorAll('.cart-icon').forEach(c => c.addEventListener('click', openCart));
+document.getElementById('closeCart').addEventListener('click', closeCartFn);
 document.getElementById('cartModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('cartModal')) document.getElementById('cartModal').style.display = 'none';
+  if (e.target === cartModal) closeCartFn();
 });
+
 document.getElementById('country').addEventListener('change', renderCart);
 
 /* ====== CAROUSEL (unchanged) ====== */
@@ -678,20 +728,26 @@ function disableBodyScroll() { document.body.style.overflow = 'hidden'; }
 function enableBodyScroll() { document.body.style.overflow = ''; }
 
 /* ====== CART MODAL BEHAVIOUR ====== */
-if (cartModal) {
-  cartModal.addEventListener('click', e => {
-    if (e.target === cartModal) {
-      cartModal.style.display = 'none';
-      enableBodyScroll();
-    }
-  });
+function openCart() {
+  renderCart();
+  cartModal.classList.add('show');
+  disableBodyScroll();
 }
-if (closeCart) {
-  closeCart.addEventListener('click', () => {
-    cartModal.style.display = 'none';
-    enableBodyScroll();
-  });
+
+function closeCartFn() {
+  cartModal.classList.remove('show');
+  setTimeout(enableBodyScroll, 300); // počkáme na animáciu
 }
+
+document.querySelectorAll('.cart-icon').forEach(c => {
+  c.addEventListener('click', openCart);
+});
+
+closeCart.addEventListener('click', closeCartFn);
+
+cartModal.addEventListener('click', e => {
+  if (e.target === cartModal) closeCartFn();
+});
 
 /* ====== DYNAMIC FOOTERS ====== */
 function addFooter(sectionId) {
