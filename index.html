@@ -170,17 +170,13 @@ input, select, textarea {
 }
 
 
-/* Zakázať ukladanie na všetkých obrázkoch */
-#photoContainer img,
-.lightbox img,
-.carousel img,
-header img#logo {
-  user-select: none;
-  -webkit-user-drag: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-touch-callout: none; /* blokuje "Save Image" na iOS */
-  pointer-events: auto; /* musí zostať, inak nefunguje klik */
+#photoContainer img {
+  user-select: none;         /* zabráni výberu textu/obrázkov */
+  -webkit-user-drag: none;   /* zabráni drag & drop v Safari/Chrome */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge */
+  -webkit-touch-callout: none; /* zakáže "Save Image" na iOS */
+  pointer-events: auto;
 }
 
 /* Lightbox animácia */
@@ -653,16 +649,10 @@ if (contactForm) {
   });
 }
 
-/* Zakázať uloženie obrázkov všade */
-document.querySelectorAll("img").forEach(img => {
-  img.addEventListener("contextmenu", e => e.preventDefault()); // pravý klik
-  img.addEventListener("dragstart", e => e.preventDefault());   // drag & drop
-  img.addEventListener("touchstart", e => {
-    // blokni iba "long press" menu, ale nechaj krátky tap
-    if (e.touches.length === 1) {
-      // nič nerobíme, tap prejde ďalej
-    }
-  }, { passive: true });
+/* ====== PREVENT RIGHT CLICK / DRAG ON PHOTOS ====== */
+[...photoImages, ...productImages].forEach(img => {
+  img.addEventListener('contextmenu', e => e.preventDefault());
+  img.addEventListener('dragstart', e => e.preventDefault());
 });
 
 /* ====== SCROLL TO TOP ON LOAD ====== */
