@@ -210,8 +210,10 @@ input, select, textarea {
 }
 
 .cart-modal.show {
-  opacity: 1;
-  pointer-events: auto;
+    opacity: 1;
+    pointer-events: auto;
+    overflow: hidden;
+    -webkit-overflow-scrolling: auto; /* opravuje "momentum scroll" na iOS */
 }
 
 .cart {
@@ -732,8 +734,23 @@ window.addEventListener('load', () => {
 });
 
 /* ====== BODY SCROLL LOCK ====== */
-function disableBodyScroll() { document.body.style.overflow = 'hidden'; }
-function enableBodyScroll() { document.body.style.overflow = ''; }
+let scrollPosition = 0;
+
+function disableBodyScroll() {
+    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPosition}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+}
+
+function enableBodyScroll() {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    window.scrollTo(0, scrollPosition);
+}
 
 /* ====== CART MODAL BEHAVIOUR ====== */
 function openCart() {
