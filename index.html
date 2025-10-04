@@ -650,7 +650,10 @@ document.getElementById('payBtn').addEventListener('click', async () => {
   if (!note) { alert("Vyplň názov výdajného miesta alebo Z-Boxu!"); return; }
 
   const formData = new FormData();
-  formData.append("product", JSON.stringify(cartData));
+  const productText = cartData.map(item => 
+  `product: ${item.product}${item.size ? ', size: ' + item.size : ''}, price: ${item.price}, qty: ${item.qty}`
+  ).join("; "); // oddeľuje viaceré produkty bodkočiarkou
+  formData.append("product", productText);
   formData.append("name", name);
   formData.append("email", email);
   formData.append("phone", phone);
