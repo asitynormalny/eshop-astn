@@ -102,17 +102,18 @@ label{display:block; margin-top:6px;}
     position: fixed; 
     top: 50%; 
     left: 50%; 
-    transform: translate(-50%, -50%); /* <-- vycentrované vertikálne aj horizontálne */
+    transform: translate(-50%, -50%);
     background: #222; 
     color: #fff; 
     padding: 25px 30px; 
     border-radius: 10px; 
     box-shadow: 0 2px 15px rgba(0,0,0,0.5); 
-    z-index: 1001; 
+    z-index: 2000; 
     text-align: center; 
     opacity: 0; 
     transition: opacity 0.3s ease, transform 0.3s ease; 
-    max-width: 95%; 
+    max-width: 95%;
+    pointer-events: auto; 
 }
 #addCartPopup.show, #orderPopup.show { 
     display: block; 
@@ -397,7 +398,7 @@ input, select, textarea {
 <textarea id="note" placeholder="Názov výdajného miesta alebo Z-Boxu"></textarea>
 
 
-    <p id="codText" style="color:green;">CASH ON DELIVERY</p>
+    <p id="codText" style="green;">CASH ON DELIVERY ONLY</p>
     <p id="total"></p>
 
     <button id="payBtn">Order Now</button>
@@ -545,7 +546,7 @@ function renderCart(){
 
   const subtotal = cartData.reduce((sum,i) => sum + i.price*i.qty, 0);
   const totalPrice = (subtotal + shipping + cod).toFixed(2);
-  total.innerHTML = `Medzisúčet: ${subtotal.toFixed(2)} €<br>Poštovné: ${shipping.toFixed(2)} €<br>Dobierka: ${cod.toFixed(2)} €<br><strong>Celkom: ${totalPrice} €</strong>`;
+  total.innerHTML = `Subtotal: ${subtotal.toFixed(2)} €<br>Shipping: ${shipping.toFixed(2)} €<br>COD fee: ${cod.toFixed(2)} €<br><strong>Total: ${totalPrice} €</strong>`;
   cartPriceElems.forEach(e => e.textContent = subtotal.toFixed(2) + " €");
 
   document.querySelectorAll('.remove-item').forEach(btn => {
@@ -567,13 +568,20 @@ document.querySelectorAll('.addToCartBtn').forEach(btn => {
     const qty = parseInt(document.getElementById(btn.getAttribute('data-qty')).value) || 1;
     cartData.push({ product, size, price, qty });
     renderCart();
-    document.getElementById('addCartPopup').classList.add('show');
+
+    const popup = document.getElementById('addCartPopup');
+    popup.classList.add('show');
+    disableBodyScroll(); 
   });
 });
 
-document.getElementById('continueShopping').addEventListener('click', () => {
+
+document.getElementById('goToCart').addEventListener('click', () => {
   document.getElementById('addCartPopup').classList.remove('show');
+  enableBodyScroll(); 
+  openCart();
 });
+
 
 // Otvorenie košíka animovane
 function openCart() {
@@ -764,6 +772,14 @@ function addFooter(sectionId) {
 }
 addFooter('shopSection');
 addFooter('photoSection');
+
+// ====== CONTINUE SHOPPING tlačidlo ======
+document.getElementById('continueShopping').addEventListener('click', () => {
+  const popup = document.getElementById('addCartPopup');
+  popup.classList.remove('show');
+  enableBodyScroll(); // povolí znova scrollovanie
+});
+
 </script>
 </body>
 </html>
