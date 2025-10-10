@@ -649,8 +649,12 @@ document.getElementById('continueShopping').addEventListener('click', () => {
 
 // Otvorenie košíka animovane
 function openCart() {
+  if (cart.length === 0) {
+    alert("Your cart is empty!");
+    return;
+  }
   renderCart();
-  cartModal.classList.add('show'); // <-- tu pridáme triedu show
+  cartModal.classList.add('show');
   disableBodyScroll();
 }
 
