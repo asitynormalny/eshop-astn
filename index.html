@@ -847,7 +847,12 @@ let scrollPos = 0;
 function disableBodyScroll() {
   if (!scrollDisabled) {
     scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPos}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     document.body.style.overflow = 'hidden';
+    document.body.style.width = '100%';
     document.body.style.touchAction = 'none';
     scrollDisabled = true;
   }
@@ -855,13 +860,17 @@ function disableBodyScroll() {
 
 function enableBodyScroll() {
   if (scrollDisabled) {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
     document.body.style.overflow = '';
+    document.body.style.width = '';
     document.body.style.touchAction = '';
     window.scrollTo(0, scrollPos);
     scrollDisabled = false;
   }
 }
-
 
 document.querySelectorAll('.cart-icon').forEach(c => {
   c.addEventListener('click', openCart);
