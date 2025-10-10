@@ -133,8 +133,8 @@ label{display:block; margin-top:6px;}
 /* Krížik */
 .lightbox-content .close-lightbox {
   position: absolute;
-  top: 0px;
-  right: 6px;
+  top: -5px;
+  right: 3px;
   font-size: 38px;
   line-height: 1;
   color:  #ff0000;
@@ -290,6 +290,18 @@ input, select, textarea {
 </style>
 </head>
 <body>
+
+<!-- GDPR MODAL -->
+<div id="gdprModal" class="cart-modal">
+  <div class="cart">
+    <span class="close-btn" id="closeGdpr">&times;</span>
+    <h3>GDPR – Data Protection</h3>
+    We process your personal data only to handle your orders or contact you. 
+    We do not share your data with third parties outside of these purposes. You have the right to request access, correction, or deletion of your data at any time.
+    </p>
+    <p>For more information, contact us at <strong>asitynormalny@gmail.com</strong>.</p>
+  </div>
+</div>
 
 <header>
   <img id="logo" src="Logo.jpg" alt="Logo">
@@ -809,20 +821,81 @@ cartModal.addEventListener('click', e => {
 });
 
 /* ====== DYNAMIC FOOTERS ====== */
-function addFooter(sectionId) {
-  const section = document.getElementById(sectionId);
-  if (!section) return;
+// Funkcia pre Shop footer (GDPR + All rights reserved)
+function addShopFooter() {
+  const section = document.getElementById('shopSection');
   const footer = document.createElement('p');
   const year = new Date().getFullYear();
-  footer.textContent = `© ${year} All rights reserved`;
+
+  // GDPR tlačidlo
+  const gdprBtn = document.createElement('button');
+  gdprBtn.textContent = 'GDPR';
+  gdprBtn.style.marginBottom = '5px';
+  gdprBtn.style.display = 'inline';
+  gdprBtn.style.padding = '0';          
+  gdprBtn.style.border = 'none';
+  gdprBtn.style.background = 'none';
+  gdprBtn.style.color = '#FF0000';
+  gdprBtn.style.fontWeight = '700';
+  gdprBtn.style.textDecoration = 'underline';
+  gdprBtn.style.fontSize = '14px';
+  gdprBtn.style.cursor = 'pointer';
+
+
+  gdprBtn.addEventListener('click', () => {
+    document.getElementById('gdprModal').classList.add('show');
+    disableBodyScroll();
+  });
+
   footer.style.marginTop = '30px';
   footer.style.fontSize = '14px';
   footer.style.fontWeight = '700';
-  footer.style.color = sectionId === 'shopSection' ? '#FF0000' : '#aaa';
+  footer.style.color = '#FF0000';
+  footer.style.textAlign = 'center';
+
+  footer.appendChild(gdprBtn);
+  footer.appendChild(document.createElement('br')); // riadok medzi tlačidlom a textom
+  footer.appendChild(document.createTextNode(`© ${year} All rights reserved`));
+
   section.appendChild(footer);
 }
-addFooter('shopSection');
-addFooter('photoSection');
+
+// Funkcia pre Photos footer (len All rights reserved)
+function addPhotoFooter() {
+  const section = document.getElementById('photoSection');
+  const footer = document.createElement('p');
+  const year = new Date().getFullYear();
+
+  footer.style.marginTop = '30px';
+  footer.style.fontSize = '14px';
+  footer.style.fontWeight = '700';
+  footer.style.color = '#aaa';
+  footer.style.textAlign = 'center';
+
+  footer.textContent = `© ${year} All rights reserved`;
+
+  section.appendChild(footer);
+}
+
+// Zavoláme ich
+addShopFooter();
+addPhotoFooter();
+
+const closeGdpr = document.getElementById('closeGdpr');
+const gdprModal = document.getElementById('gdprModal');
+
+closeGdpr.addEventListener('click', () => {
+  gdprModal.classList.remove('show');
+  enableBodyScroll();
+});
+
+gdprModal.addEventListener('click', e => {
+  if (e.target === gdprModal) {
+    gdprModal.classList.remove('show');
+    enableBodyScroll();
+  }
+});
+
 </script>
 </body>
 </html>
