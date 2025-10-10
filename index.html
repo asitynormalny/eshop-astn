@@ -133,11 +133,11 @@ label{display:block; margin-top:6px;}
 /* Krížik */
 .lightbox-content .close-lightbox {
   position: absolute;
-  top: 3px;
-  right: 10px;
-  font-size: 40px;
+  top: 0px;
+  right: 6px;
+  font-size: 38px;
   line-height: 1;
-  color:  #6772e5;
+  color:  #ff0000;
   background: none;
   border: none;
   cursor: pointer;
@@ -319,10 +319,10 @@ input, select, textarea {
         <option value="3">3</option>
       </select>
     </div>
-    <p>Price: 23 €</p>
+    <p>Price: 12 €</p>
     <p><strong>Blaze Naturally</strong></p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Blaze Kit" data-price="23" data-size="" data-qty="quantity1">Add to cart</button>
+      <button class="addToCartBtn" data-product="Blaze Kit" data-price="12" data-size="" data-qty="quantity1">Add to cart</button>
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
@@ -426,13 +426,13 @@ input, select, textarea {
     <input type="text" id="street" placeholder="Street address">
     <input type="text" id="city" placeholder="City">
     <input type="text" id="zip" placeholder="ZIP code">
-    <label for="country">Shipping country:</label>
+    <label for="country">Shipping Country:</label>
     <select id="country">
       <option value="Slovensko" selected>Slovensko</option>
       <option value="Česká republika">Česká republika</option>
     </select>
     <label for="delivery">
-  <label for="delivery">PACKETA - delivery method:</label>
+  <label for="delivery">Delivery Method (Packeta):</label>
 </label>
 
     <select id="delivery">
@@ -453,7 +453,7 @@ input, select, textarea {
 <textarea id="note" placeholder="Názov výdajného miesta alebo Z-Boxu"></textarea>
 
 
-    <p id="codText" style="color:green;">CASH ON DELIVERY</p>
+    <p id="codText" style="color:green;">CASH ON DELIVERY ONLY</p>
     <p id="total"></p>
 
     <button id="payBtn">Order Now</button>
@@ -601,7 +601,7 @@ function renderCart(){
 
   const subtotal = cartData.reduce((sum,i) => sum + i.price*i.qty, 0);
   const totalPrice = (subtotal + shipping + cod).toFixed(2);
-  total.innerHTML = `Medzisúčet: ${subtotal.toFixed(2)} €<br>Poštovné: ${shipping.toFixed(2)} €<br>Dobierka: ${cod.toFixed(2)} €<br><strong>Celkom: ${totalPrice} €</strong>`;
+  total.innerHTML = `Subtotal: ${subtotal.toFixed(2)} €<br>Shipping: ${shipping.toFixed(2)} €<br>COD charge: ${cod.toFixed(2)} €<br><strong>Total: ${totalPrice} €</strong>`;
   cartPriceElems.forEach(e => e.textContent = subtotal.toFixed(2) + " €");
 
   document.querySelectorAll('.remove-item').forEach(btn => {
