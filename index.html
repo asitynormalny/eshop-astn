@@ -42,7 +42,7 @@
 }
 
 #shopSection {
-  background: url('background.jpg') no-repeat center center fixed;
+  background: url('background.webp') no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
   padding: 5px 6px;
@@ -299,7 +299,7 @@ input, select, textarea {
     We process your personal data only to handle your orders or contact you. 
     We do not share your data with third parties outside of these purposes. You have the right to request access, correction, or deletion of your data at any time.
     </p>
-    <p>For more information, contact us at <strong>asitynormalny@gmail.com</strong>.</p>
+    <p>For more information, contact us at <strong>asitynormalny@gmail.com</strong></p>
   </div>
 </div>
 
@@ -334,7 +334,7 @@ input, select, textarea {
     <p>Price: 12 €</p>
     <p><strong>Blaze Naturally</strong></p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Blaze Kit" data-price="12" data-size="" data-qty="quantity1">Add to cart</button>
+      <button class="addToCartBtn" data-product="Blaze Kit" data-price="12" data-size="" data-qty="quantity1">Add to Cart</button>
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
@@ -367,7 +367,7 @@ input, select, textarea {
     <p>Price: 8 €</p>
     <p><strong>High-quality digital print on 225 g/m² matte paper.</strong></p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Poster" data-price="8" data-size="size2" data-qty="quantity2">Add to cart</button>
+      <button class="addToCartBtn" data-product="Poster" data-price="8" data-size="size2" data-qty="quantity2">Add to Cart</button>
       <div class="cart-container">
         <div class="cart-price">0 €</div>
         <div class="cart-icon">🛒</div>
@@ -432,12 +432,12 @@ input, select, textarea {
     <span class="close-btn" id="closeCart">&times;</span>
     <h3>Cart</h3>
     <div id="cartItems"></div>
-    <input type="text" id="name" placeholder="Full name">
+    <input type="text" id="name" placeholder="Full Name">
     <input type="email" id="email" placeholder="Email">
     <input type="tel" id="phone" placeholder="Phone">
-    <input type="text" id="street" placeholder="Street address">
+    <input type="text" id="street" placeholder="Street Address">
     <input type="text" id="city" placeholder="City">
-    <input type="text" id="zip" placeholder="ZIP code">
+    <input type="text" id="zip" placeholder="ZIP Code">
     <label for="country">Shipping Country:</label>
     <select id="country">
       <option value="Slovensko" selected>Slovensko</option>
@@ -625,7 +625,6 @@ function renderCart(){
 }
 
 /* add to cart buttons */
-/* add to cart buttons */
 document.querySelectorAll('.addToCartBtn').forEach(btn => {
   btn.addEventListener('click', () => {
     const product = btn.getAttribute('data-product');
@@ -635,12 +634,17 @@ document.querySelectorAll('.addToCartBtn').forEach(btn => {
     const qty = parseInt(document.getElementById(btn.getAttribute('data-qty')).value) || 1;
     cartData.push({ product, size, price, qty });
     renderCart();
-    document.getElementById('addCartPopup').classList.add('show');
+    
+    const popup = document.getElementById('addCartPopup');
+    popup.classList.add('show');
+    disableBodyScroll(); // <-- zakáže scroll pozadia
   });
 });
 
 document.getElementById('continueShopping').addEventListener('click', () => {
-  document.getElementById('addCartPopup').classList.remove('show');
+  const popup = document.getElementById('addCartPopup');
+  popup.classList.remove('show');
+  enableBodyScroll(); // <-- obnoví scroll pozadia
 });
 
 // Otvorenie košíka animovane
@@ -795,8 +799,25 @@ window.addEventListener('load', () => {
 });
 
 /* ====== BODY SCROLL LOCK ====== */
-function disableBodyScroll() { document.body.style.overflow = 'hidden'; }
-function enableBodyScroll() { document.body.style.overflow = ''; }
+let scrollPosition = 0;
+
+function disableBodyScroll() {
+  scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${scrollPosition}px`;
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+  document.body.style.width = '100%';
+}
+
+function enableBodyScroll() {
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+  window.scrollTo(0, scrollPosition);
+}
 
 /* ====== CART MODAL BEHAVIOUR ====== */
 function openCart() {
