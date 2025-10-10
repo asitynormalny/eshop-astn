@@ -841,8 +841,8 @@ window.addEventListener('load', () => {
 });
 
 /* ====== BODY SCROLL LOCK ====== */
-let scrollDisabled = false;
-let scrollPos = 0;
+// Safari / iOS fix: zakáže bounce scroll pri otvorenom modale
+let touchMoveHandler = null;
 
 function disableBodyScroll() {
   if (!scrollDisabled) {
@@ -850,15 +850,42 @@ function disableBodyScroll() {
     document.body.style.overflow = 'hidden';
     document.body.style.touchAction = 'none';
     scrollDisabled = true;
+
+    // iOS fix
+    touchMoveHandler = function(e) {
+      // zablokuje touchmove len ak je otvorený modal
+      if (
+        cartModal.classList.contains('show') || 
+        lightbox.classList.contains('show') || 
+        gdprModal.classList.contains('show') || 
+        messagePopup.classList.contains('show')
+      ) {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener('touchmove', touchMoveHandler, { passive: false });
   }
 }
 
 function enableBodyScroll() {
   if (scrollDisabled) {
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
-    window.scrollTo(0, scrollPos);
-    scrollDisabled = false;
+    // Odblokujeme scroll len ak nie je otvorený žiaden modal
+    if (
+      !cartModal.classList.contains('show') && 
+      !lightbox.classList.contains('show') && 
+      !gdprModal.classList.contains('show') && 
+      !messagePopup.classList.contains('show')
+    ) {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      window.scrollTo(0, scrollPos);
+      scrollDisabled = false;
+
+      if (touchMoveHandler) {
+        document.removeEventListener('touchmove', touchMoveHandler, { passive: false });
+        touchMoveHandler = null;
+      }
+    }
   }
 }
 
