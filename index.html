@@ -287,6 +287,39 @@ input, select, textarea {
   opacity: 1;
 }
 
+#messagePopup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #222;
+  color: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.5);
+  z-index: 1002;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  max-width: 90%;
+}
+
+#messagePopup.show {
+  display: block;
+  opacity: 1;
+}
+#messagePopup button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #6772e5;
+  color: #fff;
+}
+
 </style>
 </head>
 <body>
@@ -301,6 +334,11 @@ input, select, textarea {
     </p>
     <p>For more information, contact us at <strong>asitynormalny@gmail.com</strong></p>
   </div>
+</div>
+
+<div id="messagePopup">
+  <p id="messageText"></p>
+  <button id="messageOkBtn">OK</button>
 </div>
 
 <header>
@@ -649,12 +687,8 @@ document.getElementById('continueShopping').addEventListener('click', () => {
 
 // Otvorenie košíka animovane
 function openCart() {
-  if (cart.length === 0) {
-    alert("Your cart is empty!");
-    return;
-  }
   renderCart();
-  cartModal.classList.add('show');
+  cartModal.classList.add('show'); // <-- tu pridáme triedu show
   disableBodyScroll();
 }
 
@@ -700,8 +734,10 @@ document.querySelectorAll('.arrow.right').forEach(a=>{
 
 /* ====== ORDER (Formspree) ====== */
 document.getElementById('payBtn').addEventListener('click', async () => {
-  if (cartData.length === 0) { alert("Košík je prázdny!"); return; }
-
+  if (cartData.length === 0) { 
+    showMessage("Košík je prázdny!"); 
+    return; 
+  }
   const name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
   const phone = document.getElementById('phone').value.trim();
@@ -712,18 +748,21 @@ document.getElementById('payBtn').addEventListener('click', async () => {
   const note = document.getElementById('note').value.trim();
   const delivery = document.getElementById('delivery').value;
 
-  if (!name || !email || !phone || !street || !city || !zip) { alert("Vyplň všetky povinné polia!"); return; }
+  if (!name || !email || !phone || !street || !city || !zip) { showMessage("Vyplň všetky povinné polia!"); return; }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) { alert("Zadaj správny email!"); return; }
+if (!emailRegex.test(email)) { showMessage("Zadaj správny email!"); return; }
 
-  const phoneRegex = /^(?:\+(420|421)[\s]?[0-9]{3}[\s]?[0-9]{3}[\s]?[0-9]{3}|[0-9]{9,10})$/;
-  if (!phoneRegex.test(phone)) { alert("Zadaj správne telefónne číslo: buď s predvoľbou +420/+421 a 9 číslic (medzery povolené), alebo bez predvoľby 9–10 číslic!"); return; }
+const phoneRegex = /^(?:\+(420|421)[\s]?[0-9]{3}[\s]?[0-9]{3}[\s]?[0-9]{3}|[0-9]{9,10})$/;
+if (!phoneRegex.test(phone)) { 
+  showMessage("Zadaj správne telefónne číslo: buď s predvoľbou +420/+421 a 9 číslic (medzery povolené), alebo bez predvoľby 9–10 číslic!"); 
+  return; 
+}
 
-  const zipRegex = /^(\d{5}|\d{3}\s\d{2})$/;
-  if (!zipRegex.test(zip)) { alert("Zadaj správne PSČ (5 číslic alebo 3 číslice + medzera + 2 číslice)!"); return; }
+const zipRegex = /^(\d{5}|\d{3}\s\d{2})$/;
+if (!zipRegex.test(zip)) { showMessage("Zadaj správne PSČ (5 číslic alebo 3 číslice + medzera + 2 číslice)!"); return; }
 
-  if (!note) { alert("Vyplň názov výdajného miesta alebo Z-Boxu!"); return; }
+if (!note) { showMessage("Vyplň názov výdajného miesta alebo Z-Boxu!"); return; }
 
   const formData = new FormData();
   const productText = cartData.map(item => 
@@ -803,20 +842,25 @@ window.addEventListener('load', () => {
 });
 
 /* ====== BODY SCROLL LOCK ====== */
+let openModals = 0;
 let scrollPosition = 0;
 
 function disableBodyScroll() {
-  scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-  document.body.style.overflow = 'hidden';
-  document.body.style.touchAction = 'none'; // Safari blokuje gestá
-  document.body.dataset.scrollLock = scrollPosition; // len pre istotu
+  if (openModals === 0) {
+    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.overflow = 'hidden';
+    document.body.style.touchAction = 'none'; // Safari blokuje gestá
+  }
+  openModals++;
 }
 
 function enableBodyScroll() {
-  document.body.style.overflow = '';
-  document.body.style.touchAction = '';
-  const savedPos = parseInt(document.body.dataset.scrollLock || '0', 10);
-  window.scrollTo(0, savedPos);
+  openModals = Math.max(0, openModals - 1);
+  if (openModals === 0) {
+    document.body.style.overflow = '';
+    document.body.style.touchAction = '';
+    window.scrollTo(0, scrollPosition);
+  }
 }
 
 /* ====== CART MODAL BEHAVIOUR ====== */
@@ -915,6 +959,22 @@ gdprModal.addEventListener('click', e => {
     gdprModal.classList.remove('show');
     enableBodyScroll();
   }
+});
+
+
+const messagePopup = document.getElementById('messagePopup');
+const messageText = document.getElementById('messageText');
+const messageOkBtn = document.getElementById('messageOkBtn');
+
+function showMessage(msg) {
+  messageText.textContent = msg;
+  messagePopup.classList.add('show');
+  disableBodyScroll(); // zakáže scroll pozadia
+}
+
+messageOkBtn.addEventListener('click', () => {
+  messagePopup.classList.remove('show');
+  enableBodyScroll(); // obnoví scroll
 });
 
 </script>
