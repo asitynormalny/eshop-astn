@@ -476,13 +476,13 @@ input, select, textarea {
     <input type="text" id="street" placeholder="Street Address">
     <input type="text" id="city" placeholder="City">
     <input type="text" id="zip" placeholder="ZIP Code">
-    <label for="country">Shipping Country</label>
+    <label for="country">Shipping Country:</label>
     <select id="country">
       <option value="Slovensko" selected>Slovakia</option>
       <option value="Česká republika">Czech Republic</option>
     </select>
     <label for="delivery">
-  <label for="delivery">Delivery Method (Packeta)</label>
+  <label for="delivery">Delivery Method (Packeta):</label>
 </label>
 
     <select id="delivery">
@@ -703,8 +703,6 @@ document.getElementById('goToCart').addEventListener('click', () => {
   document.getElementById('addCartPopup').classList.remove('show'); // skryje popup
   openCart(); // otvorí košík animovane
 });
-document.querySelectorAll('.cart-icon').forEach(c => c.addEventListener('click', openCart));
-document.getElementById('closeCart').addEventListener('click', closeCartFn);
 document.getElementById('cartModal').addEventListener('click', e => {
   if (e.target === cartModal) closeCartFn();
 });
@@ -843,38 +841,27 @@ window.addEventListener('load', () => {
 });
 
 /* ====== BODY SCROLL LOCK ====== */
-let openModals = 0;
-let scrollPosition = 0;
+let scrollDisabled = false;
+let scrollPos = 0;
 
 function disableBodyScroll() {
-  if (openModals === 0) {
-    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+  if (!scrollDisabled) {
+    scrollPos = window.pageYOffset || document.documentElement.scrollTop;
     document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none'; // Safari blokuje gestá
+    document.body.style.touchAction = 'none';
+    scrollDisabled = true;
   }
-  openModals++;
 }
 
 function enableBodyScroll() {
-  openModals = Math.max(0, openModals - 1);
-  if (openModals === 0) {
+  if (scrollDisabled) {
     document.body.style.overflow = '';
     document.body.style.touchAction = '';
-    window.scrollTo(0, scrollPosition);
+    window.scrollTo(0, scrollPos);
+    scrollDisabled = false;
   }
 }
 
-/* ====== CART MODAL BEHAVIOUR ====== */
-function openCart() {
-  renderCart();
-  cartModal.classList.add('show');
-  disableBodyScroll();
-}
-
-function closeCartFn() {
-  cartModal.classList.remove('show');
-  setTimeout(enableBodyScroll, 300); // počkáme na animáciu
-}
 
 document.querySelectorAll('.cart-icon').forEach(c => {
   c.addEventListener('click', openCart);
@@ -978,7 +965,20 @@ messageOkBtn.addEventListener('click', () => {
   enableBodyScroll(); // obnoví scroll
 });
 
+function enableBodyScroll() {
+  // Ak je otvorený cartModal alebo lightbox alebo GDPR modal alebo messagePopup, scroll nedeaktivujeme
+  if (cartModal.classList.contains('show') || lightbox.classList.contains('show') || gdprModal.classList.contains('show') || messagePopup.classList.contains('show')) {
+    return; // necháme scroll zakázaný
+  }
+  
+  if (scrollDisabled) {
+    document.body.style.overflow = '';
+    document.body.style.touchAction = '';
+    window.scrollTo(0, scrollPos);
+    scrollDisabled = false;
+  }
+}
+
 </script>
 </body>
 </html>
-
