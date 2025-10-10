@@ -478,16 +478,16 @@ input, select, textarea {
     <input type="text" id="zip" placeholder="ZIP Code">
     <label for="country">Shipping Country:</label>
     <select id="country">
-      <option value="Slovensko" selected>Slovensko</option>
-      <option value="Česká republika">Česká republika</option>
+      <option value="Slovensko" selected>Slovakia</option>
+      <option value="Česká republika">Czech Republic</option>
     </select>
     <label for="delivery">
   <label for="delivery">Delivery Method (Packeta):</label>
 </label>
 
     <select id="delivery">
-      <option value="Výdajné miesto">Výdajné miesto</option>
       <option value="Z-Box">Z-Box</option>
+      <option value="Výdajné miesto">Pickup Point</option>
     </select>
 
     <style>
@@ -500,11 +500,12 @@ input, select, textarea {
 }
 </style>
 
-<textarea id="note" placeholder="Názov výdajného miesta alebo Z-Boxu"></textarea>
+<textarea id="note" placeholder="Pickup point or Z-Box name"></textarea>
 
 
-    <p id="codText" style="color:green;">CASH ON DELIVERY ONLY</p>
+    <p id="codText" style="color:#00FF00">CASH ON DELIVERY ONLY</p>
     <p id="total"></p>
+
 
     <button id="payBtn">Order Now</button>
   </div>
@@ -735,7 +736,7 @@ document.querySelectorAll('.arrow.right').forEach(a=>{
 /* ====== ORDER (Formspree) ====== */
 document.getElementById('payBtn').addEventListener('click', async () => {
   if (cartData.length === 0) { 
-    showMessage("Košík je prázdny!"); 
+    showMessage("Cart is empty!"); 
     return; 
   }
   const name = document.getElementById('name').value.trim();
@@ -748,21 +749,21 @@ document.getElementById('payBtn').addEventListener('click', async () => {
   const note = document.getElementById('note').value.trim();
   const delivery = document.getElementById('delivery').value;
 
-  if (!name || !email || !phone || !street || !city || !zip) { showMessage("Vyplň všetky povinné polia!"); return; }
+  if (!name || !email || !phone || !street || !city || !zip) { showMessage("Please fill in all required fields!"); return; }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-if (!emailRegex.test(email)) { showMessage("Zadaj správny email!"); return; }
+if (!emailRegex.test(email)) { showMessage("Please enter a valid email address!"); return; }
 
 const phoneRegex = /^(?:\+(420|421)[\s]?[0-9]{3}[\s]?[0-9]{3}[\s]?[0-9]{3}|[0-9]{9,10})$/;
 if (!phoneRegex.test(phone)) { 
-  showMessage("Zadaj správne telefónne číslo: buď s predvoľbou +420/+421 a 9 číslic (medzery povolené), alebo bez predvoľby 9–10 číslic!"); 
+  showMessage("Enter a valid phone number (+420/+421 9 digits, or 9–10 digits without code!"); 
   return; 
 }
 
 const zipRegex = /^(\d{5}|\d{3}\s\d{2})$/;
-if (!zipRegex.test(zip)) { showMessage("Zadaj správne PSČ (5 číslic alebo 3 číslice + medzera + 2 číslice)!"); return; }
+if (!zipRegex.test(zip)) { showMessage("Enter a valid ZIP code (12345 or 123 45)!"); return; }
 
-if (!note) { showMessage("Vyplň názov výdajného miesta alebo Z-Boxu!"); return; }
+if (!note) { showMessage("Enter pickup point or Z-Box name!"); return; }
 
   const formData = new FormData();
   const productText = cartData.map(item => 
