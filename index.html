@@ -375,13 +375,13 @@ input, select, textarea {
         <option value="3">3</option>
       </select>
     </div>
-    <p>Price: 12 €</p>
+    <p>Price: €12.00</p>
     <p class="tax-note">Tax included.</p>
     <p><strong>Blaze Naturally</strong></p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Blaze Kit" data-price="12" data-size="" data-qty="quantity1">Add to Cart</button>
+      <button class="addToCartBtn" data-product="Blaze Kit" data-price="12.00" data-size="" data-qty="quantity1">Add to Cart</button>
       <div class="cart-container">
-        <div class="cart-price">0 €</div>
+        <div class="cart-price">€0</div>
         <div class="cart-icon">🛒</div>
       </div>
     </div>
@@ -409,13 +409,13 @@ input, select, textarea {
         <option value="3">3</option>
       </select>
     </div>
-    <p>Price: 8 €</p>
+    <p>Price: €8.00</p>
     <p class="tax-note">Tax included.</p>
     <p><strong>High-quality digital print on 225 g/m² matte paper.</strong></p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Poster" data-price="8" data-size="size2" data-qty="quantity2">Add to Cart</button>
+      <button class="addToCartBtn" data-product="Poster" data-price="8.00" data-size="size2" data-qty="quantity2">Add to Cart</button>
       <div class="cart-container">
-        <div class="cart-price">0 €</div>
+        <div class="cart-price">€0</div>
         <div class="cart-icon">🛒</div>
 
       </div>
@@ -652,16 +652,16 @@ function renderCart(){
     return;
   }
 
-  cartItems.innerHTML = cartData.map((i,index) =>
-  `<p>${i.product}${i.size ? ' (' + i.size + ')' : ''} x${i.qty} - ${(i.price*i.qty).toFixed(2)} € 
+ cartItems.innerHTML = cartData.map((i,index) =>
+  `<p>${i.product}${i.size ? ' (' + i.size + ')' : ''} x${i.qty} - €${(i.price*i.qty).toFixed(2)} 
    <span class="remove-item" data-index="${index}">❌</span></p>`
-  ).join('');
+ ).join('');
 
+ const subtotal = cartData.reduce((sum,i) => sum + i.price*i.qty, 0);
+ const totalPrice = (subtotal + shipping + cod).toFixed(2);
+ total.innerHTML = `Subtotal: €${subtotal.toFixed(2)}<br>Shipping: €${shipping.toFixed(2)}<br>COD charge: €${cod.toFixed(2)}<br><strong>Total: €${totalPrice}</strong>`;
+ cartPriceElems.forEach(e => e.textContent = "€" + subtotal.toFixed(2));
 
-  const subtotal = cartData.reduce((sum,i) => sum + i.price*i.qty, 0);
-  const totalPrice = (subtotal + shipping + cod).toFixed(2);
-  total.innerHTML = `Subtotal: ${subtotal.toFixed(2)} €<br>Shipping: ${shipping.toFixed(2)} €<br>COD charge: ${cod.toFixed(2)} €<br><strong>Total: ${totalPrice} €</strong>`;
-  cartPriceElems.forEach(e => e.textContent = subtotal.toFixed(2) + " €");
 
   document.querySelectorAll('.remove-item').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -773,8 +773,8 @@ if (!note) { showMessage("Enter pickup point or Z-Box name!"); return; }
 
   const formData = new FormData();
   const productText = cartData.map(item => 
-  `product: ${item.product}${item.size ? ', size: ' + item.size : ''}, price: ${item.price}, qty: ${item.qty}`
-  ).join("; "); // oddeľuje viaceré produkty bodkočiarkou
+  `product: ${item.product}${item.size ? ', size: ' + item.size : ''}, price: €${item.price.toFixed(2)}, qty: ${item.qty}`
+  ).join("; ");
   formData.append("product", productText);
   formData.append("name", name);
   formData.append("email", email);
