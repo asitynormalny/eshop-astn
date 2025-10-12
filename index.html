@@ -345,10 +345,43 @@ input, select, textarea {
   transform-origin: top right;
   box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
+/* 🌟 Fade-in animation ONLY for Photos */
+#photoContainer img {
+  opacity: 0;
+  transform: translateY(15px) scale(0.97);
+  filter: blur(4px);
+  transition: all 0.6s ease;
+}
 
+/* Keď má obrázok triedu "show", zobrazí sa */
+#photoContainer img.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
 </style>
 </head>
 <body>
+
+<script>
+// ✅ Funkcia: animuje fotky v sekcii Photos
+function animatePhotos() {
+  const imgs = document.querySelectorAll('#photoContainer img');
+  imgs.forEach(img => img.classList.remove('show')); // najprv skryť
+  imgs.forEach((img, i) => {
+    setTimeout(() => img.classList.add('show'), i * 100); // postupne zobraziť
+  });
+}
+
+// 🔹 Spusti animáciu, keď sa stránka načíta
+window.addEventListener('load', animatePhotos);
+
+// 🔹 Spusti animáciu znova, keď používateľ klikne na Photos v menu
+const photoSectionBtn = document.querySelector('nav li[data-section="photos"]');
+if (photoSectionBtn) {
+  photoSectionBtn.addEventListener('click', animatePhotos);
+}
+</script>
 
 <!-- GDPR MODAL -->
 <div id="gdprModal" class="cart-modal">
@@ -608,6 +641,7 @@ shopBtn.addEventListener('click', () => {
 });
 photoBtn.addEventListener('click', () => {
   showSection(photoSection, shopSection, photoBtn, shopBtn);
+  setTimeout(animatePhotos, 200); // 💥 znovu spustí fade animáciu po návrate
 });
 
 /* ====== LIGHTBOX (univerzálne pre shop + photos) ====== */
@@ -669,7 +703,7 @@ function renderCart(){
   if(cartData.length === 0){
     cartItems.innerHTML = "<em>Your cart is empty</em>";
     total.innerHTML = "";
-    cartPriceElems.forEach(e => e.textContent = "0 €");
+    cartPriceElems.forEach(e => e.textContent = "€0");
     return;
   }
 
