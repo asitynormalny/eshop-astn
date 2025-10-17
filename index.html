@@ -359,47 +359,35 @@ input, select, textarea {
   transform: translateY(0) scale(1);
   filter: blur(0);
 }
-
-.carousel {
-  position: relative; /* základ pre bodky */
+.carousel-snap {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory; /* snap na každú položku */
+  -webkit-overflow-scrolling: touch; /* plynulé scrollovanie na iOS */
+  gap: 10px; /* medzera medzi obrázkami */
+  padding: 10px 0;
 }
 
-/* Bodky len na mobile (do 768px) */
-@media (max-width: 768px) {
+.carousel-snap img {
+  flex: 0 0 80%; /* šírka obrázka, prispôsobiteľná */
+  max-width: 100%;
+  scroll-snap-align: start; /* každý obrázok sa "snapne" na začiatok */
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  pointer-events: auto;
+}
+/* Na mobiloch skryjeme šípky */
+@media (max-width: 900px) {
   .arrow {
-    display: none; /* šípky skryté na mobile */
-  }
-
-  .carousel-dots {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    z-index: 10;
-  }
-
-  .carousel-dots span {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background: #000; /* čierne bodky */
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-
-  .carousel-dots span.active {
-    background: #888; /* aktívna bodka svetlejšia (sivá) */
+    display: none;
   }
 }
 
-/* Skryť bodky na PC */
-@media (min-width: 769px) {
-  .carousel-dots {
-    display: none;
+/* Na PC (šírka > 900px) šípky zostanú */
+@media (min-width: 901px) {
+  .carousel-snap {
+    overflow-x: hidden; /* zakáž horizontal scroll */
   }
 }
 </style>
@@ -458,11 +446,13 @@ if (photoSectionBtn) {
   <!-- Produkt 1 -->
   <div class="product">
     <h2>Blaze Kit</h2>
-    <div class="limited-stamp">Exclusive Design</div><div class="carousel">
-  <span class="arrow left" data-product="1">&#10094;</span>
-  <img src="P1.jpg" id="productImg1" alt="Blaze Kit">
-  <span class="arrow right" data-product="1">&#10095;</span> <!-- toto pridaj -->
-  <div class="carousel-dots" id="dots1"></div>
+    <div class="limited-stamp">Exclusive Design</div>
+    <div class="carousel-snap" id="carousel1">
+  <img src="P1.jpg" alt="Blaze Kit">
+  <img src="P2.jpg" alt="Blaze Kit">
+  <img src="P3.jpg" alt="Blaze Kit">
+  <img src="P4.jpg" alt="Blaze Kit">
+  <img src="P5.jpg" alt="Blaze Kit">
 </div>
     <div class="qty-container">
       <label for="quantity1">Quantity:</label>
@@ -489,11 +479,10 @@ if (photoSectionBtn) {
   <div class="product">
     <h2>Poster A2</h2>
     <div class="carousel">
-  <span class="arrow left" data-product="2">&#10094;</span>
-  <img src="p1.jpg" id="productImg2" alt="Poster A2">
-  <span class="arrow right" data-product="2">&#10095;</span> <!-- pridaj -->
-  <div class="carousel-dots" id="dots2"></div>
-</div>
+      <span class="arrow left" data-product="2">&#10094;</span>
+      <img src="23.jpg" id="productImg2" alt="Plagát">
+      <span class="arrow right" data-product="2">&#10095;</span>
+    </div>
     <div class="size-container">
       <label for="size2">Size:</label>
       <select id="size2">
@@ -820,82 +809,22 @@ document.getElementById('country').addEventListener('change', renderCart);
 /* ====== CAROUSEL (unchanged) ====== */
 const productImgs = [
   ["P1.jpg", "P2.jpg", "P3.jpg", "P4.jpg", "P5.jpg"], 
-  ["p1.jpg", "p2.jpg", "p3.jpg"]           
+  ["p2.jpg", "p0.jpg", "p1.jpg"]           
 ];
 let currentImgs = [0,0];
 
-// 🌟 Swipe pre mobil na carousel
-document.querySelectorAll('.carousel').forEach((carousel, index) => {
-  let startX = 0;
-  let endX = 0;
-
-  const img = carousel.querySelector('img');
-  const p = index; // index produktu
-
-  carousel.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-  }, {passive: true});
-
-  carousel.addEventListener('touchmove', e => {
-  endX = e.touches[0].clientX;
-
-  const diff = Math.abs(startX - endX);
-  if (diff > 10) {  // ak sa horizontálne hýbeme
-    e.preventDefault(); // zabráni scrollu stránky
-  }
-}, {passive: false});
-
-  carousel.addEventListener('touchend', e => {
-    const diff = startX - endX;
-    if (Math.abs(diff) > 40) { // minimálna vzdialenosť swipu
-      if (diff > 0) {
-        // Swipe left → ďalší obrázok
-        currentImgs[p] = (currentImgs[p] + 1) % productImgs[p].length;
-      } else {
-        // Swipe right → predchádzajúci obrázok
-        currentImgs[p] = (currentImgs[p] - 1 + productImgs[p].length) % productImgs[p].length;
-      }
-      img.src = productImgs[p][currentImgs[p]];
-      updateDots(p); // toto obnoví aktívnu bodku po swipe
-    }
-  }, {passive: true});
-});
-
-function updateDots(productIndex) {
-  const dotsContainer = document.getElementById('dots' + (productIndex + 1));
-  if (!dotsContainer) return;
-
-  dotsContainer.innerHTML = '';
-  for (let i = 0; i < productImgs[productIndex].length; i++) {
-    const dot = document.createElement('span');
-    if (i === currentImgs[productIndex]) dot.classList.add('active');
-
-    dot.addEventListener('click', () => {
-      currentImgs[productIndex] = i; // najprv nastav nový index
-      document.getElementById('productImg' + (productIndex + 1)).src = productImgs[productIndex][i]; // potom zmeň obrázok
-      updateDots(productIndex); // nakoniec obnov bodky
-    });
-
-    dotsContainer.appendChild(dot);
-  }
-}
-
-// Spusti po načítaní
-productImgs.forEach((_, i) => updateDots(i));
-
-document.querySelectorAll('.arrow.left, .arrow.right').forEach(a => {
-  a.addEventListener('click', (e) => {
-    // iba na desktop (šírka > 768px) umožníme kliknutie
-    if (window.innerWidth <= 768) return;
-
+document.querySelectorAll('.arrow.left').forEach(a=>{
+  a.addEventListener('click', ()=>{
     const p = parseInt(a.getAttribute('data-product')) - 1;
-    if (a.classList.contains('left')) {
-      currentImgs[p] = (currentImgs[p] - 1 + productImgs[p].length) % productImgs[p].length;
-    } else {
-      currentImgs[p] = (currentImgs[p] + 1) % productImgs[p].length;
-    }
-    document.getElementById('productImg' + (p + 1)).src = productImgs[p][currentImgs[p]];
-    updateDots(p);
+    currentImgs[p] = (currentImgs[p] - 1 + productImgs[p].length) % productImgs[p].length;
+    document.getElementById('productImg' + (p+1)).src = productImgs[p][currentImgs[p]];
+  });
+});
+document.querySelectorAll('.arrow.right').forEach(a=>{
+  a.addEventListener('click', ()=>{
+    const p = parseInt(a.getAttribute('data-product')) - 1;
+    currentImgs[p] = (currentImgs[p] + 1) % productImgs[p].length;
+    document.getElementById('productImg' + (p+1)).src = productImgs[p][currentImgs[p]];
   });
 });
 
@@ -1146,6 +1075,33 @@ function enableBodyScroll() {
     scrollDisabled = false;
   }
 }
+document.querySelectorAll('.carousel-snap img').forEach(img => {
+  img.addEventListener('click', () => openLightbox(img.src));
+});
+/* ====== CAROUSEL SWIPE LEN NA MOBIL ====== */
+function initCarouselSwipe() {
+  if (window.innerWidth <= 900) { // iba mobil
+    document.querySelectorAll('.carousel-snap').forEach(carousel => {
+      let startX = 0;
+      let scrollLeft = 0;
+
+      carousel.addEventListener('touchstart', e => {
+        startX = e.touches[0].pageX - carousel.offsetLeft;
+        scrollLeft = carousel.scrollLeft;
+      });
+
+      carousel.addEventListener('touchmove', e => {
+        const x = e.touches[0].pageX - carousel.offsetLeft;
+        const walk = (startX - x); 
+        carousel.scrollLeft = scrollLeft + walk;
+      }, { passive: true });
+    });
+  }
+}
+
+// Zavoláme funkciu po načítaní a pri zmene veľkosti obrazovky
+window.addEventListener('load', initCarouselSwipe);
+window.addEventListener('resize', initCarouselSwipe);
 
 </script>
 </body>
