@@ -359,37 +359,6 @@ input, select, textarea {
   transform: translateY(0) scale(1);
   filter: blur(0);
 }
-.carousel-snap {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory; /* snap na každú položku */
-  -webkit-overflow-scrolling: touch; /* plynulé scrollovanie na iOS */
-  gap: 10px; /* medzera medzi obrázkami */
-  padding: 10px 0;
-}
-
-.carousel-snap img {
-  flex: 0 0 80%; /* šírka obrázka, prispôsobiteľná */
-  max-width: 100%;
-  scroll-snap-align: start; /* každý obrázok sa "snapne" na začiatok */
-  border-radius: 10px;
-  cursor: pointer;
-  user-select: none;
-  pointer-events: auto;
-}
-/* Na mobiloch skryjeme šípky */
-@media (max-width: 900px) {
-  .arrow {
-    display: none;
-  }
-}
-
-/* Na PC (šírka > 900px) šípky zostanú */
-@media (min-width: 901px) {
-  .carousel-snap {
-    overflow-x: hidden; /* zakáž horizontal scroll */
-  }
-}
 </style>
 </head>
 <body>
@@ -447,13 +416,11 @@ if (photoSectionBtn) {
   <div class="product">
     <h2>Blaze Kit</h2>
     <div class="limited-stamp">Exclusive Design</div>
-    <div class="carousel-snap" id="carousel1">
-  <img src="P1.jpg" alt="Blaze Kit">
-  <img src="P2.jpg" alt="Blaze Kit">
-  <img src="P3.jpg" alt="Blaze Kit">
-  <img src="P4.jpg" alt="Blaze Kit">
-  <img src="P5.jpg" alt="Blaze Kit">
-</div>
+    <div class="carousel">
+      <span class="arrow left" data-product="1">&#10094;</span>
+      <img src="P1.jpg" id="productImg1" alt="Blaze Kit">
+      <span class="arrow right" data-product="1">&#10095;</span>
+    </div>
     <div class="qty-container">
       <label for="quantity1">Quantity:</label>
       <select id="quantity1">
@@ -1075,33 +1042,6 @@ function enableBodyScroll() {
     scrollDisabled = false;
   }
 }
-document.querySelectorAll('.carousel-snap img').forEach(img => {
-  img.addEventListener('click', () => openLightbox(img.src));
-});
-/* ====== CAROUSEL SWIPE LEN NA MOBIL ====== */
-function initCarouselSwipe() {
-  if (window.innerWidth <= 900) { // iba mobil
-    document.querySelectorAll('.carousel-snap').forEach(carousel => {
-      let startX = 0;
-      let scrollLeft = 0;
-
-      carousel.addEventListener('touchstart', e => {
-        startX = e.touches[0].pageX - carousel.offsetLeft;
-        scrollLeft = carousel.scrollLeft;
-      });
-
-      carousel.addEventListener('touchmove', e => {
-        const x = e.touches[0].pageX - carousel.offsetLeft;
-        const walk = (startX - x); 
-        carousel.scrollLeft = scrollLeft + walk;
-      }, { passive: true });
-    });
-  }
-}
-
-// Zavoláme funkciu po načítaní a pri zmene veľkosti obrazovky
-window.addEventListener('load', initCarouselSwipe);
-window.addEventListener('resize', initCarouselSwipe);
 
 </script>
 </body>
