@@ -883,18 +883,19 @@ function updateDots(productIndex) {
 // Spusti po načítaní
 productImgs.forEach((_, i) => updateDots(i));
 
-document.querySelectorAll('.arrow.left').forEach(a=>{
-  a.addEventListener('click', ()=>{
+document.querySelectorAll('.arrow.left, .arrow.right').forEach(a => {
+  a.addEventListener('click', (e) => {
+    // iba na desktop (šírka > 768px) umožníme kliknutie
+    if (window.innerWidth <= 768) return;
+
     const p = parseInt(a.getAttribute('data-product')) - 1;
-    currentImgs[p] = (currentImgs[p] - 1 + productImgs[p].length) % productImgs[p].length;
-    document.getElementById('productImg' + (p+1)).src = productImgs[p][currentImgs[p]];
-  });
-});
-document.querySelectorAll('.arrow.right').forEach(a=>{
-  a.addEventListener('click', ()=>{
-    const p = parseInt(a.getAttribute('data-product')) - 1;
-    currentImgs[p] = (currentImgs[p] + 1) % productImgs[p].length;
-    document.getElementById('productImg' + (p+1)).src = productImgs[p][currentImgs[p]];
+    if (a.classList.contains('left')) {
+      currentImgs[p] = (currentImgs[p] - 1 + productImgs[p].length) % productImgs[p].length;
+    } else {
+      currentImgs[p] = (currentImgs[p] + 1) % productImgs[p].length;
+    }
+    document.getElementById('productImg' + (p + 1)).src = productImgs[p][currentImgs[p]];
+    updateDots(p);
   });
 });
 
