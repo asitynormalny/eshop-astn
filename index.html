@@ -353,34 +353,12 @@ input, select, textarea {
   transition: all 0.6s ease;
 }
 
-@media (max-width: 768px) {
-  .arrow {
-    display: none;
-  }
-  .carousel {
-    position: relative;
-  }
-  .carousel-dots {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 5px;
-    z-index: 5;
-  }
-  .carousel-dots span {
-    width: 10px;
-    height: 10px;
-    background: rgba(0,0,0,0.5); /* tmavé bodky pre biele pozadie */
-    border-radius: 50%;
-    display: inline-block;
-  }
-  .carousel-dots span.active {
-    background: #000; /* aktívna bodka čierna */
-  }
+/* Keď má obrázok triedu "show", zobrazí sa */
+#photoContainer img.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
 }
-
 </style>
 </head>
 <body>
@@ -439,12 +417,10 @@ if (photoSectionBtn) {
     <h2>Blaze Kit</h2>
     <div class="limited-stamp">Exclusive Design</div>
     <div class="carousel">
-  <span class="arrow left" data-product="1">&#10094;</span>
-  <img src="P1.jpg" id="productImg1" alt="Blaze Kit">
-  <span class="arrow right" data-product="1">&#10095;</span>
-  <!-- TOTO je nové, bodky -->
-  <div class="carousel-dots"></div>
-</div>
+      <span class="arrow left" data-product="1">&#10094;</span>
+      <img src="P1.jpg" id="productImg1" alt="Blaze Kit">
+      <span class="arrow right" data-product="1">&#10095;</span>
+    </div>
     <div class="qty-container">
       <label for="quantity1">Quantity:</label>
       <select id="quantity1">
@@ -816,91 +792,6 @@ document.querySelectorAll('.arrow.right').forEach(a=>{
     const p = parseInt(a.getAttribute('data-product')) - 1;
     currentImgs[p] = (currentImgs[p] + 1) % productImgs[p].length;
     document.getElementById('productImg' + (p+1)).src = productImgs[p][currentImgs[p]];
-  });
-});
-
-/* ====== MOBILE SWIPE FOR CAROUSEL ====== */
-document.querySelectorAll('.carousel').forEach((carousel, index) => {
-  let startX = 0;
-  let endX = 0;
-  const productIndex = index; // index produktu pre currentImgs
-
-  carousel.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-  }, {passive: true});
-
-  carousel.addEventListener('touchmove', (e) => {
-    endX = e.touches[0].clientX;
-  }, {passive: true});
-
-  carousel.addEventListener('touchend', () => {
-    const diff = endX - startX;
-    if (Math.abs(diff) > 30) { // threshold pre swipe
-      if (diff < 0) {
-        // swipe doľava → ďalší obrázok
-        currentImgs[productIndex] = (currentImgs[productIndex] + 1) % productImgs[productIndex].length;
-      } else {
-        // swipe doprava → predchádzajúci obrázok
-        currentImgs[productIndex] = (currentImgs[productIndex] - 1 + productImgs[productIndex].length) % productImgs[productIndex].length;
-      }
-      document.getElementById('productImg' + (productIndex + 1)).src = productImgs[productIndex][currentImgs[productIndex]];
-    }
-    startX = 0;
-    endX = 0;
-  });
-});
-
-/* ====== CAROUSEL DOTS INDICATORS ====== */
-document.querySelectorAll('.carousel').forEach((carousel, index) => {
-  const dotsContainer = carousel.querySelector('.carousel-dots');
-  const numImages = productImgs[index].length;
-
-  // vytvoríme bodky
-  for (let i = 0; i < numImages; i++) {
-    const dot = document.createElement('span');
-    if (i === currentImgs[index]) dot.classList.add('active');
-    dotsContainer.appendChild(dot);
-  }
-
-  function updateDots() {
-    const dots = dotsContainer.querySelectorAll('span');
-    dots.forEach((dot,i) => dot.classList.toggle('active', i === currentImgs[index]));
-  }
-
-  // pridáme update po swipe alebo šípke
-  const updateCarousel = () => {
-    document.getElementById('productImg' + (index+1)).src = productImgs[index][currentImgs[index]];
-    updateDots();
-  }
-
-  // zmeníme existujúci swipe handler, aby volal updateCarousel
-  let startX = 0;
-  let endX = 0;
-
-  carousel.addEventListener('touchstart', e => startX = e.touches[0].clientX, {passive:true});
-  carousel.addEventListener('touchmove', e => endX = e.touches[0].clientX, {passive:true});
-  carousel.addEventListener('touchend', () => {
-    const diff = endX - startX;
-    if (Math.abs(diff) > 30) {
-      if (diff < 0) {
-        currentImgs[index] = (currentImgs[index] + 1) % numImages;
-      } else {
-        currentImgs[index] = (currentImgs[index] - 1 + numImages) % numImages;
-      }
-      updateCarousel();
-    }
-    startX = 0;
-    endX = 0;
-  });
-
-  // tiež update po kliknutí šípok (desktop)
-  carousel.querySelector('.arrow.left')?.addEventListener('click', () => {
-    currentImgs[index] = (currentImgs[index] - 1 + numImages) % numImages;
-    updateCarousel();
-  });
-  carousel.querySelector('.arrow.right')?.addEventListener('click', () => {
-    currentImgs[index] = (currentImgs[index] + 1) % numImages;
-    updateCarousel();
   });
 });
 
