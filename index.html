@@ -837,8 +837,13 @@ document.querySelectorAll('.carousel').forEach((carousel, index) => {
   }, {passive: true});
 
   carousel.addEventListener('touchmove', e => {
-    endX = e.touches[0].clientX;
-  }, {passive: true});
+  endX = e.touches[0].clientX;
+
+  const diff = Math.abs(startX - endX);
+  if (diff > 10) {  // ak sa horizontálne hýbeme
+    e.preventDefault(); // zabráni scrollu stránky
+  }
+}, {passive: false});
 
   carousel.addEventListener('touchend', e => {
     const diff = startX - endX;
