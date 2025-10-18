@@ -213,7 +213,7 @@ label{display:block; margin-top:6px;}
 #codText { font-weight:bold; font-size:16px; margin:10px 0; color:#fff; }
 @media (max-width:600px){
   header img{ width: 80%; max-width:500px; height:auto; }
-  .arrow{font-size:30px; padding:20px 8px;}
+  .arrow{font-size:24px; padding:4px 8px;}
   .size-container select, .qty-container select{width:70%; font-size:14px;}
   .cart input, .cart select, .cart textarea{width:95%; font-size:13px;}
   .cart{max-width:90%;}
@@ -359,22 +359,6 @@ input, select, textarea {
   transform: translateY(0) scale(1);
   filter: blur(0);
 }
-
-.carousel {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-
-.slides {
-  display: flex;
-  transition: transform 0.20s ease-in-out;
-}
-
-.slides img {
-  width: 100%;
-  flex-shrink: 0;
-}
 </style>
 </head>
 <body>
@@ -433,16 +417,10 @@ if (photoSectionBtn) {
     <h2>Blaze Kit</h2>
     <div class="limited-stamp">Exclusive Design</div>
     <div class="carousel">
-    <div class="slides" id="slides1">
-    <img src="P1.jpg">
-    <img src="P2.jpg">
-    <img src="P3.jpg">
-    <img src="P4.jpg">
-    <img src="P5.jpg">
-     </div>
       <span class="arrow left" data-product="1">&#10094;</span>
+      <img src="P1.jpg" id="productImg1" alt="Blaze Kit">
       <span class="arrow right" data-product="1">&#10095;</span>
-      </div>
+    </div>
     <div class="qty-container">
       <label for="quantity1">Quantity:</label>
       <select id="quantity1">
@@ -467,17 +445,11 @@ if (photoSectionBtn) {
   <!-- Produkt 2 -->
   <div class="product">
     <h2>Poster A2</h2>
-   <div class="carousel">
-   <div class="slides" id="slides2">
-    <img src="P1.jpg">
-    <img src="P2.jpg">
-    <img src="P3.jpg">
-    <img src="P4.jpg">
-    <img src="P5.jpg">
-     </div>
+    <div class="carousel">
       <span class="arrow left" data-product="2">&#10094;</span>
+      <img src="23.jpg" id="productImg2" alt="Plagát">
       <span class="arrow right" data-product="2">&#10095;</span>
-      </div>
+    </div>
     <div class="size-container">
       <label for="size2">Size:</label>
       <select id="size2">
@@ -1070,70 +1042,6 @@ function enableBodyScroll() {
     scrollDisabled = false;
   }
 }
-
-document.querySelectorAll('.carousel').forEach(carousel => {
-  const slides = carousel.querySelector('.slides');
-  const slideImgs = Array.from(slides.querySelectorAll('img'));
-
-  // 1️⃣ Clone first & last
-  const firstClone = slideImgs[0].cloneNode(true);
-  const lastClone = slideImgs[slideImgs.length - 1].cloneNode(true);
-  slides.appendChild(firstClone);
-  slides.insertBefore(lastClone, slideImgs[0]);
-
-  let currentIndex = 1; // začíname na prvom originálnom obrázku
-  const totalSlides = slideImgs.length;
-  const slideWidth = 100; // percentá
-
-  slides.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
-  slides.style.transition = `transform 0.4s ease`;
-
-  const leftArrow = carousel.querySelector('.arrow.left');
-  const rightArrow = carousel.querySelector('.arrow.right');
-
-  function moveToSlide(index) {
-    slides.style.transition = 'transform 0.4s ease';
-    slides.style.transform = `translateX(-${index * slideWidth}%)`;
-  }
-
-  rightArrow.addEventListener('click', () => {
-    if (currentIndex >= totalSlides + 1) return; // bezpečnostná kontrola
-    currentIndex++;
-    moveToSlide(currentIndex);
-  });
-
-  leftArrow.addEventListener('click', () => {
-    if (currentIndex <= 0) return;
-    currentIndex--;
-    moveToSlide(currentIndex);
-  });
-
-  slides.addEventListener('transitionend', () => {
-    // Ak sme na klone posledného obrázka pred prvým
-    if (currentIndex === 0) {
-      slides.style.transition = 'none';
-      currentIndex = totalSlides;
-      slides.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
-    }
-    // Ak sme na klone prvého obrázka za posledným
-    if (currentIndex === totalSlides + 1) {
-      slides.style.transition = 'none';
-      currentIndex = 1;
-      slides.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
-    }
-  });
-
-  // Swipe support
-  let startX = 0;
-  slides.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-  });
-  slides.addEventListener('touchend', e => {
-    const diff = e.changedTouches[0].clientX - startX;
-    if (diff > 50) leftArrow.click();
-    if (diff < -50) rightArrow.click();
-  });
-});
 
 </script>
 </body>
