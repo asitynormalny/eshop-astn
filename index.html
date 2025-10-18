@@ -359,6 +359,29 @@ input, select, textarea {
   transform: translateY(0) scale(1);
   filter: blur(0);
 }
+
+/* Smooth 3D animácia loga */
+@keyframes logoTiltSmooth {
+  0%   { transform: perspective(600px) rotateY(0deg) scale(1); }
+  25%  { transform: perspective(600px) rotateY(45deg) scale(1.08); }
+  50%  { transform: perspective(600px) rotateY(0deg) scale(1); }
+  75%  { transform: perspective(600px) rotateY(-45deg) scale(1.08); }
+  100% { transform: perspective(600px) rotateY(0deg) scale(1); }
+}
+
+header img#logo {
+animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite; 
+  transform-origin: center center; 
+  display: block;
+}
+
+/* Responzívne pre mobil */
+@media (max-width: 768px) {
+  header img#logo {
+    width: 108%;  
+    max-width: 500px; 
+  }
+}
 </style>
 </head>
 <body>
@@ -401,7 +424,7 @@ if (photoSectionBtn) {
 </div>
 
 <header>
-  <img id="logo" src="Logo.jpg" alt="Logo">
+  <img id="logo" src="Logo.webp" alt="Logo">
 </header>
 
 
@@ -418,7 +441,7 @@ if (photoSectionBtn) {
     <div class="limited-stamp">Exclusive Design</div>
     <div class="carousel">
       <span class="arrow left" data-product="1">&#10094;</span>
-      <img src="P1.jpg" id="productImg1" alt="Blaze Kit">
+      <img src="P1.webp" id="productImg1" alt="Blaze Kit">
       <span class="arrow right" data-product="1">&#10095;</span>
     </div>
     <div class="qty-container">
@@ -447,7 +470,7 @@ if (photoSectionBtn) {
     <h2>Poster A2</h2>
     <div class="carousel">
       <span class="arrow left" data-product="2">&#10094;</span>
-      <img src="PR1.jpg" id="productImg2" alt="Poster">
+      <img src="PR1.webp" id="productImg2" alt="Poster">
       <span class="arrow right" data-product="2">&#10095;</span>
     </div>
     <div class="size-container">
@@ -775,8 +798,8 @@ document.getElementById('country').addEventListener('change', renderCart);
 
 /* ====== CAROUSEL (unchanged) ====== */
 const productImgs = [
-  ["P1.jpg", "P2.jpg", "P3.jpg", "P4.jpg", "P5.jpg"], 
-  ["p2.jpg", "p0.jpg", "p1.jpg"]           
+  ["P1.webp", "P2.webp", "P3.webp", "P4.webp", "P5.webp"], 
+  ["PR1.webp",]           
 ];
 let currentImgs = [0,0];
 
@@ -1042,6 +1065,16 @@ function enableBodyScroll() {
     scrollDisabled = false;
   }
 }
+
+window.addEventListener('load', () => {
+  const logo = document.getElementById('logo');
+  logo.style.transition = "transform 0.6s ease-out";
+  logo.style.transform = "perspective(600px) rotateY(0deg) scale(1.2)"; // začneme väčšie
+  setTimeout(() => {
+    logo.style.transform = "perspective(600px) rotateY(0deg) scale(1)"; // zmenší sa na normálnu veľkosť
+  }, 50);
+});
+
 </script>
 </body>
 </html>
