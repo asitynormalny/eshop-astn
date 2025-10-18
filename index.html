@@ -368,7 +368,7 @@ input, select, textarea {
 
 .slides {
   display: flex;
-  transition: transform 0.25s ease-in-out;
+  transition: transform 0.20s ease-in-out;
 }
 
 .slides img {
@@ -1073,28 +1073,54 @@ function enableBodyScroll() {
 
 document.querySelectorAll('.carousel').forEach(carousel => {
   const slides = carousel.querySelector('.slides');
-  const slideImgs = slides.querySelectorAll('img');
-  let currentIndex = 0;
+  const slideImgs = Array.from(slides.querySelectorAll('img'));
+
+  // 1️⃣ Clone first & last
+  const firstClone = slideImgs[0].cloneNode(true);
+  const lastClone = slideImgs[slideImgs.length - 1].cloneNode(true);
+  slides.appendChild(firstClone);
+  slides.insertBefore(lastClone, slideImgs[0]);
+
+  let currentIndex = 1; // začíname na prvom originálnom obrázku
+  const totalSlides = slideImgs.length;
+  const slideWidth = 100; // percentá
+
+  slides.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
+  slides.style.transition = `transform 0.4s ease`;
 
   const leftArrow = carousel.querySelector('.arrow.left');
   const rightArrow = carousel.querySelector('.arrow.right');
 
-  function update() {
-    slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+  function moveToSlide(index) {
+    slides.style.transition = 'transform 0.4s ease';
+    slides.style.transform = `translateX(-${index * slideWidth}%)`;
   }
 
-  // ⬅️ Arrow left
-  leftArrow.addEventListener('click', () => {
-    currentIndex--;
-    if (currentIndex < 0) currentIndex = slideImgs.length - 1; // loop na posledný
-    update();
+  rightArrow.addEventListener('click', () => {
+    if (currentIndex >= totalSlides + 1) return; // bezpečnostná kontrola
+    currentIndex++;
+    moveToSlide(currentIndex);
   });
 
-  // ➡️ Arrow right
-  rightArrow.addEventListener('click', () => {
-    currentIndex++;
-    if (currentIndex >= slideImgs.length) currentIndex = 0; // loop na prvý
-    update();
+  leftArrow.addEventListener('click', () => {
+    if (currentIndex <= 0) return;
+    currentIndex--;
+    moveToSlide(currentIndex);
+  });
+
+  slides.addEventListener('transitionend', () => {
+    // Ak sme na klone posledného obrázka pred prvým
+    if (currentIndex === 0) {
+      slides.style.transition = 'none';
+      currentIndex = totalSlides;
+      slides.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
+    }
+    // Ak sme na klone prvého obrázka za posledným
+    if (currentIndex === totalSlides + 1) {
+      slides.style.transition = 'none';
+      currentIndex = 1;
+      slides.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
+    }
   });
 
   // Swipe support
@@ -1102,18 +1128,10 @@ document.querySelectorAll('.carousel').forEach(carousel => {
   slides.addEventListener('touchstart', e => {
     startX = e.touches[0].clientX;
   });
-
   slides.addEventListener('touchend', e => {
-    const endX = e.changedTouches[0].clientX;
-    const diff = endX - startX;
-    if (diff > 50) { // swipe doprava
-      currentIndex--;
-      if (currentIndex < 0) currentIndex = slideImgs.length - 1;
-    } else if (diff < -50) { // swipe doľava
-      currentIndex++;
-      if (currentIndex >= slideImgs.length) currentIndex = 0;
-    }
-    update();
+    const diff = e.changedTouches[0].clientX - startX;
+    if (diff > 50) leftArrow.click();
+    if (diff < -50) rightArrow.click();
   });
 });
 
