@@ -799,7 +799,7 @@ document.getElementById('country').addEventListener('change', renderCart);
 /* ====== CAROUSEL (unchanged) ====== */
 const productImgs = [
   ["P1.webp", "P2.webp", "P3.webp", "P4.webp", "P5.webp"], 
-  ["PR1.webp",]           
+  ["PR1.webp", "PR2.webp"]           
 ];
 let currentImgs = [0,0];
 
@@ -931,17 +931,11 @@ window.addEventListener('load', () => {
 let scrollDisabled = false;
 let scrollPos = 0;
 
-function preventDefault(e) {
-  e.preventDefault();
-}
-
 function disableBodyScroll() {
   if (!scrollDisabled) {
     scrollPos = window.pageYOffset || document.documentElement.scrollTop;
     document.body.style.overflow = 'hidden';
     document.body.style.touchAction = 'none';
-    // blokujeme scroll aj na mobile (iOS)
-    document.addEventListener('touchmove', preventDefault, { passive: false });
     scrollDisabled = true;
   }
 }
@@ -951,11 +945,10 @@ function enableBodyScroll() {
     document.body.style.overflow = '';
     document.body.style.touchAction = '';
     window.scrollTo(0, scrollPos);
-    // odstránime blokovanie touchmove
-    document.removeEventListener('touchmove', preventDefault);
     scrollDisabled = false;
   }
 }
+
 
 document.querySelectorAll('.cart-icon').forEach(c => {
   c.addEventListener('click', openCart);
