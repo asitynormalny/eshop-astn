@@ -381,7 +381,25 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
     width: 108%;  
     max-width: 500px; 
   }
+
 }
+.img-protect-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.img-protect-wrapper img {
+  display: block;
+  pointer-events: none; /* obrázok nereaguje na dotyk */
+}
+
+.img-protect-wrapper .overlay {
+  position: absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  z-index:10;
+}
+
 </style>
 </head>
 <body>
@@ -630,6 +648,7 @@ protectedImages.forEach(img => {
     }
     // krátke tapy stále spustia click
   }, { passive: false });
+   img.addEventListener('touchcancel', e => e.preventDefault());
 });
 
 // Kliknutie na obrázok (Photos + Shop) ostáva rovnaké
