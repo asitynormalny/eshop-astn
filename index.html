@@ -1074,6 +1074,13 @@ window.addEventListener('load', () => {
     logo.style.transform = "perspective(600px) rotateY(0deg) scale(1)"; // zmenší sa na normálnu veľkosť
   }, 50);
 });
+// 🧩 Oprava: odstráni modrý highlight po výbere na iPhone / Safari
+document.querySelectorAll('select').forEach(sel => {
+  sel.addEventListener('change', () => {
+    // stratí focus okamžite po zmene
+    sel.blur();
+  });
+});
 
 </script>
 </body>
