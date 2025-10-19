@@ -333,7 +333,7 @@ input, select, textarea {
 .limited-stamp {
   position: absolute;
   top: 20px;        /* zníži razítko, posunie ho nižšie */
-  right: -3px;      /* vzdialenosť od pravého okraja produktu */
+  right: 0px;      /* vzdialenosť od pravého okraja produktu */
   background: rgba(255, 0, 0, 0.85);
   color: #fff;
   font-weight: bold;
@@ -341,7 +341,7 @@ input, select, textarea {
   padding: 5px 10px;
   border-radius: 5px;
   z-index: 10;
-  transform: rotate(9deg);
+  transform: rotate(8deg);
   transform-origin: top right;
   box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
@@ -399,6 +399,16 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
   width:100%; height:100%;
   z-index:10;
 }
+.product-description {
+  font-weight: 400;       /* normálna hrúbka písma */
+  font-size: 16px;        /* veľkosť textu */
+  line-height: 1.3;       /* výška riadku */
+  margin: 0;              /* odstráni medzery nad aj pod */
+  padding: 0;
+}
+.product-description + .product-description {
+  margin-top: 2px; /* len medzi nasledujúcimi produkt-description */
+}
 
 </style>
 </head>
@@ -455,11 +465,11 @@ if (photoSectionBtn) {
 <div id="shopSection" class="section">
   <!-- Produkt 1 -->
   <div class="product">
-    <h2>Blaze Kit</h2>
+    <h2>Smoke Kit</h2>
     <div class="limited-stamp">Exclusive Design</div>
     <div class="carousel">
       <span class="arrow left" data-product="1">&#10094;</span>
-      <img src="P1.webp" id="productImg1" alt="Blaze Kit">
+      <img src="P1.webp" id="productImg1" alt="Smoke Kit">
       <span class="arrow right" data-product="1">&#10095;</span>
     </div>
     <div class="qty-container">
@@ -472,10 +482,13 @@ if (photoSectionBtn) {
     </div>
     <p>Price: €10.00</p>
     <p class="tax-note">Tax included.</p>
-    <p><strong>Includes king size papers with tips, small papers with tips, and a Clipper lighter.
-        Slow-burning hemp papers with Arabic gum, made in Slovenia.</strong></p>
+    <p class="product-description">1× Clipper lighter</p>
+    <p class="product-description">1× 1¼ papers + tips
+<p class="product-description">1× King size slim papers + tips</p>
+<p class="product-description"> Hemp papers, slow‑burning, Arabic gum</p>
+<p class="product-description">Made in Slovenia</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
-      <button class="addToCartBtn" data-product="Blaze Kit" data-price="10.00" data-size="" data-qty="quantity1">Add to Cart</button>
+      <button class="addToCartBtn" data-product="Smoke Kit" data-price="10.00" data-size="" data-qty="quantity1">Add to Cart</button>
       <div class="cart-container">
         <div class="cart-price">€0</div>
         <div class="cart-icon">🛒</div>
@@ -507,7 +520,10 @@ if (photoSectionBtn) {
     </div>
     <p>Price: €8.00</p>
     <p class="tax-note">Tax included.</p>
-    <p><strong>High-quality digital print on 225 g/m² matte paper.</strong></p>
+    <p class="product-description">225 g/m² matte paper</p>
+    <p class="product-description">High-quality digital print</p>
+<p class="product-description">Size: A2 (420 × 594 mm)</p>
+<p class="product-description">Printed in Slovakia</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
       <button class="addToCartBtn" data-product="Poster" data-price="8.00" data-size="size2" data-qty="quantity2">Add to Cart</button>
       <div class="cart-container">
@@ -840,7 +856,7 @@ document.querySelectorAll('.arrow.right').forEach(a=>{
 /* ====== ORDER (Formspree) ====== */
 document.getElementById('payBtn').addEventListener('click', async () => {
   if (cartData.length === 0) { 
-    showMessage("Cart is empty!"); 
+    showMessage("Cart is empty !"); 
     return; 
   }
   const name = document.getElementById('name').value.trim();
@@ -853,21 +869,21 @@ document.getElementById('payBtn').addEventListener('click', async () => {
   const note = document.getElementById('note').value.trim();
   const delivery = document.getElementById('delivery').value;
 
-  if (!name || !email || !phone || !street || !city || !zip) { showMessage("Please fill in all required fields!"); return; }
+  if (!name || !email || !phone || !street || !city || !zip) { showMessage("Please fill in all required fields !"); return; }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-if (!emailRegex.test(email)) { showMessage("Please enter a valid email address!"); return; }
+if (!emailRegex.test(email)) { showMessage("Please enter a valid email address !"); return; }
 
 const phoneRegex = /^(?:\+(420|421)[\s]?[0-9]{3}[\s]?[0-9]{3}[\s]?[0-9]{3}|[0-9]{9,10})$/;
 if (!phoneRegex.test(phone)) { 
-  showMessage("Enter a valid phone number (+420/+421 9 digits, or 9–10 digits without code!"); 
+  showMessage("Enter a valid phone number (+420/+421 9 digits, or 9–10 digits without code !"); 
   return; 
 }
 
 const zipRegex = /^(\d{5}|\d{3}\s\d{2})$/;
-if (!zipRegex.test(zip)) { showMessage("Enter a valid ZIP code (12345 or 123 45)!"); return; }
+if (!zipRegex.test(zip)) { showMessage("Enter a valid ZIP code (12345 or 123 45) !"); return; }
 
-if (!note) { showMessage("Enter pickup point or Z-Box name!"); return; }
+if (!note) { showMessage("Enter pickup point or Z-Box name !"); return; }
 
   const formData = new FormData();
   const productText = cartData.map(item => 
@@ -897,12 +913,12 @@ if (!note) { showMessage("Enter pickup point or Z-Box name!"); return; }
       cartData = [];
       renderCart();
       ['name','email','phone','street','city','zip','note'].forEach(id => document.getElementById(id).value = "");
-    } else {
-      alert("Niečo sa pokazilo. Skúste znova.");
+     } else {
+        showMessage("Something went wrong. Please try again.");
+      }
+   } catch (err) {
+      showMessage("Error sending the order.");
     }
-  } catch (err) {
-    alert("Chyba pri odosielaní objednávky.");
-  }
 });
 document.getElementById('orderOkBtn').addEventListener('click', () => {
   document.getElementById('orderPopup').classList.remove('show');
@@ -923,12 +939,10 @@ if (contactForm) {
         contactForm.reset();
         setTimeout(() => { contactStatus.textContent = ""; }, 5000);
       } else {
-        contactStatus.textContent = "Chyba pri odosielaní správy. Skúste znova.";
-        contactStatus.style.color = "#f00";
+        showMessage("Error sending message ! Please try again.");
       }
     } catch (err) {
-      contactStatus.textContent = "Chyba pri odosielaní správy.";
-      contactStatus.style.color = "#f00";
+      showMessage("Error sending message !");
     }
   });
 }
