@@ -1108,7 +1108,32 @@ window.addEventListener('load', () => {
   }, 50);
 });
 
+
+// Blokovanie praveho kliknutia
+document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    alert("Kopírovanie je zakázané!");
+});
+
+// Blokovanie Ctrl+C a podobných skratiek
+document.addEventListener("keydown", function(e) {
+    if ((e.ctrlKey && (e.key === "c" || e.key === "x" || e.key === "u" || e.key === "s")) || 
+        (e.metaKey && (e.key === "c" || e.key === "x" || e.key === "u" || e.key === "s"))) {
+        e.preventDefault();
+        alert("Kopírovanie je zakázané!");
+    }
+});
+
+// Blokovanie označovania textu
+document.addEventListener("selectstart", function(e) {
+    e.preventDefault();
+});
+
+// Blokovanie kopírovania na mobile (dlhé podržanie)
+document.addEventListener("copy", function(e) {
+    e.preventDefault();
+    alert("Kopírovanie je zakázané!");
+});
 </script>
 </body>
 </html>
-
