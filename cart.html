@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Cart</title>
+  <link rel="icon" type="image/png" href="faviconsi.png?v=2">
+  <style>
+    :root { --bg:#111; --panel:#1b1b1b; --text:#fff; --muted:#aaa; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#000; color:var(--text); }
+    header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; background:#111; position:sticky; top:0; z-index:3; }
+    header a { color: var(--text); text-decoration:none; font-weight:700; }
+    .brand { display:flex; align-items:center; gap:10px; }
+    .brand img { height:34px; width:auto; border-radius:6px; }
+    .wrap { max-width:900px; margin:18px auto 80px; padding:0 14px; }
+
+    .grid { display:grid; grid-template-columns: 1.2fr .8fr; gap:16px; }
+    @media (max-width:900px){ .grid { grid-template-columns: 1fr; } }
+
+    .card { background:var(--panel); border-radius:12px; box-shadow: 0 2px 10px rgba(255,255,255,.15); }
+    .card h2 { margin:0; padding:14px 16px; border-bottom:1px solid #2a2a2a; font-size:18px; }
+    .card .content { padding:14px 16px; }
+
+    .item { display:grid; grid-template-columns: 64px 1fr auto; gap:12px; align-items:center; padding:10px 0; border-bottom:1px dashed #2a2a2a; }
+    .item:last-child { border-bottom:0; }
+    .thumb { width:64px; height:64px; border-radius:8px; object-fit:cover; background:#000; }
+    .name { font-weight:700; }
+    .muted { color:var(--muted); font-size:13px; }
+
+    .qty { display:flex; align-items:center; gap:8px; }
+    .qty select { padding:8px 10px; border:0; border-radius:8px; background:#222; color:#fff; }
+
+    .remove { background:none; border:0; color:#ff6060; font-weight:800; cursor:pointer; padding:6px 8px; }
+
+    .row { display:flex; justify-content:space-between; gap:8px; margin:6px 0; }
+    .total { font-weight:800; font-size:18px; }
+
+    input, select, textarea, button { width:100%; padding:10px 12px; border:0; border-radius:10px; background:#222; color:#fff; font-size:16px; }
+    textarea { resize:vertical; min-height:60px; }
+    label { display:block; font-size:13px; color:var(--muted); margin:12px 0 6px; }
+    button.primary { background:#6772e5; color:#fff; font-weight:800; cursor:pointer; }
+    .success { background:#12381a; color:#87ffa5; border:1px solid #2a6a3a; padding:10px 12px; border-radius:10px; }
+    .error { background:#3a1212; color:#ff9a9a; border:1px solid #6a2a2a; padding:10px 12px; border-radius:10px; }
+
+    .foot { text-align:center; color:var(--muted); margin-top:18px; font-size:14px; }
+    .tax-note { color:#aaa; font-size:13px; margin-top:-8px; margin-bottom:10px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .empty { text-align:center; padding:22px 10px; color:#ccc; }
+    .inline { display:flex; gap:10px; }
+    .inline > * { flex:1; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <a href="index.html" title="Back to shop"><img src="Logo.webp?v=2" alt="logo"/></a>
+      <a href="index.html#shop">⬅ Back to shop</a>
+    </div>
+    <div>
+      <strong>Cart</strong>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="grid">
+      <div class="card" id="cartCard">
+        <h2>Your items</h2>
+        <div class="content" id="items"></div>
+      </div>
+
+      <div class="card">
+        <h2>Checkout</h2>
+        <div class="content">
+          <p class="tax-note">Tax included.</p>
+
+          <div class="row"><span>Subtotal</span><span id="subtotal">€0.00</span></div>
+          <div class="row"><span>Shipping</span><span id="shipping">€0.00</span></div>
+          <div class="row"><span>COD charge</span><span id="cod">€0.00</span></div>
+          <div class="row total"><span>Total</span><span id="total">€0.00</span></div>
+
+          <div id="msg" style="margin-top:10px"></div>
+
+          <form id="orderForm">
+            <label>Name</label>
+            <input id="name" placeholder="Full Name" required />
+            <label>Email</label>
+            <input id="email" type="email" placeholder="Email" required />
+            <label>Phone</label>
+            <input id="phone" type="tel" placeholder="Phone" required />
+
+            <div class="inline">
+              <div>
+                <label>Street</label>
+                <input id="street" placeholder="Street Address" required />
+              </div>
+              <div>
+                <label>City</label>
+                <input id="city" placeholder="City" required />
+              </div>
+            </div>
+
+            <div class="inline">
+              <div>
+                <label>ZIP</label>
+                <input id="zip" placeholder="12345" required />
+              </div>
+              <div>
+                <label>Country</label>
+                <select id="country">
+                  <option value="Slovensko" selected>Slovakia</option>
+                  <option value="Česká republika">Czech Republic</option>
+                </select>
+              </div>
+            </div>
+
+            <label>Delivery Method (Packeta)</label>
+            <select id="delivery">
+              <option value="Z-Box">Z-Box</option>
+              <option value="Výdajné miesto">Pickup Point</option>
+            </select>
+
+            <label>Pickup point or Z-Box name</label>
+            <textarea id="note" placeholder="Pickup point or Z-Box name" required></textarea>
+
+            <button class="primary" type="submit" id="payBtn">Order Now</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <p class="foot">© <span id="year"></span> All rights reserved</p>
+  </div>
+
+  <script>
+    const EURO = new Intl.NumberFormat('en-IE', { style:'currency', currency:'EUR' });
+
+    // === cart storage helpers ===
+    function loadCart(){
+      try { return JSON.parse(localStorage.getItem('cartData')||'[]'); } catch(e){ return []; }
+    }
+    function saveCart(data){ localStorage.setItem('cartData', JSON.stringify(data)); }
+
+    // === state ===
+    let cart = loadCart();
+
+    // === pricing ===
+    function shippingFor(country){ return country === 'Česká republika' ? 4.50 : 3.50; }
+    const COD = 1.40;
+
+    function render(){
+      const itemsEl = document.getElementById('items');
+      if(cart.length === 0){
+        itemsEl.innerHTML = '<p class="empty">Your cart is empty.</p>';
+      } else {
+        itemsEl.innerHTML = cart.map((item, i) => `
+          <div class="item">
+            <img class="thumb" src="${thumbFor(item.product)}" alt="${item.product}">
+            <div>
+              <div class="name">${item.product}${item.size ? ' ('+item.size+')' : ''}</div>
+              <div class="muted">${EURO.format(item.price)} each</div>
+              <div class="qty">
+                <span>Qty:</span>
+                <select data-idx="${i}" class="qtySel">
+                  ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}" ${n==item.qty?'selected':''}>${n}</option>`).join('')}
+                </select>
+              </div>
+            </div>
+            <div>
+              <div style="text-align:right; font-weight:700">${EURO.format(item.price*item.qty)}</div>
+              <button class="remove" data-idx="${i}">Remove</button>
+            </div>
+          </div>
+        `).join('');
+
+        document.querySelectorAll('.qtySel').forEach(sel=>{
+          sel.addEventListener('change', e => {
+            const i = +e.target.dataset.idx; cart[i].qty = +e.target.value; saveCart(cart); updateTotals(); render();
+          });
+        });
+        document.querySelectorAll('.remove').forEach(btn=>{
+          btn.addEventListener('click', e => { const i = +e.target.dataset.idx; cart.splice(i,1); saveCart(cart); updateTotals(); render(); });
+        });
+      }
+      updateTotals();
+    }
+
+    function thumbFor(name){
+      // simple mapping to your existing assets
+      if(name.toLowerCase().includes('smoke')) return 'P1.webp';
+      if(name.toLowerCase().includes('poster')) return 'PR1.webp';
+      return 'faviconsi.png?v=2';
+    }
+
+    function updateTotals(){
+      const subtotal = cart.reduce((s,i)=>s + i.price*i.qty, 0);
+      const country = document.getElementById('country').value;
+      const shipping = cart.length ? shippingFor(country) : 0;
+      const cod = cart.length ? COD : 0;
+      const total = subtotal + shipping + cod;
+      document.getElementById('subtotal').textContent = EURO.format(subtotal);
+      document.getElementById('shipping').textContent = EURO.format(shipping);
+      document.getElementById('cod').textContent = EURO.format(cod);
+      document.getElementById('total').textContent = EURO.format(total);
+    }
+
+    document.getElementById('country').addEventListener('change', updateTotals);
+
+    // === checkout ===
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^(?:\+(420|421)[\s]?[0-9]{3}[\s]?[0-9]{3}[\s]?[0-9]{3}|[0-9]{9,10})$/;
+    const zipRegex = /^(\d{5}|\d{3}\s\d{2})$/;
+
+    function showMsg(text, type='error'){
+      const el = document.getElementById('msg');
+      el.className = type;
+      el.textContent = text;
+      setTimeout(()=>{ el.textContent=''; el.className=''; }, 5000);
+    }
+
+    document.getElementById('orderForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      if(cart.length===0){ showMsg('Cart is empty.', 'error'); return; }
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const street = document.getElementById('street').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const zip = document.getElementById('zip').value.trim();
+      const country = document.getElementById('country').value;
+      const note = document.getElementById('note').value.trim();
+      const delivery = document.getElementById('delivery').value;
+
+      if(!name||!email||!phone||!street||!city||!zip){ showMsg('Please fill in all required fields.'); return; }
+      if(!emailRegex.test(email)){ showMsg('Please enter a valid email address.'); return; }
+      if(!phoneRegex.test(phone)){ showMsg('Enter a valid phone number (+420/+421 9 digits, or 9–10 digits without code).'); return; }
+      if(!zipRegex.test(zip)){ showMsg('Enter a valid ZIP code (12345 or 123 45).'); return; }
+      if(!note){ showMsg('Enter pickup point or Z-Box name.'); return; }
+
+      const formData = new FormData();
+      const productText = cart.map(item => `product: ${item.product}${item.size ? ', size: ' + item.size : ''}, price: €${item.price.toFixed(2)}, qty: ${item.qty}`).join('; ');
+      formData.append('product', productText);
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('phone', phone);
+      formData.append('street', street);
+      formData.append('city', city);
+      formData.append('zip', zip);
+      formData.append('country', country);
+      formData.append('note', note);
+      formData.append('delivery', delivery);
+      formData.append('cod', 'Dobierka');
+
+      try {
+        const response = await fetch('https://formspree.io/f/xvgbylyd', { method:'POST', body: formData, headers:{ 'Accept':'application/json' } });
+        if(response.ok){
+          saveCart([]); cart = []; render(); updateTotals();
+          showMsg('Order successfully placed! Thank you.', 'success');
+        } else {
+          showMsg('Something went wrong. Please try again.');
+        }
+      } catch(err){
+        showMsg('Error sending the order.');
+      }
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    render();
+  </script>
+</body>
+</html>
