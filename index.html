@@ -50,17 +50,22 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 .navbar button { padding:10px 20px; font-size:16px; cursor:pointer; background:#222; color:#fff; border:none; border-radius:5px; }
 .navbar button.active { background:#6772e5; }
 .section {
-  display: none;
+  position: absolute;       /* sekcie sú na sebe */
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;        /* vždy výška celej obrazovky */
   opacity: 0;
-  transform: translateX(50px); /* posun doprava */
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  visibility: hidden;       /* namiesto display:none */
+  transition: opacity 0.5s ease;
 }
 
 .section.active {
-  display: block;
+  position: relative;       /* aktívna sekcia sa správa normálne */
   opacity: 1;
-  transform: translateX(0);
+  visibility: visible;
 }
+
 .product{margin:25px auto 30px auto; background:#111; padding:20px; max-width:420px; box-shadow:0 2px 5px rgba(255,255,255,0.2); border-radius:10px;}
 .carousel{position:relative; margin-bottom:15px; display:flex; justify-content:center; align-items:center;}
 .carousel img{max-width:100%; display:block; border-radius:5px; cursor:pointer;}
@@ -669,20 +674,12 @@ const photoImages = document.querySelectorAll('#photoContainer img');
 
 /* ====== SECTION SWITCH ====== */
 function showSection(sectionToShow, sectionToHide, btnToActivate, btnToDeactivate) {
-  sectionToHide.style.opacity = '0';
-  setTimeout(() => {
-    sectionToHide.classList.remove('active');
-    sectionToHide.style.display = 'none';
-    sectionToShow.style.display = 'block';
-    sectionToShow.classList.add('active');
-    sectionToShow.style.opacity = '0';
-    requestAnimationFrame(() => {
-      sectionToShow.style.opacity = '1';
-    });
-  }, 200);
+  sectionToHide.classList.remove('active');
+  sectionToShow.classList.add('active');
   btnToActivate.classList.add('active');
   btnToDeactivate.classList.remove('active');
 }
+
 shopBtn.addEventListener('click', () => {
   showSection(shopSection, photoSection, shopBtn, photoBtn);
 });
