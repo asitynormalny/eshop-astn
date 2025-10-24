@@ -913,7 +913,6 @@ if (!note) { showMessage("Enter pickup point or Z-Box name !"); return; }
       cartData = [];
       renderCart();
       ['name','email','phone','street','city','zip','note'].forEach(id => document.getElementById(id).value = "");
-      closeCartFn();
      } else {
         showMessage("Something went wrong. Please try again.");
       }
@@ -1108,6 +1107,7 @@ window.addEventListener('load', () => {
     logo.style.transform = "perspective(600px) rotateY(0deg) scale(1)"; // zmenší sa na normálnu veľkosť
   }, 50);
 });
+
 </script>
 </body>
 </html>
