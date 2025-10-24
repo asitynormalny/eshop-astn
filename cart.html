@@ -8,7 +8,21 @@
   <style>
     :root { --bg:#111; --panel:#1b1b1b; --text:#fff; --muted:#aaa; }
     * { box-sizing: border-box; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:#000; color:var(--text); }
+     body {
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color:var(--text);
+  background: url('background.webp') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* 🟢 na mobiloch vypni fixed, aby to vyzeralo rovnako */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll; /* už nebude „trhané“ ani iné oproti indexu */
+    background-position: center top;
+  }
+}
     header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; background:#111; position:sticky; top:0; z-index:3; }
     header a { color: var(--text); text-decoration:none; font-weight:700; }
     .brand { display:flex; align-items:center; gap:10px; }
@@ -43,7 +57,7 @@
     .success { background:#12381a; color:#87ffa5; border:1px solid #2a6a3a; padding:10px 12px; border-radius:10px; }
     .error { background:#3a1212; color:#ff9a9a; border:1px solid #6a2a2a; padding:10px 12px; border-radius:10px; }
 
-    .foot { text-align:center; color:var(--muted); margin-top:18px; font-size:14px; }
+    .foot { text-align:center; color:#FF0000; margin-top:18px; font-size:14px; }
     .tax-note { color:#aaa; font-size:13px; margin-top:-8px; margin-bottom:10px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 
     .empty { text-align:center; padding:22px 10px; color:#ccc; }
@@ -62,10 +76,10 @@
   <header>
     <div class="brand">
       <a href="index.html" title="Back to shop">
-      <a href="index.html#shop">Back to Shop</a>
+      <a href="index.html#shop">⬅️ Back to Shop</a>
     </div>
     <div>
-      <strong>Cart</strong>
+      <strong>Cart 🛒</strong>
     </div>
   </header>
 
