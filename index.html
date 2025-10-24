@@ -966,21 +966,32 @@ let scrollDisabled = false;
 let scrollPos = 0;
 
 function disableBodyScroll() {
-  if (!scrollDisabled) {
-    scrollPos = window.pageYOffset || document.documentElement.scrollTop;
-    document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
-    scrollDisabled = true;
-  }
+  if (scrollDisabled) return;
+
+  scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${scrollPos}px`;
+  document.body.style.width = '100%';
+  document.body.style.overflow = 'hidden';
+  document.body.style.touchAction = 'none';
+  scrollDisabled = true;
 }
 
 function enableBodyScroll() {
-  if (scrollDisabled) {
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
-    window.scrollTo(0, scrollPos);
-    scrollDisabled = false;
+  const blockingModals = [cartModal, lightbox, gdprModal, messagePopup, orderPopup].filter(Boolean);
+  if (blockingModals.some(modal => modal.classList.contains('show'))) {
+    return;
   }
+
+  if (!scrollDisabled) return;
+
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  document.body.style.overflow = '';
+  document.body.style.touchAction = '';
+  window.scrollTo(0, scrollPos);
+  scrollDisabled = false;
 }
 
 
@@ -1057,6 +1068,7 @@ addPhotoFooter();
 
 const closeGdpr = document.getElementById('closeGdpr');
 const gdprModal = document.getElementById('gdprModal');
+const orderPopup = document.getElementById('orderPopup');
 
 closeGdpr.addEventListener('click', () => {
   gdprModal.classList.remove('show');
@@ -1085,20 +1097,6 @@ messageOkBtn.addEventListener('click', () => {
   messagePopup.classList.remove('show');
   enableBodyScroll(); // obnoví scroll
 });
-
-function enableBodyScroll() {
-  // Ak je otvorený cartModal alebo lightbox alebo GDPR modal alebo messagePopup, scroll nedeaktivujeme
-  if (cartModal.classList.contains('show') || lightbox.classList.contains('show') || gdprModal.classList.contains('show') || messagePopup.classList.contains('show')) {
-    return; // necháme scroll zakázaný
-  }
-  
-  if (scrollDisabled) {
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
-    window.scrollTo(0, scrollPos);
-    scrollDisabled = false;
-  }
-}
 
 window.addEventListener('load', () => {
   const logo = document.getElementById('logo');
