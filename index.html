@@ -343,7 +343,7 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
 
 /* TOPBAR */
 .topbar {
-  background: #000;              /* čierny pás */
+  background: #111;              /* čierny pás */
   color: #fff;
   display: flex;
   justify-content: flex-end;     /* obsah doprava */
@@ -429,6 +429,59 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
   justify-content: center;     /* vycentruj horizontálne */
   align-items: center;         /* vycentruj vertikálne */
 }
+
+.size-container select,
+.qty-container select {
+  width: 70%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;              /* desktop */
+  text-align-last: center;         /* Chrome/Firefox/Edge */
+  -moz-text-align-last: center;    /* Firefox */
+  -webkit-appearance: none;        /* odstráni defaultný iOS štýl */
+  -moz-appearance: none;           /* Firefox */
+  appearance: none;                /* ostatné */
+}
+
+.size-container select,
+.qty-container select {
+  background: #222 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12'><polygon points='0,0 12,0 6,6' fill='white'/></svg>") no-repeat right 10px center;
+  background-size: 12px;
+}
+
+.size-container select,
+.qty-container select {
+  width: 70%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;      /* decentná sivá orámovanie */
+  
+  background-color: #fff;      /* 🔹 celé pozadie biele */
+  color: #000;                 /* 🔹 text čierny */
+
+  /* čierna šípka ako SVG */
+ background-image: url("data:image/svg+xml;utf8,\
+ <svg xmlns='http://www.w3.org/2000/svg' width='12' height='12'>\
+ <path d='M2 4 L6 8 L10 4' stroke='black' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/>\
+ </svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+
+  /* centrovanie textu */
+  text-align: center;
+  text-align-last: center;
+  -moz-text-align-last: center;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+
 
 </style>
 </head>
