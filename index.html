@@ -41,6 +41,7 @@ body {
   background-size: cover;
   color: #fff;
   text-align: center;
+  min-height: 100vh; 
 }
 
 header { padding:15px 20px; background:#111; display:flex; justify-content:center; align-items:center; gap:20px; position:relative;}
@@ -447,6 +448,12 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
     font-size: 14px;  /* menší text na mobiloch */
     padding: 8px;
   }
+}
+
+.section {
+  min-height: 100vh;  /* vždy aspoň výška obrazovky */
+  width: 100%;        /* istota že sa roztiahne */
+  box-sizing: border-box;
 }
 
 </style>
