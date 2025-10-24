@@ -83,6 +83,16 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 .size-container, .qty-container{margin:15px 0; text-align:center;}
 .size-container select, .qty-container select{width:50%; padding:10px; font-size:16px; border-radius:5px; border:none; text-align:center;}
 .product button{padding:10px 20px; font-size:16px; cursor:pointer; background:#6772e5; color:#fff; border:none; border-radius:5px; margin-top:10px;}
+.cart-container { text-align:center; display:flex; flex-direction:column; align-items:center; }
+.cart-price{ font-size:14px; color:#0f0; margin-top:5px; }
+.cart-icon{ font-size:24px; cursor:pointer; margin-top:5px; }
+.cart-modal{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; justify-content:center; align-items:center;}
+.cart{background:#111; padding:15px 20px; max-width:350px; width:80%; border-radius:10px; box-shadow:0 2px 10px rgba(255,255,255,0.3); position:relative; text-align:center; max-height:85vh; overflow-y:auto;-webkit-overflow-scrolling: touch; /* plynulý scroll na iOS */}
+.cart input, .cart select, .cart textarea{width:90%; padding:8px; margin:5px 0; font-size:14px; border-radius:4px; border:none;}
+.cart textarea{resize:vertical; min-height:50px;}
+.cart button{padding:10px 16px; font-size:15px; cursor:pointer; background:#6772e5; color:#fff; border:none; border-radius:5px; margin-top:10px;}
+.close-btn{position:absolute; top:10px; right:15px; font-size:35px; color:#fff; cursor:pointer;}
+.remove-item{cursor:pointer; color:red; margin-left:8px; font-weight:bold;}
 label{display:block; margin-top:6px;}
 .lightbox {
   display: none;
@@ -141,12 +151,39 @@ label{display:block; margin-top:6px;}
   transform: scale(1.1);
 }
 
+#addCartPopup, #orderPopup { 
+    display: none; 
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); /* <-- vycentrované vertikálne aj horizontálne */
+    background: #222; 
+    color: #fff; 
+    padding: 25px 30px; 
+    border-radius: 10px; 
+    box-shadow: 0 2px 15px rgba(0,0,0,0.5); 
+    z-index: 1001; 
+    text-align: center; 
+    opacity: 0; 
+    transition: opacity 0.3s ease, transform 0.3s ease; 
+    max-width: 95%; 
+}
+#addCartPopup.show, #orderPopup.show { 
+    display: block; 
+    opacity: 1; 
+    transform: translate(-50%, -50%); /* <-- rovnaké ako vyššie */
+}
 
-
+#addCartPopup button, #orderPopup button { margin:5px; padding:12px 18px; font-size: 16px; border:none; border-radius:5px; cursor:pointer; }
+#addCartPopup #continueShopping{background:#6772e5; color:#fff;}
+#addCartPopup #goToCart{background:#0f0; color:#000;}
+#orderPopup button{background:#6772e5; color:#fff;}
 #contactFormContainer{ margin:40px auto; max-width:400px; text-align:center; background:#111; padding:20px; border-radius:10px; box-shadow:0 2px 5px rgba(255,255,255,0.2); }
 #contactForm input, #contactForm textarea{ width:90%; padding:10px; margin:5px 0; border-radius:5px; border:none;}
 #contactForm button{ padding:10px 20px; margin-top:10px; border:none; border-radius:5px; background:#6772e5; color:#fff; cursor:pointer; }
-
+#payBtn {
+    margin-top: -18px; /* zníži medzeru nad tlačidlom */
+}
 
 #photoContainer {
   display: grid;
@@ -173,6 +210,20 @@ label{display:block; margin-top:6px;}
 }
 
 
+#codText { font-weight:bold; font-size:16px; margin:10px 0; color:#fff; }
+@media (max-width:600px){
+  header img{ width: 80%; max-width:500px; height:auto; }
+  .arrow{font-size:30px; padding:19px 8px;}
+  .size-container select, .qty-container select{width:70%; font-size:14px;}
+  .cart input, .cart select, .cart textarea{width:95%; font-size:13px;}
+  .cart{max-width:90%;}
+  #addCartPopup, #orderPopup{padding:12px 15px; font-size:14px;}
+}
+input, select, textarea {
+  font-size: 16px;
+}
+
+
 /* Zákaz stiahnutia všetkých obrázkov */
 #photoContainer img,
 .carousel img,
@@ -195,6 +246,45 @@ label{display:block; margin-top:6px;}
 .lightbox.show img {
   opacity: 1;
   transform: scale(1); /* dorastie na 100% */
+}
+
+.cart-modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none; /* zablokuje klikanie keď je skrytý */
+  background: rgba(0,0,0,0.7);
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+.cart-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cart {
+  background: #111;
+  padding: 15px 20px;
+  max-width: 350px;
+  width: 80%;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(255,255,255,0.3);
+  text-align: center;
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.cart-modal.show .cart {
+  transform: scale(1);
+  opacity: 1;
 }
 
 #messagePopup {
@@ -319,23 +409,6 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
 .product-description + .product-description {
   margin-top: 2px; /* len medzi nasledujúcimi produkt-description */
 }
-#gdprModal {
-  display:none;
-  position:fixed;
-  top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,0.7);
-  z-index:999;
-  justify-content:center;
-  align-items:center;
-}
-#gdprModal.show { display:flex; }
-#gdprModal .gdpr-content {
-  background:#111;
-  padding:20px;
-  border-radius:10px;
-  color:#fff;
-  max-width:350px;
-}
 
 </style>
 </head>
@@ -362,8 +435,8 @@ if (photoSectionBtn) {
 </script>
 
 <!-- GDPR MODAL -->
-<div id="gdprModal">
-  <div class="gdpr-content">
+<div id="gdprModal" class="cart-modal">
+  <div class="cart">
     <span class="close-btn" id="closeGdpr">&times;</span>
     <h3>GDPR – Data Protection</h3>
     We process your personal data only to handle your orders or contact you. 
@@ -416,9 +489,9 @@ if (photoSectionBtn) {
 <p class="product-description">Made in Slovenia</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
       <button class="addToCartBtn" data-product="Smoke Kit" data-price="10.00" data-size="" data-qty="quantity1">Add to Cart</button>
-       <div class="cart-container">
-  <div class="cart-price">€0</div>
-  <a class="cart-icon" href="cart.html" title="Cart">🛒</a>
+      <div class="cart-container">
+        <div class="cart-price">€0</div>
+        <div class="cart-icon">🛒</div>
       </div>
     </div>
   </div>
@@ -454,8 +527,8 @@ if (photoSectionBtn) {
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
       <button class="addToCartBtn" data-product="Poster" data-price="8.00" data-size="size2" data-qty="quantity2">Add to Cart</button>
       <div class="cart-container">
-  <div class="cart-price">€0</div>
-  <a class="cart-icon" href="cart.html" title="Cart">🛒</a>
+        <div class="cart-price">€0</div>
+        <div class="cart-icon">🛒</div>
 
       </div>
     </div>
@@ -492,11 +565,69 @@ if (photoSectionBtn) {
   </div>
 </div>
 
+<!-- POPUPS -->
+<div id="addCartPopup">
+  <p>Product added to cart successfully !</p>
+  <button id="continueShopping">Continue shopping</button>
+  <button id="goToCart">View cart</button>
+</div>
+<div id="orderPopup">
+  <p>Order successfully placed !</p>
+  <button id="orderOkBtn">OK</button>
+</div>
+
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <div class="lightbox-content">
     <span class="close-lightbox" id="closeLightbox">&times;</span>
     <img id="lightboxImg" src="">
+  </div>
+</div>
+
+<!-- CART MODAL -->
+<div class="cart-modal" id="cartModal">
+  <div class="cart">
+    <span class="close-btn" id="closeCart">&times;</span>
+    <h3>Cart</h3>
+    <div id="cartItems"></div>
+    <input type="text" id="name" placeholder="Full Name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="tel" id="phone" placeholder="Phone">
+    <input type="text" id="street" placeholder="Street Address">
+    <input type="text" id="city" placeholder="City">
+    <input type="text" id="zip" placeholder="ZIP Code">
+    <label for="country">Shipping Country:</label>
+    <select id="country">
+      <option value="Slovensko" selected>Slovakia</option>
+      <option value="Česká republika">Czech Republic</option>
+    </select>
+    <label for="delivery">
+  <label for="delivery">Delivery Method (Packeta):</label>
+</label>
+
+    <select id="delivery">
+      <option value="Z-Box">Z-Box</option>
+      <option value="Výdajné miesto">Pickup Point</option>
+    </select>
+
+    <style>
+#note {
+  color: red;           /* farba textu */
+}
+#note::placeholder {
+  color: red;           /* farba placeholderu */
+  opacity: 1;           /* aby placeholder bol plne červený vo všetkých prehliadačoch */
+}
+</style>
+
+<textarea id="note" placeholder="Pickup point or Z-Box name"></textarea>
+
+
+    <p id="codText" style="color:#00FF00">CASH ON DELIVERY ONLY</p>
+    <p id="total"></p>
+
+
+    <button id="payBtn">Order Now</button>
   </div>
 </div>
 
@@ -544,6 +675,10 @@ const photoImages = document.querySelectorAll('#photoContainer img');
   img.addEventListener('click', () => openLightbox(img.src));
 });
 
+
+const cartModal = document.getElementById('cartModal');
+const closeCart = document.getElementById('closeCart');
+
 /* ====== SECTION SWITCH ====== */
 function showSection(sectionToShow, sectionToHide, btnToActivate, btnToDeactivate) {
   sectionToHide.style.opacity = '0';
@@ -562,6 +697,10 @@ function showSection(sectionToShow, sectionToHide, btnToActivate, btnToDeactivat
 }
 shopBtn.addEventListener('click', () => {
   showSection(shopSection, photoSection, shopBtn, photoBtn);
+});
+photoBtn.addEventListener('click', () => {
+  showSection(photoSection, shopSection, photoBtn, shopBtn);
+  setTimeout(animatePhotos, 200); // 💥 znovu spustí fade animáciu po návrate
 });
 
 /* ====== LIGHTBOX (univerzálne pre shop + photos) ====== */
@@ -612,18 +751,41 @@ lightbox.addEventListener('click', e => {
 });
 
 /* ====== CART (unchanged logic) ====== */
-// --- LocalStorage košík (zdieľaný s cart.html) ---
-function loadCart(){ try { return JSON.parse(localStorage.getItem('cartData')||'[]'); } catch(e){ return []; } }
-function saveCart(data){ localStorage.setItem('cartData', JSON.stringify(data)); }
+let cartData = [];
+function renderCart(){
+  const shipping = document.getElementById('country').value === "Česká republika" ? 4.50 : 3.50;
+  const cod = 1.40;
+  const cartItems = document.getElementById('cartItems');
+  const total = document.getElementById('total');
+  const cartPriceElems = document.querySelectorAll('.cart-price');
 
-// Subtotal badge pri produktoch
-function updateLocalSubtotalBadges(){
-  const cart = loadCart();
-  const subtotal = cart.reduce((s,i)=> s + i.price*i.qty, 0);
-  document.querySelectorAll('.cart-price').forEach(e => e.textContent = "€" + subtotal.toFixed(2));
+  if(cartData.length === 0){
+    cartItems.innerHTML = "<em>Your cart is empty</em>";
+    total.innerHTML = "";
+    cartPriceElems.forEach(e => e.textContent = "€0");
+    return;
+  }
+
+ cartItems.innerHTML = cartData.map((i,index) =>
+  `<p>${i.product}${i.size ? ' (' + i.size + ')' : ''} x${i.qty} - €${(i.price*i.qty).toFixed(2)} 
+   <span class="remove-item" data-index="${index}">❌</span></p>`
+ ).join('');
+
+ const subtotal = cartData.reduce((sum,i) => sum + i.price*i.qty, 0);
+ const totalPrice = (subtotal + shipping + cod).toFixed(2);
+ total.innerHTML = `Subtotal: €${subtotal.toFixed(2)}<br>Shipping: €${shipping.toFixed(2)}<br>COD charge: €${cod.toFixed(2)}<br><strong>Total: €${totalPrice}</strong>`;
+ cartPriceElems.forEach(e => e.textContent = "€" + subtotal.toFixed(2));
+
+
+  document.querySelectorAll('.remove-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      cartData.splice(btn.getAttribute('data-index'), 1);
+      renderCart();
+    });
+  });
 }
 
-// „Add to Cart“ → uloží do localStorage a obnoví subtotal badge
+/* add to cart buttons */
 document.querySelectorAll('.addToCartBtn').forEach(btn => {
   btn.addEventListener('click', () => {
     const product = btn.getAttribute('data-product');
@@ -631,26 +793,43 @@ document.querySelectorAll('.addToCartBtn').forEach(btn => {
     const sizeId = btn.getAttribute('data-size');
     const size = sizeId ? document.getElementById(sizeId).value : "";
     const qty = parseInt(document.getElementById(btn.getAttribute('data-qty')).value) || 1;
-
-    const cart = loadCart();
-    // zlúčenie rovnakých položiek (rovnaký produkt + veľkosť)
-    const idx = cart.findIndex(i => i.product===product && i.size===size && i.price===price);
-    if(idx>-1){ cart[idx].qty += qty; } else { cart.push({ product, size, price, qty }); }
-    saveCart(cart);
-    updateLocalSubtotalBadges();
-
-    // malý nenáročný feedback (bez popupu)
-    showMessage('Product added to cart ✔');
-    setTimeout(()=>{ 
-      const msg = document.getElementById('messagePopup');
-      if(msg) msg.classList.remove('show');
-    }, 1200);
+    cartData.push({ product, size, price, qty });
+    renderCart();
+    
+    const popup = document.getElementById('addCartPopup');
+    popup.classList.add('show');
+    disableBodyScroll(); // <-- zakáže scroll pozadia
   });
 });
 
-// po načítaní stránky aktualizuj subtotal badge
-window.addEventListener('load', updateLocalSubtotalBadges);
+document.getElementById('continueShopping').addEventListener('click', () => {
+  const popup = document.getElementById('addCartPopup');
+  popup.classList.remove('show');
+  enableBodyScroll(); // <-- obnoví scroll pozadia
+});
 
+// Otvorenie košíka animovane
+function openCart() {
+  renderCart();
+  cartModal.classList.add('show'); // <-- tu pridáme triedu show
+  disableBodyScroll();
+}
+
+// Zatvorenie košíka animovane
+function closeCartFn() {
+  cartModal.classList.remove('show'); // <-- tu odstránime triedu show
+  setTimeout(enableBodyScroll, 300); // počkáme na animáciu
+}
+
+document.getElementById('goToCart').addEventListener('click', () => {
+  document.getElementById('addCartPopup').classList.remove('show'); // skryje popup
+  openCart(); // otvorí košík animovane
+});
+document.getElementById('cartModal').addEventListener('click', e => {
+  if (e.target === cartModal) closeCartFn();
+});
+
+document.getElementById('country').addEventListener('change', renderCart);
 
 /* ====== CAROUSEL (unchanged) ====== */
 const productImgs = [
@@ -674,6 +853,76 @@ document.querySelectorAll('.arrow.right').forEach(a=>{
   });
 });
 
+/* ====== ORDER (Formspree) ====== */
+document.getElementById('payBtn').addEventListener('click', async () => {
+  if (cartData.length === 0) { 
+    showMessage("Cart is empty !"); 
+    return; 
+  }
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const street = document.getElementById('street').value.trim();
+  const city = document.getElementById('city').value.trim();
+  const zip = document.getElementById('zip').value.trim();
+  const country = document.getElementById('country').value;
+  const note = document.getElementById('note').value.trim();
+  const delivery = document.getElementById('delivery').value;
+
+  if (!name || !email || !phone || !street || !city || !zip) { showMessage("Please fill in all required fields !"); return; }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if (!emailRegex.test(email)) { showMessage("Please enter a valid email address !"); return; }
+
+const phoneRegex = /^(?:\+(420|421)[\s]?[0-9]{3}[\s]?[0-9]{3}[\s]?[0-9]{3}|[0-9]{9,10})$/;
+if (!phoneRegex.test(phone)) { 
+  showMessage("Enter a valid phone number (+420/+421 9 digits, or 9–10 digits without code !"); 
+  return; 
+}
+
+const zipRegex = /^(\d{5}|\d{3}\s\d{2})$/;
+if (!zipRegex.test(zip)) { showMessage("Enter a valid ZIP code (12345 or 123 45) !"); return; }
+
+if (!note) { showMessage("Enter pickup point or Z-Box name !"); return; }
+
+  const formData = new FormData();
+  const productText = cartData.map(item => 
+  `product: ${item.product}${item.size ? ', size: ' + item.size : ''}, price: €${item.price.toFixed(2)}, qty: ${item.qty}`
+  ).join("; ");
+  formData.append("product", productText);
+  formData.append("name", name);
+  formData.append("email", email);
+  formData.append("phone", phone);
+  formData.append("street", street);
+  formData.append("city", city);
+  formData.append("zip", zip);
+  formData.append("country", country);
+  formData.append("note", note);
+  formData.append("delivery", delivery);
+  formData.append("cod", "Dobierka");
+
+  try {
+    const response = await fetch("https://formspree.io/f/xvgbylyd", {
+      method: "POST",
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      document.getElementById('orderPopup').classList.add('show');
+      cartData = [];
+      renderCart();
+      ['name','email','phone','street','city','zip','note'].forEach(id => document.getElementById(id).value = "");
+     } else {
+        showMessage("Something went wrong. Please try again.");
+      }
+   } catch (err) {
+      showMessage("Error sending the order.");
+    }
+});
+document.getElementById('orderOkBtn').addEventListener('click', () => {
+  document.getElementById('orderPopup').classList.remove('show');
+});
 
 /* ====== CONTACT ====== */
 const contactForm = document.getElementById('contactForm');
@@ -705,9 +954,11 @@ if (contactForm) {
 });
 
 /* ====== SCROLL TO TOP ON LOAD ====== */
-window.history.scrollRestoration = "manual";
-window.addEventListener("beforeunload", () => window.scrollTo(0,0));
-
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+  }, 50);
+});
 
 /* ====== BODY SCROLL LOCK ====== */
 let scrollDisabled = false;
@@ -731,6 +982,16 @@ function enableBodyScroll() {
   }
 }
 
+
+document.querySelectorAll('.cart-icon').forEach(c => {
+  c.addEventListener('click', openCart);
+});
+
+closeCart.addEventListener('click', closeCartFn);
+
+cartModal.addEventListener('click', e => {
+  if (e.target === cartModal) closeCartFn();
+});
 
 /* ====== DYNAMIC FOOTERS ====== */
 // Funkcia pre Shop footer (GDPR + All rights reserved)
@@ -825,9 +1086,11 @@ messageOkBtn.addEventListener('click', () => {
 });
 
 function enableBodyScroll() {
-  if (lightbox.classList.contains('show') || gdprModal.classList.contains('show') || messagePopup.classList.contains('show')) {
-    return;
+  // Ak je otvorený cartModal alebo lightbox alebo GDPR modal alebo messagePopup, scroll nedeaktivujeme
+  if (cartModal.classList.contains('show') || lightbox.classList.contains('show') || gdprModal.classList.contains('show') || messagePopup.classList.contains('show')) {
+    return; // necháme scroll zakázaný
   }
+  
   if (scrollDisabled) {
     document.body.style.overflow = '';
     document.body.style.touchAction = '';
@@ -836,7 +1099,6 @@ function enableBodyScroll() {
   }
 }
 
-
 window.addEventListener('load', () => {
   const logo = document.getElementById('logo');
   logo.style.transition = "transform 0.6s ease-out";
@@ -844,15 +1106,6 @@ window.addEventListener('load', () => {
   setTimeout(() => {
     logo.style.transform = "perspective(600px) rotateY(0deg) scale(1)"; // zmenší sa na normálnu veľkosť
   }, 50);
-});
-// ✅ Skontroluj hash v URL a zobraz správnu sekciu
-window.addEventListener('load', () => {
-  if (window.location.hash === '#shop') {
-    showSection(shopSection, photoSection, shopBtn, photoBtn);
-  } else {
-    // default zostane Photos
-    showSection(photoSection, shopSection, photoBtn, shopBtn);
-  }
 });
 
 </script>
