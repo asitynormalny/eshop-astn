@@ -13,7 +13,7 @@
     header a { color: var(--text); text-decoration:none; font-weight:700; }
     .brand { display:flex; align-items:center; gap:10px; }
     .brand img { height:34px; width:auto; border-radius:6px; }
-    .wrap { max-width:900px; margin:18px auto 80px; padding:0 14px; }
+    .wrap { max-width:900px; margin:18px auto 20px; padding:0 14px; }
 
     .grid { display:grid; grid-template-columns: 1.2fr .8fr; gap:16px; }
     @media (max-width:900px){ .grid { grid-template-columns: 1fr; } }
@@ -49,13 +49,20 @@
     .empty { text-align:center; padding:22px 10px; color:#ccc; }
     .inline { display:flex; gap:10px; }
     .inline > * { flex:1; }
+    .cod-note {
+  color: #00cc44;       /* zelený text */
+  font-weight: 700;     /* tučné */
+  text-align: center;   /* na stred */
+  margin: 12px 0;       /* odstupy hore/dole */
+  font-size: 17px;      /* veľkosť textu */
+}
   </style>
 </head>
 <body>
   <header>
     <div class="brand">
-      <a href="index.html" title="Back to shop"><img src="Logo.webp?v=2" alt="logo"/></a>
-      <a href="index.html#shop">⬅ Back to shop</a>
+      <a href="index.html" title="Back to shop">
+      <a href="index.html#shop">Back to Shop</a>
     </div>
     <div>
       <strong>Cart</strong>
@@ -122,7 +129,7 @@
 
             <label>Pickup point or Z-Box name</label>
             <textarea id="note" placeholder="Pickup point or Z-Box name" required></textarea>
-
+             <p class="cod-note">CASH ON DELIVERY ONLY</p>
             <button class="primary" type="submit" id="payBtn">Order Now</button>
           </form>
         </div>
@@ -162,7 +169,7 @@
               <div class="qty">
                 <span>Qty:</span>
                 <select data-idx="${i}" class="qtySel">
-                  ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}" ${n==item.qty?'selected':''}>${n}</option>`).join('')}
+                  ${[1,2,3].map(n=>`<option value="${n}" ${n==item.qty?'selected':''}>${n}</option>`).join('')}
                 </select>
               </div>
             </div>
