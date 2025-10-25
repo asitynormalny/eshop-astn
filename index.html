@@ -687,27 +687,35 @@ window.addEventListener('load', () => {
 /* ====== BODY SCROLL LOCK (upravené pre popup/lightbox/GDPR) ====== */
 let scrollDisabled = false;
 let scrollPos = 0;
+
 function disableBodyScroll() {
   if (!scrollDisabled) {
-    scrollPos = window.pageYOffset || document.documentElement.scrollTop;
-    document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
+    scrollPos = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPos}px`;
+    document.body.style.width = '100%'; // aby sa neposúval horizontálne
     scrollDisabled = true;
   }
 }
+
 function enableBodyScroll() {
   const gdprModal = document.getElementById('gdprModal');
   const messagePopup = document.getElementById('messagePopup');
+
+  // ak je ešte otvorený modal → nedeaktivuj scroll
   if (lightbox.classList.contains('show') || gdprModal.classList.contains('show') || messagePopup.classList.contains('show')) {
     return;
   }
+
   if (scrollDisabled) {
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
-    window.scrollTo(0, scrollPos);
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, scrollPos); // vrátiš sa presne tam, kde si bol
     scrollDisabled = false;
   }
 }
+
 
 /* ====== FOOTERS ====== */
 function addShopFooter() {
