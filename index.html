@@ -57,7 +57,6 @@ header img { max-width:600px; height:auto; cursor:pointer; }
   min-height: 100vh;        /* vždy výška celej obrazovky */
   opacity: 0;
   visibility: hidden;       /* namiesto display:none */
-  transition: opacity 0.5s ease;
 }
 
 .section.active {
@@ -422,20 +421,6 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
   align-items: center;         /* vycentruj vertikálne */
 }
 
-.size-container select,
-.qty-container select {
-  width: 70%;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: none;
-  text-align: center;              /* desktop */
-  text-align-last: center;         /* Chrome/Firefox/Edge */
-  -moz-text-align-last: center;    /* Firefox */
-  -webkit-appearance: none;        /* odstráni defaultný iOS štýl */
-  -moz-appearance: none;           /* Firefox */
-  appearance: none;                /* ostatné */
-}
 
 @media (max-width: 768px) {
   .product {
@@ -460,6 +445,7 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
   width: 100%;        /* istota že sa roztiahne */
   box-sizing: border-box;
 }
+
 
 </style>
 </head>
