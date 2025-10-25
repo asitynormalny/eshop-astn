@@ -814,6 +814,16 @@ document.getElementById('globalCart').addEventListener('click', () => {
   window.location.href = 'cart.html';
 });
 
+// Fix pre iOS/Android keyboard bug
+window.addEventListener('resize', () => {
+  // keď sa výška viewportu vráti späť po zavretí klávesnice
+  if (document.activeElement.tagName !== 'INPUT' &&
+      document.activeElement.tagName !== 'TEXTAREA') {
+    window.scrollTo(0, 0); // reset scrollu
+  }
+});
+  
 </script>
 </body>
 </html>
+
