@@ -813,21 +813,32 @@ document.getElementById('globalCart').addEventListener('click', () => {
   window.location.href = 'cart.html';
 });
 
- // iOS / Android fix: po zavretí klávesnice vráti scroll plynule späť
+// iOS / Android fix: po zavretí klávesnice jemne opraví scroll, ale len ak nie je otvorený modal
 let lastScrollY = 0;
 
 window.addEventListener("focusin", () => {
-  // keď otvoríš klávesnicu, uložíme aktuálnu pozíciu
   lastScrollY = window.scrollY;
 });
 
 window.addEventListener("focusout", () => {
-  // po zavretí klávesnice, jemne vrátime scroll naspäť
   setTimeout(() => {
-    window.scrollTo({ top: lastScrollY, behavior: "smooth" });
+    // skontroluj, či je otvorený lightbox alebo iný modal
+    const gdprModal = document.getElementById('gdprModal');
+    const messagePopup = document.getElementById('messagePopup');
+    const lightbox = document.getElementById('lightbox');
+
+    const modalOpen = 
+      (gdprModal && gdprModal.classList.contains('show')) ||
+      (messagePopup && messagePopup.classList.contains('show')) ||
+      (lightbox && lightbox.classList.contains('show'));
+
+    if (!modalOpen) {
+      window.scrollTo({ top: lastScrollY, behavior: "smooth" });
+    }
   }, 150);
 });
 
 </script>
 </body>
 </html>
+
