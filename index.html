@@ -98,6 +98,20 @@ header img { max-width:600px; height:auto; cursor:pointer; }
   text-align: center;
 }
 
+.size-container select,
+.qty-container select {
+  width: 50%;             /* PC */
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;              /* Android */
+  text-align-last: center;         /* Chrome, Firefox, Edge */
+  -webkit-appearance: none;        /* fix pre iOS */
+  -moz-appearance: none;
+  appearance: none;
+}
+
 /* Responzívne úpravy */
 @media (max-width:600px){
   .size-container select,
