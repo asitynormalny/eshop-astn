@@ -269,6 +269,54 @@ input, select, textarea { font-size: 16px; }
   text-align: center;
 }
 
+#topBar {
+  background: #000;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;   /* normálne správanie, zmizne pri scrolle */
+  z-index: 1001;
+}
+
+
+#globalCart {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#globalCartPrice {
+  color: #0f0;
+  font-weight: 600;
+}
+header img#logo {
+  position: relative;   /* aby z-index fungoval */
+  z-index: 2000;        /* väčšie ako topBar (1001) */
+}
+
+@media (max-width: 600px) {
+  #topBar {
+    padding: 6px 12px;   /* mierne väčšie než predtým */
+  }
+
+  #globalCart {
+    font-size: 14px;     /* jemne väčší text + ikona */
+    gap: 6px;
+  }
+
+  #globalCartPrice {
+    font-size: 13px;
+  }
+
+  #globalCartIcon {
+    font-size: 18px;     /* ikona košíka o niečo väčšia */
+  }
+}
+
 
 </style>
 </head>
@@ -301,6 +349,13 @@ if (photoSectionBtn) { photoSectionBtn.addEventListener('click', animatePhotos);
 <div id="messagePopup">
   <p id="messageText"></p>
   <button id="messageOkBtn">OK</button>
+</div>
+
+<div id="topBar">
+  <div id="globalCart">
+    <span>Cart</span>
+    <span id="globalCartIcon">🛒</span>
+  </div>
 </div>
 
 <header>
@@ -340,12 +395,8 @@ if (photoSectionBtn) { photoSectionBtn.addEventListener('click', animatePhotos);
     <p class="product-description">Made in Slovenia</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
       <button class="addToCartBtn" data-product="Smoke Kit" data-price="10.00" data-size="" data-qty="quantity1">Add to Cart</button>
-      <div class="cart-container">
-        <div class="cart-price">€0</div>
-        <div class="cart-icon">🛒</div>
       </div>
     </div>
-  </div>
 
   <!-- Produkt 2 -->
   <div class="product">
@@ -377,12 +428,8 @@ if (photoSectionBtn) { photoSectionBtn.addEventListener('click', animatePhotos);
     <p class="product-description">Printed in Slovakia</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
       <button class="addToCartBtn" data-product="Poster" data-price="8.00" data-size="size2" data-qty="quantity2">Add to Cart</button>
-      <div class="cart-container">
-        <div class="cart-price">€0</div>
-        <div class="cart-icon">🛒</div>
       </div>
     </div>
-  </div>
 
   <!-- FORMULÁR KONTAKTUJTE NÁS -->
   <div id="contactFormContainer">
@@ -508,14 +555,33 @@ closeLightbox.addEventListener('click', (e) => { e.stopPropagation(); closeLight
 lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightboxFn(); });
 
 /* ====== KOŠÍK CEZ localStorage (pre cart.html) ====== */
-function loadCart(){ try { return JSON.parse(localStorage.getItem('cartData')||'[]'); } catch(e){ return []; } }
-function saveCart(d){ localStorage.setItem('cartData', JSON.stringify(d)); }
-function subtotal(cart){ return cart.reduce((s,i)=> s + (i.price*(i.qty||1)), 0); }
+function loadCart(){ 
+  try { 
+    return JSON.parse(localStorage.getItem('cartData')||'[]'); 
+  } catch(e){ 
+    return []; 
+  } 
+}
+
+function saveCart(d){ 
+  localStorage.setItem('cartData', JSON.stringify(d)); 
+}
+
+function subtotal(cart){ 
+  return cart.reduce((s,i)=> s + (i.price*(i.qty||1)), 0); 
+}
+
 function updateCartBadges(){
   const sum = subtotal(loadCart());
-  document.querySelectorAll('.cart-price').forEach(e => e.textContent = "€" + sum.toFixed(2));
+  const globalPrice = document.getElementById('globalCartPrice');
+  if (globalPrice) {
+    globalPrice.textContent = "€" + sum.toFixed(2);
+  }
 }
+
+// spustíme hneď na začiatku, aby sa zobrazila správna suma
 updateCartBadges();
+
 
 // Add to Cart (zachováva size, qty)
 document.querySelectorAll('.addToCartBtn').forEach(btn => {
@@ -548,9 +614,13 @@ document.getElementById('goToCart').addEventListener('click', () => {
 });
 
 // Ikona košíka -> cart.html
-document.querySelectorAll('.cart-icon').forEach(c => {
-  c.addEventListener('click', () => { window.location.href = 'cart.html'; });
-});
+// Klik na globálny košík hore
+const globalCart = document.getElementById('globalCart');
+if (globalCart) {
+  globalCart.addEventListener('click', () => {
+    window.location.href = 'cart.html';
+  });
+}
 
 // Zmena krajiny už neovplyvňuje nič na indexe (počítanie prebieha v cart.html)
 
@@ -727,6 +797,11 @@ window.addEventListener('load', () => {
     logo.style.transform = "perspective(600px) rotateY(0deg) scale(1)";
   }, 50);
 });
+
+document.getElementById('globalCart').addEventListener('click', () => {
+  window.location.href = 'cart.html';
+});
+
 </script>
 </body>
 </html>
