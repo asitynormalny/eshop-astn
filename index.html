@@ -327,6 +327,13 @@ header {
 #topBar .cart-link:hover {
   text-decoration: underline;
 }
+.cart-link {
+  font-size: 17px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* zruší sivý efekt na mobile */
+}
 
 </style>
 </head>
@@ -362,7 +369,7 @@ if (photoSectionBtn) { photoSectionBtn.addEventListener('click', animatePhotos);
 </div>
 
 <div id="topBar">
-  <a href="cart.html" class="cart-link">Cart 🛒</a>
+  <span id="cartLink" class="cart-link">Cart 🛒</span>
 </div>
 
 <header>
@@ -782,6 +789,11 @@ window.addEventListener('load', () => {
     logo.style.transform = "perspective(600px) rotateY(0deg) scale(1)";
   }, 50);
 });
+
+document.getElementById('cartLink').addEventListener('click', () => {
+  window.location.href = 'cart.html';
+});
+
 </script>
 </body>
 </html>
