@@ -8,18 +8,19 @@
   <style>
     :root { --bg:#111; --panel:#1b1b1b; --text:#fff; --muted:#aaa; }
     * { box-sizing: border-box; }
-     body {
+    body {
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   color:var(--text);
-  background: url('background.webp') no-repeat center center fixed;
+  background: url('background.webp') no-repeat center center;
   background-size: cover;
+  background-attachment: fixed; /* desktop */
 }
 
-/* 🟢 na mobiloch vypni fixed, aby to vyzeralo rovnako */
+/* 🟢 na mobiloch vypni fixed */
 @media (max-width: 768px) {
   body {
-    background-attachment: scroll; /* už nebude „trhané“ ani iné oproti indexu */
+    background-attachment: scroll !important;
     background-position: center top;
   }
 }
