@@ -46,11 +46,12 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background: url("background.webp") no-repeat center center fixed;
+  background: url("background.webp") no-repeat center center;
   background-size: cover;
   color: #fff;
   text-align: center;
 }
+
 
 
 header { padding:15px 20px; background:#111; display:flex; justify-content:center; align-items:center; gap:20px; position:relative;}
@@ -312,11 +313,22 @@ header img#logo {
   }
 }
 
+#bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("background.webp") no-repeat center center;
+  background-size: cover;
+  z-index: -1; /* aby bol pod všetkým obsahom */
+}
 
 
 </style>
 </head>
 <body>
+<div id="bg"></div>
 
 <script>
 // ✅ Animácia fotiek (ZACHOVANÁ)
