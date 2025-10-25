@@ -46,8 +46,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background: url("background.webp") no-repeat center center;
-  background-size: cover;
+  background: #fff; /* čisté biele pozadie */
   color: #fff;
   text-align: center;
 }
@@ -313,26 +312,18 @@ header img#logo {
   }
 }
 
-#bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url("background.webp") no-repeat center center;
-  background-size: cover;
-  z-index: -1; /* aby bol pod všetkým obsahom */
-}
+
+
 
 #shopSection {
   padding: 0px 5px;
 }
 
 
+
 </style>
 </head>
 <body>
-<div id="bg"></div>
 
 <script>
 // ✅ Animácia fotiek (ZACHOVANÁ)
@@ -814,28 +805,6 @@ document.getElementById('globalCart').addEventListener('click', () => {
   window.location.href = 'cart.html';
 });
 
-let lastScroll = 0;
-
-// ukladáme scroll pri pohybe
-window.addEventListener('scroll', () => {
-  lastScroll = window.scrollY;
-});
-
-// keď sa zmení veľkosť viewportu (klávesnica hore/dole)
-window.addEventListener('resize', () => {
-  const ae = document.activeElement;
-  const isInput = ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA');
-
-  if (!isInput) {
-    // chvíľku počkáme, nech sa viewport ustáli
-    setTimeout(() => {
-      window.scrollTo(0, lastScroll);
-    }, 100);
-  }
-});
-  
 </script>
 </body>
 </html>
-
-
