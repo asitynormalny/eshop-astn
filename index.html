@@ -266,20 +266,6 @@ label{display:block; margin-top:6px;}
   transform-origin: top right;
   box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
-/* 🌟 Fade-in animation ONLY for Photos */
-#photoContainer img {
-  opacity: 0;
-  transform: translateY(15px) scale(0.97);
-  filter: blur(4px);
-  transition: all 0.6s ease;
-}
-
-/* Keď má obrázok triedu "show", zobrazí sa */
-#photoContainer img.show {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
-}
 
 /* Smooth 3D animácia loga */
 @keyframes logoTiltSmooth {
@@ -450,26 +436,6 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
 </style>
 </head>
 <body>
-
-<script>
-// ✅ Funkcia: animuje fotky v sekcii Photos
-function animatePhotos() {
-  const imgs = document.querySelectorAll('#photoContainer img');
-  imgs.forEach(img => img.classList.remove('show')); // najprv skryť
-  imgs.forEach((img, i) => {
-    setTimeout(() => img.classList.add('show'), i * 100); // postupne zobraziť
-  });
-}
-
-// 🔹 Spusti animáciu, keď sa stránka načíta
-window.addEventListener('load', animatePhotos);
-
-// 🔹 Spusti animáciu znova, keď používateľ klikne na Photos v menu
-const photoSectionBtn = document.querySelector('nav li[data-section="photos"]');
-if (photoSectionBtn) {
-  photoSectionBtn.addEventListener('click', animatePhotos);
-}
-</script>
 
 <!-- GDPR MODAL -->
 <div id="gdprModal">
@@ -969,8 +935,6 @@ window.addEventListener('load', () => {
     showSection(photoSection, shopSection, photoBtn, shopBtn);
   }
 });
-
-
 
 </script>
 </body>
