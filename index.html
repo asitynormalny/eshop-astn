@@ -814,16 +814,28 @@ document.getElementById('globalCart').addEventListener('click', () => {
   window.location.href = 'cart.html';
 });
 
-// Fix pre iOS/Android keyboard bug
+let lastScroll = 0;
+
+// ukladáme scroll pri pohybe
+window.addEventListener('scroll', () => {
+  lastScroll = window.scrollY;
+});
+
+// keď sa zmení veľkosť viewportu (klávesnica hore/dole)
 window.addEventListener('resize', () => {
-  // keď sa výška viewportu vráti späť po zavretí klávesnice
-  if (document.activeElement.tagName !== 'INPUT' &&
-      document.activeElement.tagName !== 'TEXTAREA') {
-    window.scrollTo(0, 0); // reset scrollu
+  const ae = document.activeElement;
+  const isInput = ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA');
+
+  if (!isInput) {
+    // chvíľku počkáme, nech sa viewport ustáli
+    setTimeout(() => {
+      window.scrollTo(0, lastScroll);
+    }, 100);
   }
 });
   
 </script>
 </body>
 </html>
+
 
