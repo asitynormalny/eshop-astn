@@ -813,6 +813,19 @@ document.getElementById('globalCart').addEventListener('click', () => {
   window.location.href = 'cart.html';
 });
 
+ // iOS / Android fix: po zavretí klávesnice obnoví viewport
+  window.addEventListener("focusout", () => {
+    setTimeout(() => {
+      // malé „refreshnutie“ výšky dokumentu
+      document.documentElement.style.height = "101%";
+      setTimeout(() => {
+        document.documentElement.style.height = "";
+      }, 50);
+      // jemný scroll hore, aby sa prepočítal layout
+      window.scrollTo(0, window.scrollY || 0);
+    }, 100);
+  });
+
 </script>
 </body>
 </html>
