@@ -332,7 +332,9 @@ header {
   font-weight: bold;
   color: #fff;
   cursor: pointer;
-  -webkit-tap-highlight-color: transparent; /* zruší sivý efekt na mobile */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent; /* odstráni sivý highlight na mobile */
+  text-decoration: none;
 }
 
 </style>
@@ -369,7 +371,7 @@ if (photoSectionBtn) { photoSectionBtn.addEventListener('click', animatePhotos);
 </div>
 
 <div id="topBar">
-  <span id="cartLink" class="cart-link">Cart 🛒</span>
+  <div id="cartLink" class="cart-link">Cart 🛒</div>
 </div>
 
 <header>
@@ -793,6 +795,19 @@ window.addEventListener('load', () => {
 document.getElementById('cartLink').addEventListener('click', () => {
   window.location.href = 'cart.html';
 });
+
+const cartLink = document.getElementById('cartLink');
+if (cartLink) {
+  cartLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'cart.html';
+  });
+
+  cartLink.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    window.location.href = 'cart.html';
+  });
+}
 
 </script>
 </body>
