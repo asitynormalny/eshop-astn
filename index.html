@@ -269,6 +269,64 @@ input, select, textarea { font-size: 16px; }
   text-align: center;
 }
 
+#topBar {
+  background: #000;
+  color: #fff;
+  padding: 15px 20px;       /* základný padding */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;      /* nebude držať hore pri scrollovaní */
+  z-index: 1000;
+}
+
+#topBar .cart-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+#topBar .cart-price {
+  font-size: 15px;
+  color: #0f0;
+}
+
+#topBar .cart-icon {
+  font-size: 22px;
+}
+
+@media (max-width: 600px) {
+  #topBar {
+    padding: 5px 10px;    /* tenší pás */
+  }
+
+  #topBar .cart-icon {
+    font-size: 18px;      /* menšia ikona košíka */
+  }
+}
+#topBar {
+  z-index: 1;        /* top-bar pod logom */
+  position: relative;
+}
+
+header {
+  position: relative;
+  z-index: 2;        /* logo nad top-barom */
+}
+
+
+#topBar .cart-link {
+  font-size: 17px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#topBar .cart-link:hover {
+  text-decoration: underline;
+}
 
 </style>
 </head>
@@ -301,6 +359,10 @@ if (photoSectionBtn) { photoSectionBtn.addEventListener('click', animatePhotos);
 <div id="messagePopup">
   <p id="messageText"></p>
   <button id="messageOkBtn">OK</button>
+</div>
+
+<div id="topBar">
+  <a href="cart.html" class="cart-link">Cart 🛒</a>
 </div>
 
 <header>
@@ -340,10 +402,6 @@ if (photoSectionBtn) { photoSectionBtn.addEventListener('click', animatePhotos);
     <p class="product-description">Made in Slovenia</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
       <button class="addToCartBtn" data-product="Smoke Kit" data-price="10.00" data-size="" data-qty="quantity1">Add to Cart</button>
-      <div class="cart-container">
-        <div class="cart-price">€0</div>
-        <div class="cart-icon">🛒</div>
-      </div>
     </div>
   </div>
 
@@ -377,12 +435,9 @@ if (photoSectionBtn) { photoSectionBtn.addEventListener('click', animatePhotos);
     <p class="product-description">Printed in Slovakia</p>
     <div class="add-cart-row" style="display:flex; align-items:center; justify-content:center; gap:15px;">
       <button class="addToCartBtn" data-product="Poster" data-price="8.00" data-size="size2" data-qty="quantity2">Add to Cart</button>
-      <div class="cart-container">
-        <div class="cart-price">€0</div>
-        <div class="cart-icon">🛒</div>
       </div>
     </div>
-  </div>
+  
 
   <!-- FORMULÁR KONTAKTUJTE NÁS -->
   <div id="contactFormContainer">
