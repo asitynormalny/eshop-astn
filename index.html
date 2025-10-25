@@ -50,17 +50,14 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 .navbar button { padding:10px 20px; font-size:16px; cursor:pointer; background:#222; color:#fff; border:none; border-radius:5px; }
 .navbar button.active { background:#6772e5; }
 .section {
-  position: absolute;       /* sekcie sú na sebe */
-  top: 0;
-  left: 0;
   width: 100%;
-  min-height: 100vh;        /* vždy výška celej obrazovky */
+  min-height: 100vh;
   opacity: 0;
-  visibility: hidden;       /* namiesto display:none */
+  visibility: hidden;
+  position: relative;   /* stále relative, nikdy absolute */
 }
 
 .section.active {
-  position: relative;       /* aktívna sekcia sa správa normálne */
   opacity: 1;
   visibility: visible;
 }
@@ -471,7 +468,7 @@ animation: logoTiltSmooth 9s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
 <div class="topbar">
   <div class="cart-container">
     <a class="cart-icon" href="cart.html" title="Cart">
-      Cart <span class="cart-price">€0</span> 🛒
+      Cart 🛒
     </a>
   </div>
 </div>
