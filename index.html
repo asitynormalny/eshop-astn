@@ -20,7 +20,6 @@
 <meta name="robots" content="noimageindex">
 
 <style>
-/* ====== PÔVODNÉ ŠTÝLY – ZACHOVANÉ ====== */
 
 header img#logo {
   width: 80%;
@@ -34,20 +33,6 @@ header img#logo {
   pointer-events: none;
 }
 
-#shopSection {
-  background: url('background.jpg') no-repeat center center fixed ;
-  background-size: cover;
-  min-height: 100vh;
-  padding: 5px 6px;
-  box-sizing: border-box;
-}
-#shopSection {
-  background: url('background.webp') no-repeat center center fixed;
-  background-size: cover;
-  min-height: 100vh;
-  padding: 5px 6px;
-  box-sizing: border-box;
-}
 
 @media (max-width: 900px) {
   header img#logo {
@@ -57,7 +42,17 @@ header img#logo {
   }
 }
 
-body { font-family:sans-serif; margin:0; padding:0; background:#fff; color:#fff; text-align:center;}
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background: url('background.webp') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  text-align: center;
+}
+
+
 header { padding:15px 20px; background:#111; display:flex; justify-content:center; align-items:center; gap:20px; position:relative;}
 header img { max-width:600px; height:auto; cursor:pointer; }
 .navbar { display:flex; justify-content:center; gap:20px; margin:15px 0; }
@@ -317,6 +312,10 @@ header img#logo {
   }
 }
 
+#shopSection {
+  padding: 0px 4px;
+  box-sizing: border-box;
+}
 
 </style>
 </head>
