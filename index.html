@@ -71,8 +71,18 @@ header img { max-width:600px; height:auto; cursor:pointer; }
 .arrow{position:absolute; top:50%; transform:translateY(-50%); font-size:30px; color:#fff; cursor:pointer; background:rgba(0,0,0,0.4); padding:25px 8px; border-radius:5px; user-select:none;}
 .arrow.left{left:5px;} 
 .arrow.right{right:5px;}
-.size-container, .qty-container{margin:15px 0; text-align:center;}
-.size-container select, .qty-container select{width:70%; padding:10px; font-size:16px; border-radius:5px; border:none; text-align:center;}
+.size-container select, 
+.qty-container select {
+  width: 70%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+
+  /* 🔹 vycentrovanie textu aj na iPhone */
+  text-align: center;
+  text-align-last: center; 
+} 
 .product button{padding:10px 20px; font-size:16px; cursor:pointer; background:#6772e5; color:#fff; border:none; border-radius:5px; margin-top:10px;}
 label{display:block; margin-top:6px;}
 .lightbox {
@@ -935,6 +945,8 @@ window.addEventListener('load', () => {
     showSection(photoSection, shopSection, photoBtn, shopBtn);
   }
 });
+
+
 
 </script>
 </body>
